@@ -2,3 +2,5 @@ django
 djangorestframework
 django-filter
 pillow
+python-dotenv #for secure data
+psycopg2 #server side needed
