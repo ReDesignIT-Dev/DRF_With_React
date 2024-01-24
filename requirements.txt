@@ -1,5 +1,7 @@
 django
 djangorestframework
+django-crispy-forms
+crispy-bootstrap5
 django-filter
 pillow
 python-dotenv #for secure data
