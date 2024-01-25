@@ -24,4 +24,3 @@ DATABASES = {
 RECAPTCHA_PUBLIC_KEY = getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-print(f'Finished the prod settings with debug = {DEBUG}')
