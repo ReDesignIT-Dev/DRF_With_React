@@ -14,6 +14,7 @@ class Product(models.Model):
     sale_end = models.DateTimeField(blank=True, null=True, default=None)
     photo = models.ImageField(blank=True, null=True, default=None, upload_to="products")
 
+
     def is_on_sale(self):
         now = timezone.now()
         if self.sale_start:
@@ -27,7 +28,6 @@ class Product(models.Model):
 
     def current_price(self):
         if self.is_on_sale():
-            print(f'price type -> {type(self.price)}, discount type -> {type(self.DISCOUNT_RATE)}')
             discounted_price = Decimal(self.price) * (1 - self.DISCOUNT_RATE)
             return round(discounted_price, 2)
         return self.get_rounded_price()
