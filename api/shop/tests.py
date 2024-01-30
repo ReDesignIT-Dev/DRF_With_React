@@ -7,7 +7,7 @@ class ProductCreateTestCase(APITestCase):
     def test_create_product(self):
         initial_product_count = Product.objects.count()
         product_attrs = {
-            "name": "New Product",
+            "name": "New Product 1",
             "description": "Awesome product",
             "price": "123.45",
         }
@@ -28,7 +28,7 @@ class ProductDestroyTestCase(APITestCase):
     def test_delete_product(self):
         
         product_attrs = {
-            "name": "New Product",
+            "name": "New Product 2",
             "description": "Awesome product",
             "price": "123.45",
         }
@@ -53,3 +53,28 @@ class ProductListTestCase(APITestCase):
         self.assertIsNone(response.data['previous'])
         self.assertEqual(response.data['count'], products_count)
         self.assertEqual(len(response.data['results']), products_count)
+
+
+class ProductUpdateTestCase(APITestCase):
+    def test_update_product(self):
+        product_attrs = {
+            "name": "First name which will be changed",
+            "description": "Awesome product",
+            "price": "123.45",
+        }
+        response = self.client.post("/products/create", product_attrs)
+        product = Product.objects.first()
+        print(f'product id = {product.id}')
+        print(f'all = {Product.objects.all()}')
+        response = self.client.patch(
+            '/products/{}/'.format(product.id),
+            {
+                'name': 'New Product 3',
+                'description': 'Awesome product after the change',
+                'price': '999',
+            },
+            format='json',
+        )
+        print(f'response ----------> {response.json()}')
+        updated = Product.objects.get(id=product.id)
+        self.assertEqual(updated.name, 'New Product 3')
