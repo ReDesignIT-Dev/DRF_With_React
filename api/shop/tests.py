@@ -64,8 +64,6 @@ class ProductUpdateTestCase(APITestCase):
         }
         response = self.client.post("/products/create", product_attrs)
         product = Product.objects.first()
-        print(f'product id = {product.id}')
-        print(f'all = {Product.objects.all()}')
         response = self.client.patch(
             '/products/{}/'.format(product.id),
             {
@@ -75,6 +73,5 @@ class ProductUpdateTestCase(APITestCase):
             },
             format='json',
         )
-        print(f'response ----------> {response.json()}')
         updated = Product.objects.get(id=product.id)
         self.assertEqual(updated.name, 'New Product 3')
