@@ -1,5 +1,5 @@
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
@@ -47,9 +47,9 @@ class ProductCreate(CreateAPIView):
         return super().create(request, *args, **kwargs)
     
 class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
     lookup_field = 'id'
     serializer_class = ProductSerializer
+    queryset = Product.objects.all()
     
     def delete(self, request, *args, **kwargs):
         product_id = request.data.get('id')
@@ -61,6 +61,9 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
+        print(f'request: {request.data}')
+        product = Product.objects.get(id=response.data['id'])
+        product.save()  
         if response.status_code == 200:
             from django.core.cache import cache
             product = response.data
@@ -69,6 +72,7 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
                 'description': product['description'],
                 'price': product['price']
             })
+            
         return response
     
 
