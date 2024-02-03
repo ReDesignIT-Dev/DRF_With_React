@@ -82,7 +82,6 @@ class ProductUpdateTestCase(APITestCase):
         updated = Product.objects.get(id=product.id)
         self.assertEqual(updated.name, "New Product 3")
 
-
     def test_upload_product_photo(self):
         response, _ = create_product(
             self.client, "The object for photo test", "Awesome product", "123.45"
@@ -90,25 +89,27 @@ class ProductUpdateTestCase(APITestCase):
         product = Product.objects.first()
         original_photo = product.photo
         photo_path = os.path.join(
-            settings.MEDIA_ROOT, 'products', 'vitamin-iron.jpg',
+            settings.MEDIA_ROOT,
+            "products",
+            "vitamin-iron.jpg",
         )
-        with open(photo_path, 'rb') as photo_data:
+        with open(photo_path, "rb") as photo_data:
             response = self.client.patch(
-                '/products/{}/'.format(product.id),
-                {'photo': photo_data},
-                format='multipart',
+                "/products/{}/".format(product.id),
+                {"photo": photo_data},
+                format="multipart",
             )
 
         self.assertEqual(response.status_code, 200)
-        self.assertNotEqual(response.data['photo'], original_photo)
+        self.assertNotEqual(response.data["photo"], original_photo)
 
         try:
             updated = Product.objects.get(id=product.id)
             expected_photo = os.path.join(
-                settings.MEDIA_ROOT, 'products', 'vitamin-iron',
+                settings.MEDIA_ROOT,
+                "products",
+                "vitamin-iron",
             )
-            self.assertTrue(
-                updated.photo.path.startswith(expected_photo)
-            )
+            self.assertTrue(updated.photo.path.startswith(expected_photo))
         finally:
             os.remove(updated.photo.path)
