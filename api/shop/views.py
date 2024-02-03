@@ -61,7 +61,6 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
-        print(f'request: {request.data}')
         product = Product.objects.get(id=response.data['id'])
         product.save()  
         if response.status_code == 200:
