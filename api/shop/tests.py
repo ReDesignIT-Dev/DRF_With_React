@@ -3,15 +3,22 @@ from rest_framework.test import APITestCase
 from .models import Product
 
 
+def create_product(api_client, name, description, price):
+    product_attrs = {
+        "name": name,
+        "description": description,
+        "price": price,
+    }
+    response = api_client.post("/products/create", product_attrs)
+    return response, product_attrs
+
+
 class ProductCreateTestCase(APITestCase):
     def test_create_product(self):
         initial_product_count = Product.objects.count()
-        product_attrs = {
-            "name": "New Product 1",
-            "description": "Awesome product",
-            "price": "123.45",
-        }
-        response = self.client.post("/products/create", product_attrs)
+        response, product_attrs = create_product(
+            self.client, "New Product 1", "Awesome product", "123.45"
+        )
         if response.status_code != 201:
             print(response.data)
         self.assertEqual(
@@ -24,54 +31,52 @@ class ProductCreateTestCase(APITestCase):
                 response.data["current_price"], float(product_attrs["price"])
             )
 
+
 class ProductDestroyTestCase(APITestCase):
     def test_delete_product(self):
-        
-        product_attrs = {
-            "name": "New Product 2",
-            "description": "Awesome product",
-            "price": "123.45",
-        }
-        response = self.client.post("/products/create", product_attrs)
+
+        response, _ = create_product(
+            self.client, "New Product 2", "Awesome product", "123.45"
+        )
         initial_product_count = Product.objects.count()
         product_id = Product.objects.first().id
-        self.client.delete('/products/{}/'.format(product_id))
+        self.client.delete("/products/{}/".format(product_id))
         self.assertEqual(
             Product.objects.count(),
-            initial_product_count -1,
+            initial_product_count - 1,
         )
         self.assertRaises(
             Product.DoesNotExist,
-            Product.objects.get, id=product_id,
+            Product.objects.get,
+            id=product_id,
         )
+
 
 class ProductListTestCase(APITestCase):
     def test_list_products(self):
         products_count = Product.objects.count()
-        response = self.client.get('/products/')
-        self.assertIsNone(response.data['next'])
-        self.assertIsNone(response.data['previous'])
-        self.assertEqual(response.data['count'], products_count)
-        self.assertEqual(len(response.data['results']), products_count)
+        response = self.client.get("/products/")
+        self.assertIsNone(response.data["next"])
+        self.assertIsNone(response.data["previous"])
+        self.assertEqual(response.data["count"], products_count)
+        self.assertEqual(len(response.data["results"]), products_count)
 
 
 class ProductUpdateTestCase(APITestCase):
     def test_update_product(self):
-        product_attrs = {
-            "name": "First name which will be changed",
-            "description": "Awesome product",
-            "price": "123.45",
-        }
-        response = self.client.post("/products/create", product_attrs)
+
+        response, _ = create_product(
+            self.client, "First name which will be changed", "Awesome product", "123.45"
+        )
         product = Product.objects.first()
         response = self.client.patch(
-            '/products/{}/'.format(product.id),
+            "/products/{}/".format(product.id),
             {
-                'name': 'New Product 3',
-                'description': 'Awesome product after the change',
-                'price': '999',
+                "name": "New Product 3",
+                "description": "Awesome product after the change",
+                "price": "999",
             },
-            format='json',
+            format="json",
         )
         updated = Product.objects.get(id=product.id)
-        self.assertEqual(updated.name, 'New Product 3')
+        self.assertEqual(updated.name, "New Product 3")
