@@ -35,7 +35,7 @@ function App() {
         spacing={2}
       >
         <Button variant="primary" onClick={() => setName("Boguś")}>
-          Boguś inside
+          Boguś inside Test Push GIT
         </Button>
 
         <Button onClick={() => setSurname("Wacławowski")}>
