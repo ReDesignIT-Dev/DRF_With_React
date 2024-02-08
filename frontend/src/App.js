@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Stack from '@mui/material/Stack';
@@ -8,6 +8,18 @@ function App() {
 
   const [name, setName] = useState("Stefan");
   const [surname, setSurname] = useState("Stefanowski");
+  const txtTitle = useRef();
+  const hexColor = useRef();
+
+  console.log(txtTitle);
+  const submit = (e) => {
+    e.preventDefault();
+    const title = txtTitle.current.value;
+    const color = hexColor.current.value;
+    alert(`${title}, ${color}`);
+    txtTitle.current.value = "";
+    hexColor.current.value = "";
+  }
 
   useEffect(() => {
     console.log(`Now it's ${name} & ${surname}`);
@@ -32,6 +44,17 @@ function App() {
           Wacławowski inside
         </Button>
       </Stack>
+
+    <form onSubmit={submit}>
+      <input 
+      ref={txtTitle}
+      type = "text"
+      placeholder='color title...'
+      />
+      <input ref={hexColor} type="color" />
+      <button> ADD </button>
+    </form>
+
     </div>
 
   );
