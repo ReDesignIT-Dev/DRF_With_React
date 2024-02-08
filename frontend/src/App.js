@@ -13,7 +13,6 @@ function App() {
 
   const submit = (e) => {
     e.preventDefault();
-
     alert(`${title}, ${color}`);
     setTitle("");
     setColor("#000000");
