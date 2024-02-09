@@ -49,7 +49,6 @@ function App() {
       onChange={(event) => setTitle(event.target.value)}
       type="text"
       placeholder='color title...'
-      
       />
       <input value={color} type="color" onChange={(event) => setColor(event.target.value)} />
       <button> ADD </button>
