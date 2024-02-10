@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useReducer } from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Stack from '@mui/material/Stack';
@@ -10,6 +10,7 @@ function App() {
   const [surname, setSurname] = useState("Stefanowski");
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("#000000");
+  const [checked, setChecked] = useReducer(checked => !checked, false);
 
   const submit = (e) => {
     e.preventDefault();
@@ -43,18 +44,22 @@ function App() {
         </Button>
       </Stack>
 
-    <form onSubmit={submit}>
-      <input 
-      value={title}
-      onChange={(event) => setTitle(event.target.value)}
-      type="text"
-      placeholder='color title...'
-      
-      />
-      <input value={color} type="color" onChange={(event) => setColor(event.target.value)} />
-      <button> ADD </button>
-    </form>
+      <form onSubmit={submit}>
+        <input
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          type="text"
+          placeholder='color title...'
 
+        />
+        <input value={color} type="color" onChange={(event) => setColor(event.target.value)} />
+        <button> ADD </button>
+      </form>
+
+      <input type="checkbox" value={checked} onChange={setChecked} />
+      <label>
+        {checked ? "checked" : "not checked"}
+      </label>
     </div>
 
   );
