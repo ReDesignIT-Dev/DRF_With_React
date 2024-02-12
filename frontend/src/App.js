@@ -3,8 +3,52 @@ import { useState, useEffect, useRef, useReducer } from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Stack from '@mui/material/Stack';
+import {Link} from "react-router-dom";
 
-function App() {
+function Home() {
+  return (
+    <div>
+      <h1> Home website </h1>
+      <nav>
+        <Link to="/"> Home </Link>
+        <Link to="/contact"> Contact </Link>
+        <Link to="/about"> About </Link>
+      </nav>
+    </div>
+  );
+}
+
+export function About() {
+  return (
+    <div>
+      <h1> About this website </h1>
+      <nav>
+        <Link to="/"> Home </Link>
+        <Link to="/contact"> Contact </Link>
+        <Link to="/about"> About </Link>
+      </nav>
+    </div>
+  );
+}
+
+export function Contact() {
+  return (
+    <div>
+      <h1> Contact form for the website </h1>
+      <nav>
+        <Link to="/"> Home </Link>
+        <Link to="/contact"> Contact </Link>
+        <Link to="/about"> About </Link>
+      </nav>
+    </div>
+  );
+}
+
+export function App(){
+  return <Home />;
+}
+
+function Training() {
 
   const [name, setName] = useState("Stefan");
   const [surname, setSurname] = useState("Stefanowski");
