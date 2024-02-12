@@ -12,6 +12,26 @@ function App() {
   const [color, setColor] = useState("#000000");
   const [checked, setChecked] = useReducer(checked => !checked, false);
 
+  const tahoe_peaks = [
+    { name: "freel", elevation: 10891 },
+    { name: "monument", elevation: 1231 },
+    { name: "pyramid", elevation: 999 },
+    { name: "lastPyr", elevation: 1999 }
+  ];
+
+  function List({ data, renderItem, renderEmpty }) {
+    return !data.length ? (
+      renderEmpty) : (
+      <ul>
+        {data.map((item) => (
+          <li key={item.name}>
+            {renderItem(item)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   const submit = (e) => {
     e.preventDefault();
     alert(`${title}, ${color}`);
@@ -60,6 +80,14 @@ function App() {
       <label>
         {checked ? "checked" : "not checked"}
       </label>
+
+      <List data={tahoe_peaks}
+      renderEmpty={<p> This list is empty</p>}
+      renderItem={(item) => (
+        <>
+        {item.name} - {item.elevation} ft.
+        </>
+      )} />
     </div>
 
 
