@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useReducer } from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Stack from '@mui/material/Stack';
-import {Link} from "react-router-dom";
+import {Link, Outlet} from "react-router-dom";
 
 function Home() {
   return (
@@ -26,7 +26,9 @@ export function About() {
         <Link to="/"> Home </Link>
         <Link to="/contact"> Contact </Link>
         <Link to="/about"> About </Link>
+        <Link to="/about/history"> History </Link>
       </nav>
+      <Outlet />
     </div>
   );
 }
@@ -40,6 +42,14 @@ export function Contact() {
         <Link to="/contact"> Contact </Link>
         <Link to="/about"> About </Link>
       </nav>
+    </div>
+  );
+}
+
+export function History() {
+  return (
+    <div>
+      <h1> History of this page </h1>
     </div>
   );
 }
