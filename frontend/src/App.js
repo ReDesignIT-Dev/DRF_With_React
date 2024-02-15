@@ -4,8 +4,20 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Stack from '@mui/material/Stack';
 import {Link, Outlet} from "react-router-dom";
+import axios from 'axios';
 
 function Home() {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/')
+      .then(response => {
+        setMessage(response.data.message);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
   return (
     <div>
       <h1> Home website </h1>
@@ -14,6 +26,7 @@ function Home() {
         <Link to="/contact"> Contact </Link>
         <Link to="/about"> About </Link>
       </nav>
+      <p>{message}</p>
     </div>
   );
 }
