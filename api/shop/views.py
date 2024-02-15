@@ -11,7 +11,7 @@ from rest_framework import status
 
 class HomeView(APIView):
     def get(self, request, format=None):
-        return Response({'message': 'Hello, Home View!'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Hello, Home View! Yeah'}, status=status.HTTP_200_OK)
 
 class ProductsPagination(LimitOffsetPagination):
     default_limit = 10

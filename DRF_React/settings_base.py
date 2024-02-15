@@ -15,7 +15,7 @@ from os import getenv
 from dotenv import load_dotenv
 
 load_dotenv()
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'frontend', 'build'))
 
@@ -37,8 +37,6 @@ REGISTRATION_OPEN = True
 REGISTRATION_SALT = getenv('REGISTRATION_SALT')
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",  # React app
-    "http://127.0.0.1:8000",  # React app
     "http://localhost:3000",  # React app
     "http://127.0.0.1:3000",  # React app
 ]
@@ -96,17 +94,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DRF_React.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': getenv('DJANGO_DB'),
-        'USER': getenv('DJANGO_DB_USER'),
-        'PASSWORD': getenv('DJANGO_DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
