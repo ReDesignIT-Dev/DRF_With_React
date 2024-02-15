@@ -6,6 +6,12 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from .serializers import ProductSerializer, ProductStatSerializer
 from .models import Product
+from rest_framework.views import APIView
+from rest_framework import status
+
+class HomeView(APIView):
+    def get(self, request, format=None):
+        return Response({'message': 'Hello, Home View!'}, status=status.HTTP_200_OK)
 
 class ProductsPagination(LimitOffsetPagination):
     default_limit = 10
