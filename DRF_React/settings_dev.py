@@ -2,7 +2,7 @@ from .settings_base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
