@@ -29,10 +29,9 @@ TIME_ZONE = 'UTC'
 # Application definition
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'home'
-#AUTH_USER_MODEL = 'login.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 ACCOUNT_ACTIVATION_DAYS = 7
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 REGISTRATION_OPEN = True
 REGISTRATION_SALT = getenv('REGISTRATION_SALT')
 
@@ -40,6 +39,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React app
     "http://127.0.0.1:3000",  # React app
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+OAUTH2_PROVIDER = {
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,6 +67,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'api.shop',
+    'api.users',
     'oauth2_provider',
 ]
 
