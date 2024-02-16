@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('', include('api.shop.urls')),
+    path('', include('api.users.urls')),
     re_path(r'^(?P<path>.*)$', serve, {'document_root': settings.FRONTEND_ROOT})
 ]
