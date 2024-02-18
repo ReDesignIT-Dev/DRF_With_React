@@ -249,3 +249,43 @@ input[type="checkbox"] {
     top: -10px;
     right: 0
 }
+
+.Login {
+    font-family: sans-serif;
+    text-align: center;
+  }
+
+  .login-form{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .form-box{
+    margin-top: 7vh;
+    opacity:80%;
+    background: black;
+    padding-right: 80px;
+    padding-left: 80px;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+  }
+  
+  label {
+    color:white;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .show {
+    display: block;
+    transition: 800ms;
+    opacity: 1;
+  }
+  
+  .show.active {
+    transform: translateY(100px) scale(0) rotateY(180deg);
+    opacity: 0;
+  }
