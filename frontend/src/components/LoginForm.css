@@ -1,8 +1,38 @@
-.login-text{
+.form-box {
+    margin-top: 7vh;
+    opacity: 80%;
+    background: black;
+    padding-right: 40px;
+    padding-left: 40px;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+}
+
+.form-box form{
+    width: 100%;
+}
+
+.form-box form label{
+    margin-top: 10px;
+}
+
+.login-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-text {
     width: 100%;
     color: white;
     border-bottom: 2px solid white;
-    line-height: 30px;
+    line-height: 50px;
     width: 100%;
     font-weight: bolder;
     text-align: center;
@@ -10,14 +40,15 @@
     justify-content: center;
     align-items: center;
     padding-top: 5vh;
-  }
-  
-.login-box{
+}
+
+.login-box {
     color: white;
     border: 1px solid lightgrey;
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     border-radius: 20px;
     padding: 2px;
     padding-left: 10px;
@@ -28,13 +59,14 @@
     background: transparent;
     transition: 1s;
     outline: none;
-  }
-  
-  .login-btn{
+    width: 100%;
+}
+
+.login-btn {
     width: 75%;
     justify-content: center;
     align-items: center;
-    background-color: rgb(48,172,251);
+    background-color: rgb(48, 172, 251);
     color: white;
     margin-top: 5px;
     border-radius: 20px;
@@ -45,12 +77,11 @@
     outline: none;
     cursor: pointer;
     margin-bottom: 20px;
-  }
-  
-  .login-btn:hover{
+}
+
+.login-btn:hover {
     transform: scale(1.03);
     letter-spacing: 4px;
     background-color: #7FFFD4;
     color: #1E90FF;
-  }
-  
+}
