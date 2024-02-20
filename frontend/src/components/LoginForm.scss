@@ -1,6 +1,77 @@
+
+
+.form-box form{
+    width: 100%;
+}
+
+.form-box form label{
+    margin-top: 10px;
+}
+
+
+
+.login-text {
+    width: 100%;
+    color: white;
+    border-bottom: 2px solid white;
+    line-height: 50px;
+    width: 100%;
+    font-weight: bolder;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5vh;
+}
+
+.login-box {
+    color: white;
+    border: 1px solid lightgrey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 20px;
+    padding: 2px;
+    padding-left: 10px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin: 5px;
+    font-size: 11pt;
+    background: transparent;
+    transition: 1s;
+    outline: none;
+    width: 100%;
+}
+
+.login-btn {
+    width: 75%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(48, 172, 251);
+    color: white;
+    margin-top: 5px;
+    border-radius: 20px;
+    border: none;
+    font-size: 15pt;
+    font-weight: 700;
+    transition: 1s;
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.login-btn:hover {
+    transform: scale(1.03);
+    letter-spacing: 4px;
+    background-color: #7FFFD4;
+    color: #1E90FF;
+}
+
+
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
 
-$borderRadius: 1px;
+$borderRadius: 20px;
 $offset: 150%;
 $inputHeight: 63px;
 $transitionEasing: cubic-bezier(.36,1,.62,.98);
@@ -29,10 +100,6 @@ $yellow: #ED6A5E;
     transition: $transition;
 }
 
-html, body, .container, #app {
-    width: 100%;
-    height: 100%;
-}
 
 body {
     font-family: 'Open Sans', sans-serif;
@@ -46,7 +113,6 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 100%;
     @include transition(all .85s ease-in-out);
     &--is-login {
         opacity: .92;
@@ -60,17 +126,17 @@ body {
 
 .form-block {
     position: relative;
-    margin: 100px auto 0;
-    width: 285px;
+    width: 330px;
     padding: 25px;
     background: rgba(255, 255, 255, .13);
-    border-radius: 2 * $borderRadius;
+    border-radius: $borderRadius;
     color: #fff;
     @include box-shadow(0px 0px 16px 9px rgba(0,0,0,0.07));
 }
 
 .form-block__header {
     margin-bottom: 20px;
+    width: 100%;
     h1 {
         font-size: 30px;
         margin: 0 0 20px;
@@ -79,6 +145,7 @@ body {
 
 .form-block__toggle-block {
     position: relative;
+    width: 100%;
     span {
         font-size: 13px;
         font-weight: 300;
@@ -159,7 +226,7 @@ body {
     cursor: pointer;
     background-image: none;
     border: none;
-    border-radius: 2 * $borderRadius;
+    border-radius: calc($borderRadius / 2);
     @include transition(all .2s ease-in-out);
     @include box-shadow(0px 0px 13px 8px rgba(0,0,0,0.1));
     &--primary {
@@ -182,7 +249,7 @@ input[type="checkbox"] {
             content: '';
             display: block;
             position: absolute;
-            top: 10px;
+            top: 8px;
             right: 0;
             width: 43px;
             height: 8px;
@@ -194,7 +261,7 @@ input[type="checkbox"] {
             content: '';
             display: block;
             position: absolute;
-            top: 1px;
+            top: 0px;
             right: 18px;
             width: 25px;
             height: 25px;
@@ -239,12 +306,13 @@ input[type="checkbox"] {
 }
 
 .Login {
+    width: 100vw;
+    height: 100vh;
     font-family: sans-serif;
     text-align: center;
+    overflow: hidden;
   }
 
-
-  
 
   
   label {
@@ -254,12 +322,116 @@ input[type="checkbox"] {
   }
   
   .show {
+    width: 100vw;
+    height: 100vh;
     display: block;
-    transition: 800ms;
+    transition: 1000ms;
     opacity: 1;
   }
   
   .show.active {
+    width: 100vw;
+    height: 100vh;
     transform: translateY(100px) scale(0) rotateY(180deg);
     opacity: 0;
   }
+
+  .mainContainer {
+    height: 100vh;
+    width: 100vw;
+}
+
+.titleContainer {
+    display: flex;
+    flex-direction: column;
+    font-size: 64px;
+    font-weight: bolder;
+    align-items: center;
+    justify-content: center;
+}
+
+.resultContainer,
+.historyItem {
+    flex-direction: row;
+    display: flex;
+    width: 400px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.historyContainer {
+    flex-direction: column;
+    display: flex;
+    height: 200px;
+    align-items: center;
+    flex-grow: 5;
+    justify-content: flex-start;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 260px;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.inputContainer>.errorLabel {
+    color: red;
+    font-size: 12px;
+}
+
+.inputBox {
+    height: 48px;
+    width: 400px;
+    font-size: large;
+    border-radius: 4px;
+    border: 1px solid grey;
+    padding-left: 8px;
+}
+
+.app {
+    height: 100%;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.logPop {
+    height: 100%;
+}
+
+.login-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    border-radius: $borderRadius;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+}
+
+.login-form.active {
+    opacity: 1; /* Set opacity to 1 when the active class is applied */
+  }
+
+  .form-box {
+    opacity: 90%;
+    background: black;
+    border-radius: $borderRadius;
+    box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+}
