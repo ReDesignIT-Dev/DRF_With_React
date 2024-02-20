@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import LoginForm from "../components/LoginForm";
 import Navbar from "../components/Navbar";
-import "./Login.scss";
 
 export function Login() {
-
 
       const [isShowLogin, setIsShowLogin] = useState(true);
     
