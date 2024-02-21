@@ -5,20 +5,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { About, Contact, History } from "./App";
-import {Login} from "./pages/Login";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter forceRefresh={true}>
+      <Header />
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route exact path="/" element={<App />} />
         <Route path="/about" element={<About />}>
           <Route path ="history" element={<History />} />
         </Route>
         <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   </React.StrictMode>
 );
