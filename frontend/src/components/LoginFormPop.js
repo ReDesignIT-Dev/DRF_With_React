@@ -116,7 +116,7 @@ class LoginFormInPop extends React.Component {
             <Input type="password" id="repeatpassword" label="repeat password" disabled={this.props.mode === 'login'} />
           </div>
         </div>
-        <button className="button button--primary full-width mt-4" type="submit">{this.props.mode === 'login' ? 'Log In' : 'Sign Up'}</button>
+        <button className="button button--primary d-flex align-items-center justify-content-center p-3 mt-4 mx-auto" type="submit">{this.props.mode === 'login' ? 'Log In' : 'Sign Up'}</button>
       </form>
     );
   }
