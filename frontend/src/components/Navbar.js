@@ -1,5 +1,6 @@
 import React from "react";
 import "./Navbar.css";
+import "react-bootstrap";
 
 function Navbar({ handleLoginClick }) {
   const handleClick = () => {
