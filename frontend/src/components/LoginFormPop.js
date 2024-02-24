@@ -43,7 +43,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   return (
     <div className={`${isShowLogin ? "active" : ""} show`}>
-      <div className="login-form">
+      <div className="login-form px-3 mx-auto">
         <div className="form-box solid">
           <div className={`app app--is-${mode}`}>
             <LoginComponent
@@ -76,21 +76,21 @@ class LoginComponent extends React.Component {
 
   render() {
     return (
-      <div className="logPop d-flex justify-content-center">
+      <div className="logPop d-flex flex-column justify-content-center">
+        <div className="d-flex justify-content-end close-button-div">
+          <button className="close-button" onClick={() => { this.props.handleEscape(); }}> X </button>
+        </div>
         <div className={`form-block-wrapper form-block-wrapper--is-${this.state.mode}`} ></div>
-        <button className="close-button" onClick={() => {this.props.handleEscape();}}>
-            X
-          </button>
         <section className={`form-block form-block--is-${this.state.mode}`}>
           <header className="form-block__header d-flex flex-column">
-            <h1>{this.state.mode === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
+            <h1 className="text-center">{this.state.mode === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
             <div className="form-block__toggle-block d-flex flex-row">
-              <span className="flex-fill text-nowrap">{this.state.mode === 'login' ? 'Don\'t' : 'Already'} have an account? Click here &#8594;</span>
+              <span className="text-nowrap">{this.state.mode === 'login' ? 'Don\'t' : 'Already'} have an account? Click here &#8594;</span>
               <input id="form-toggler" type="checkbox" onClick={this.toggleMode.bind(this)} />
-              <label className="flex-fill" htmlFor="form-toggler"></label>
+              <label className="flex-shrink-1" htmlFor="form-toggler"></label>
             </div>
           </header>
-          <LoginFormInPop mode={this.state.mode} onSubmit={this.props.onSubmit}/>
+          <LoginFormInPop mode={this.state.mode} onSubmit={this.props.onSubmit} />
         </section>
       </div>
     );
