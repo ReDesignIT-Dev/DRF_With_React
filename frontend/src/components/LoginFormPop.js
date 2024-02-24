@@ -4,12 +4,14 @@ import "react-bootstrap"
 
 const mode = 'login';
 
-const LoginFormPop = ({ isShowLogin }) => {
+const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+  const handleEscape = () => {
+    handleXClick();
+  };
   const onSubmitClick = () => {
     // Set initial error values to empty
     setEmailError("");
@@ -50,6 +52,7 @@ const LoginFormPop = ({ isShowLogin }) => {
                 onSubmitClick();
                 console.log('submit');
               }}
+              handleEscape={handleEscape}
             />
           </div>
         </div>
@@ -75,6 +78,9 @@ class LoginComponent extends React.Component {
     return (
       <div className="logPop d-flex justify-content-center">
         <div className={`form-block-wrapper form-block-wrapper--is-${this.state.mode}`} ></div>
+        <button className="close-button" onClick={() => {this.props.handleEscape();}}>
+            X
+          </button>
         <section className={`form-block form-block--is-${this.state.mode}`}>
           <header className="form-block__header d-flex flex-column">
             <h1>{this.state.mode === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
@@ -84,7 +90,7 @@ class LoginComponent extends React.Component {
               <label className="flex-fill" htmlFor="form-toggler"></label>
             </div>
           </header>
-          <LoginFormInPop mode={this.state.mode} onSubmit={this.props.onSubmit} />
+          <LoginFormInPop mode={this.state.mode} onSubmit={this.props.onSubmit}/>
         </section>
       </div>
     );
