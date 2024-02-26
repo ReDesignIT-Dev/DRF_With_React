@@ -43,7 +43,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   return (
     <div className={`${isShowLogin ? "active" : ""} show`}>
-      <div className="login-form px-3 mx-auto">
+      <div className="login-form">
         <div className="form-box solid">
           <div className={`app app--is-${mode}`}>
             <LoginComponent
