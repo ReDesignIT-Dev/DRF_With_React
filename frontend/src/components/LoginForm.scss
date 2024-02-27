@@ -34,7 +34,6 @@
   font-weight: 600;
   margin: 5px;
   font-size: 11pt;
-  background: transparent;
   transition: 1s;
   outline: none;
   width: 100%;
@@ -320,18 +319,40 @@ label {
 }
 
 .show {
-  width: 100vw;
-  height: 100vh;
   display: block;
   transition: 1000ms;
   opacity: 1;
 }
 
 .show.active {
-  width: 100vw;
-  height: 100vh;
-  transform: translateY(100px) scale(0) rotateY(180deg);
+  transform: translate(-50%, -50%) scale(0) rotateY(180deg);
+  transform-origin: center;
   opacity: 0;
+}
+
+.logPop {
+  height: 100%;
+}
+
+.login-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border-radius: $borderRadius;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.form-box {
+  opacity: 90%;
+  background: black;
+  border-radius: $borderRadius;
+  box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;  
 }
 
 .mainContainer {
@@ -395,47 +416,9 @@ label {
   padding-left: 8px;
 }
 
-.app {
-  height: 100%;
-  width: 100%;
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
-.logPop {
-  height: 100%;
-}
-
-.login-form {
-  width: 500px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  border-radius: $borderRadius;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.login-form.active {
-  opacity: 1; /* Set opacity to 1 when the active class is applied */
-}
-
-.form-box {
-  opacity: 90%;
-  background: black;
-  border-radius: $borderRadius;
-  box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  justify-content: center;
-}
-
 .close-button-div {
-  background-color: rgba(255, 255, 255, 0.13);
+
+  border-radius: $borderRadius;
 }
 .close-button {
   background-color: rgba(255, 255, 255, 0.13);
@@ -447,13 +430,14 @@ label {
   border-radius: $borderRadius;
   transition: background-color 0.3s, color 0.3s;
   &:hover {
-    background-color: rgba(
-      255,
-      255,
-      255,
-      0.5
-    ); /* Change background color on hover */
-    color: darkred; /* Change text color on hover */
-    /* You can add more hover styles or animations here */
+    background-color: rgba(255, 255, 255, 0.5);
+    color: darkred;
   }
+}
+
+.toggle-text{
+
+}
+.toggle-slider{
+  min-width: 55px;
 }

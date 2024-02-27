@@ -42,20 +42,16 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   };
 
   return (
-    <div className={`${isShowLogin ? "active" : ""} show`}>
-      <div className="login-form">
-        <div className="form-box solid">
-          <div className={`app app--is-${mode}`}>
-            <LoginComponent
-              mode={mode}
-              onSubmit={() => {
-                onSubmitClick();
-                console.log('submit');
-              }}
-              handleEscape={handleEscape}
-            />
-          </div>
-        </div>
+    <div className={`${isShowLogin ? "active " : ""} show login-form`}>
+      <div className={`form-box solid app--is-${mode} d-flex flex-column justify-content-center`}>
+        <LoginComponent
+          mode={mode}
+          onSubmit={() => {
+            onSubmitClick();
+            console.log('submit');
+          }}
+          handleEscape={handleEscape}
+        />
       </div>
     </div>
   );
@@ -76,7 +72,7 @@ class LoginComponent extends React.Component {
 
   render() {
     return (
-      <div className="logPop d-flex flex-column justify-content-center">
+      <>
         <div className="d-flex justify-content-end close-button-div">
           <button className="close-button" onClick={() => { this.props.handleEscape(); }}> X </button>
         </div>
@@ -85,14 +81,18 @@ class LoginComponent extends React.Component {
           <header className="form-block__header d-flex flex-column">
             <h1 className="text-center">{this.state.mode === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
             <div className="form-block__toggle-block d-flex flex-row">
-              <span className="text-nowrap">{this.state.mode === 'login' ? 'Don\'t' : 'Already'} have an account? Click here &#8594;</span>
-              <input id="form-toggler" type="checkbox" onClick={this.toggleMode.bind(this)} />
-              <label className="flex-shrink-1" htmlFor="form-toggler"></label>
+              <div className="toggle-text">
+                <span className="text-nowrap d-flex align-items-center">{this.state.mode === 'login' ? 'Don\'t' : 'Already'} have an account? Click here &#8594;</span>
+              </div>
+              <div className="toggle-slider">
+                <input id="form-toggler" type="checkbox" onClick={this.toggleMode.bind(this)} />
+                <label className="flex-shrink-1" htmlFor="form-toggler"></label>
+              </div>
             </div>
           </header>
           <LoginFormInPop mode={this.state.mode} onSubmit={this.props.onSubmit} />
         </section>
-      </div>
+      </>
     );
   }
 }
