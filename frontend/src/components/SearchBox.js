@@ -15,7 +15,7 @@ export default function SearchBox() {
     };
 
     return (
-        <div className="search-box d-flex flex-row align-items-center gap-2 p-1">
+        <div className="search-box d-flex flex-row align-items-center gap-2">
             <input
                 className="search-input flex-fill p-3"
                 type="text"

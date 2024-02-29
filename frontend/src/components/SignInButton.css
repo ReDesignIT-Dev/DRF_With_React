@@ -7,7 +7,7 @@
 }
 
 .loginicon {
-  width: 80px;
+  min-width: 80px;
   text-decoration: none;
   font-weight: bolder;
   color: black;
