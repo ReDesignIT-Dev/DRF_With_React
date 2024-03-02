@@ -1,10 +1,11 @@
 django
 djangorestframework
-django-cors-headers #to connect drf with react
+django-cors-headers # to connect drf with react
 django-crispy-forms
 crispy-bootstrap5
 django-filter
 pillow
-python-dotenv #for secure data
-psycopg2 #server side needed
-django-oauth-toolkit #security - oauth2_provider
+python-dotenv # for secure data
+psycopg2 # server side needed
+django-oauth-toolkit # security - oauth2_provider
+djangorestframework-oauth # oauth2 required
