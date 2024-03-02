@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'components/axiosConfig';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
     setProducts(mockProducts);
   }, []);
   useEffect(() => {
-    axios.get('http://localhost:8000/')
+    axios.get('')
       .then(response => {
         setMessage(response.data.message);
       })
