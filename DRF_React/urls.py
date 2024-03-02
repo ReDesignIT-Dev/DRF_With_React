@@ -24,5 +24,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('', include('api.shop.urls')),
     path('', include('api.users.urls')),
+    re_path(r'^oauth2/', include('oauth2_provider.urls', namespace='oauth2')),
     re_path(r'^(?P<path>.*)$', serve, {'document_root': settings.FRONTEND_ROOT})
 ]
