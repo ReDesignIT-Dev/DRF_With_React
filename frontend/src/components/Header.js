@@ -4,7 +4,7 @@ import SignInButton from "./SignInButton";
 import SearchBox from "./SearchBox";
 import { Link } from "react-router-dom";
 import "./Header.scss";
-import logo from "images/racoon-logo.png";
+import LogoRacoon from "./LogoRacoon";
 
 function Header() {
 
@@ -18,7 +18,7 @@ function Header() {
     <div className="main-header px-3">
       <div className="header d-flex flex-column py-2">
         <div className="top-header d-flex gap-2 justify-content-center align-items-center">
-          <div className="header-logo d-flex justify-content-center align-items-center"><Link to="/"> <img src={logo} alt="LOGO" /></Link></div>
+          <div className="header-logo d-flex justify-content-center align-items-center"><Link to="/"><LogoRacoon/></Link></div>
           <div className="header-searchbar"><SearchBox /></div>
           <div className="header-signin"><SignInButton handleLoginClick={handleLoginClick} /></div>
         </div>
