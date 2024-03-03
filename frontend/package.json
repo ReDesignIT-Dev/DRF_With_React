@@ -37,7 +37,7 @@
     "@babel/preset-env",
     "@babel/preset-react"
   ],
-  "proxy": "http://localhost:8000/",
+  "proxy": "http://localhost:8000",
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",
     "build": "react-scripts build",
