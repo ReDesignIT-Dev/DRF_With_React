@@ -1,23 +1,26 @@
 import React, { useState } from "react";
-import "./LoginForm.scss";
+import "./LoginFormPop.scss";
 import "react-bootstrap"
-
-const mode = 'login';
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [state, setState] = useState("login");
+
   const handleEscape = () => {
     handleXClick();
   };
+
+  const toggleState = () => {
+    state === 'login' ? setState('signup') : setState('login');
+  };
+
   const onSubmitClick = () => {
-    // Set initial error values to empty
     setEmailError("");
     setPasswordError("");
 
-    // Check if the user has entered both fields correctly
     if ("" === email) {
       setEmailError("Please enter your email");
       return;
@@ -43,93 +46,58 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   return (
     <div className={`${isShowLogin ? "active " : ""} show login-form`}>
-      <div className={`form-box solid app--is-${mode} d-flex flex-column justify-content-center`}>
-        <LoginComponent
-          mode={mode}
-          onSubmit={() => {
+      <div className={`form-box solid app--is-${state} d-flex flex-column justify-content-center`}>
+
+        <div className="d-flex justify-content-end close-button-div">
+          <button className="close-button" onClick={handleEscape}> X </button>
+        </div>
+        <div className={`form-block-wrapper form-block-wrapper--is-${state}`} ></div>
+        <section className={`form-block form-block--is-${state}`}>
+          <header className="form-block__header d-flex flex-column">
+            <h1 className="text-center">{state === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
+            <div className="form-block__toggle-block d-flex flex-row">
+              <div className="toggle-text">
+                <span className="text-nowrap d-flex align-items-center">{state === 'login' ? 'Don\'t' : 'Already'} have an account? Click here &#8594;</span>
+              </div>
+              <div className="toggle-slider">
+                <input id="form-toggler" type="checkbox" onClick={toggleState} />
+                <label className="flex-shrink-1" htmlFor="form-toggler"></label>
+              </div>
+            </div>
+          </header>
+
+          <form onSubmit={(e) => {
+            e.preventDefault();
             onSubmitClick();
-            console.log('submit');
-          }}
-          handleEscape={handleEscape}
-        />
+          }}>
+            <div className="form-block__input-wrapper">
+              <div className="form-group form-group--login">
+                <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
+                <ErrorLabel error={emailError} />
+                <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
+                <ErrorLabel error={passwordError} />
+              </div>
+              <div className="form-group form-group--signup">
+                <Input type="text" id="fullname" label="full name" disabled={state === 'login'} />
+                <Input type="email" id="email" label="email" disabled={state === 'login'} onChange={(ev) => setEmail(ev.target.value)}/>
+                <Input type="password" id="createpassword" label="password" disabled={state === 'login'} />
+                <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} />
+              </div>
+            </div>
+            <button className="button button--primary d-flex align-items-center justify-content-center p-3 mt-4 mx-auto" type="submit">{state === 'login' ? 'Log In' : 'Sign Up'}</button>
+          </form>
+        </section>
       </div>
     </div>
   );
 };
 
-class LoginComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mode: this.props.mode
-    };
-  }
+const Input = ({ id, type, label, disabled, value, onChange }) => (
+  <input className="form-group__input" type={type} id={id}  placeholder={label} disabled={disabled} onChange={onChange} value={value}/>
+);
 
-  toggleMode() {
-    var newMode = this.state.mode === 'login' ? 'signup' : 'login';
-    this.setState({ mode: newMode });
-  }
-
-  render() {
-    return (
-      <>
-        <div className="d-flex justify-content-end close-button-div">
-          <button className="close-button" onClick={() => { this.props.handleEscape(); }}> X </button>
-        </div>
-        <div className={`form-block-wrapper form-block-wrapper--is-${this.state.mode}`} ></div>
-        <section className={`form-block form-block--is-${this.state.mode}`}>
-          <header className="form-block__header d-flex flex-column">
-            <h1 className="text-center">{this.state.mode === 'login' ? 'Welcome back!' : 'Sign up'}</h1>
-            <div className="form-block__toggle-block d-flex flex-row">
-              <div className="toggle-text">
-                <span className="text-nowrap d-flex align-items-center">{this.state.mode === 'login' ? 'Don\'t' : 'Already'} have an account? Click here &#8594;</span>
-              </div>
-              <div className="toggle-slider">
-                <input id="form-toggler" type="checkbox" onClick={this.toggleMode.bind(this)} />
-                <label className="flex-shrink-1" htmlFor="form-toggler"></label>
-              </div>
-            </div>
-          </header>
-          <LoginFormInPop mode={this.state.mode} onSubmit={this.props.onSubmit} />
-        </section>
-      </>
-    );
-  }
-}
-
-class LoginFormInPop extends React.Component {
-  state = {
-    mode: this.props.mode
-  };
-
-  render() {
-    return (
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        this.props.onSubmit();
-      }}>
-        <div className="form-block__input-wrapper">
-          <div className="form-group form-group--login">
-            <Input type="text" id="email" label="email" disabled={this.props.mode === 'signup'} onChange={(ev) => this.props.setEmail(ev.target.value)} />
-            <label className="errorLabel">{this.props.emailError}</label>
-            <Input type="password" id="password" label="password" disabled={this.props.mode === 'signup'} />
-            <label className="errorLabel">{this.props.passwordError}</label>
-          </div>
-          <div className="form-group form-group--signup">
-            <Input type="text" id="fullname" label="full name" disabled={this.props.mode === 'login'} />
-            <Input type="email" id="email" label="email" disabled={this.props.mode === 'login'} />
-            <Input type="password" id="createpassword" label="password" disabled={this.props.mode === 'login'} />
-            <Input type="password" id="repeatpassword" label="repeat password" disabled={this.props.mode === 'login'} />
-          </div>
-        </div>
-        <button className="button button--primary d-flex align-items-center justify-content-center p-3 mt-4 mx-auto" type="submit">{this.props.mode === 'login' ? 'Log In' : 'Sign Up'}</button>
-      </form>
-    );
-  }
-}
-
-const Input = ({ id, type, label, disabled }) => (
-  <input className="form-group__input" type={type} id={id} placeholder={label} disabled={disabled} />
+const ErrorLabel = ({error}) => (
+ <label className="errorLabel d-flex justify-content-center text-center px-2">{error}</label>
 );
 
 export default LoginFormPop;
