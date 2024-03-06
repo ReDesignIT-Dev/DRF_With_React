@@ -3,8 +3,12 @@ import "./LoginFormPop.scss";
 import "react-bootstrap"
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [createPassword, setCreatePassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [state, setState] = useState("login");
@@ -47,8 +51,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     if (state === "login") {
       console.log('Form submitted with email: ', email, 'and password:', password);
     }
-    else if (state === "register") {
-      console.log('REGISTER with data:', email, 'and password:', password, 'and', );
+    else if (state === "signup") {
+      console.log('REGISTER with data:', email, 'and password:', password, 'and name:', name);
     }
   };
 
@@ -84,14 +88,14 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
             <div className="form-block__input-wrapper">
               <div className="form-group form-group--login">
                 <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
-                <ErrorLabel error={emailError} />
+                <ErrorLabel error={emailError} state={state}/>
                 <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
-                <ErrorLabel error={passwordError} />
+                <ErrorLabel error={passwordError} state={state}/>
               </div>
               <div className="form-group form-group--signup">
-                <Input type="text" id="fullname" label="full name" disabled={state === 'login'} />
+                <Input type="text" id="fullname" label="full name" disabled={state === 'login'} onChange={(ev) => setName(ev.target.value)}/>
                 <Input type="text" id="email" label="email" disabled={state === 'login'} onChange={(ev) => setEmail(ev.target.value)} />
-                <Input type="password" id="createpassword" label="password" disabled={state === 'login'} />
+                <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setPassword(ev.target.value)}/>
                 <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} />
               </div>
             </div>
@@ -107,8 +111,8 @@ const Input = ({ id, type, label, disabled, value, onChange }) => (
   <input className="form-group__input" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} value={value} />
 );
 
-const ErrorLabel = ({ error }) => (
-  <label className="errorLabel d-flex justify-content-center text-center px-2">{error}</label>
+const ErrorLabel = ({ error, state }) => (
+  <label className={`${state === "signup" ? "hidden" : ""} errorLabel d-flex justify-content-center text-center px-2`} >{error}</label>
 );
 
 export default LoginFormPop;
