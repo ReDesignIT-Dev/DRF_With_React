@@ -41,10 +41,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   }
 
   const isEmailValid = (emailToTest) => {
-    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailToTest)) {
-      return false;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (emailRegex.test(emailToTest)) {
+      return true;
     }
-    return true;
+    return false;
   }
 
   const isEmpty = (inputText) => {
@@ -53,6 +54,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     }
     return false;
   }
+
+  const isPasswordValid = (passwordToValidate) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(passwordToValidate);
+  };
 
   const onSubmitClick = () => {
     clearErrors();
@@ -68,6 +74,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         setEmailError("Please enter a valid email");
         return;
       }
+
+
     }
     else if (state === "signup"){
 
@@ -132,7 +140,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
               <div className="form-group form-group--login">
                 <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
                 <ErrorLabel error={emailError} state={state} groupState="login" />
-                <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
+                <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)}/>
                 <ErrorLabel error={passwordError} state={state} groupState="login" />
               </div>
               <div className="form-group form-group--signup">
