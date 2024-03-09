@@ -2,10 +2,6 @@
   width: 100%;
 }
 
-.form-box form label {
-  margin-top: 10px;
-}
-
 .login-text {
   width: 100%;
   color: white;
@@ -143,23 +139,25 @@ $yellow: #ed6a5e;
 }
 
 .form-block__input-wrapper {
-  height: 2 * $inputHeight;
+  //min-height: 2 * $inputHeight;
+  height: auto;
   position: relative;
   margin-bottom: 2px;
+  display: flex;
   @include transition(all 0.25s $transitionEasing 0.3s);
   .form-block--is-signup & {
-    height: 4 * $inputHeight;
+    //min-height: 4 * $inputHeight;
+    height: auto;
     @include transition(all 0.5s $transitionEasing 0.2s);
   }
 }
-
+.button--primary{
+  align-self: flex-end; /* Adjust this property as needed */
+  margin-top: 20px;     /* Adjust this value */
+}
 .form-group {
-  &--signup {
-    position: absolute;
-    top: 0;
-    left: $offset;
+    position: static;
     width: 100%;
-  }
 }
 
 .form-group__input {
@@ -171,7 +169,6 @@ $yellow: #ed6a5e;
   text-align: center;
   box-sizing: border-box;
   font-size: 16px;
-  margin-top: 15px;
   background: rgba(255, 255, 255, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: $borderRadius;
@@ -181,7 +178,7 @@ $yellow: #ed6a5e;
     background: transparent;
   }
   .form-block--is-signup & {
-    transform: translateX(-$offset);
+    //transform: translateX(-$offset);
   }
   .form-group--login & {
     opacity: 1;
@@ -189,6 +186,7 @@ $yellow: #ed6a5e;
       opacity: 0;
     }
   }
+
   .form-group--signup & {
     opacity: 0;
     .form-block--is-signup & {
@@ -353,7 +351,7 @@ label {
   opacity: 90%;
   background: black;
   width: 100%;
-  max-width: 400px;  
+  max-width: 400px;
 }
 
 .mainContainer {
@@ -418,7 +416,6 @@ label {
 }
 
 .close-button-div {
-
   border-radius: $borderRadius;
 }
 .close-button {
@@ -435,11 +432,11 @@ label {
     color: darkred;
   }
 }
-.toggle-slider{
+.toggle-slider {
   min-width: 55px;
 }
 
-.errorLabel{
+.errorLabel {
   color: red;
   background-color: rgb(204, 238, 15);
   border-radius: 12.5px;
@@ -449,3 +446,4 @@ label {
 .hidden {
   display: none !important;
 }
+

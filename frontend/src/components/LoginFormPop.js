@@ -10,8 +10,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   // signup logic
   const [signupName, setSignupName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
-  const [createPassword, setCreatePassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupRepeatPassword, setSignupRepeatPassword] = useState("");
 
   // login errors
   const [emailError, setEmailError] = useState("");
@@ -20,7 +20,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   // signup errors
   const [signupEmailError, setSignupEmailError] = useState("");
   const [signupPasswordError, setSignupPasswordError] = useState("");
-  const [signupPasswordRepeatError, setSignupPasswordRepeatError] = useState("");
+  const [signupPasswordRepeatError, setSignupRepeatPasswordError] = useState("");
   // detect if in login or signup mode
   const [state, setState] = useState("login");
 
@@ -32,12 +32,14 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     state === 'login' ? setState('signup') : setState('login');
   };
 
+
+
   const clearErrors = () => {
     setEmailError("");
     setPasswordError("");
     setSignupEmailError("");
     setSignupPasswordError("");
-    setSignupPasswordRepeatError("");
+    setSignupRepeatPasswordError("");
   }
 
   const isEmailValid = (emailToTest) => {
@@ -48,62 +50,112 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     return false;
   }
 
-  const isEmpty = (inputText) => {
-    if (inputText === ""){
-      return true;
-    }
-    return false;
-  }
+  const isEmpty = (inputText) => inputText === "";
 
   const isPasswordValid = (passwordToValidate) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(passwordToValidate);
   };
 
+  const emailRegexRequirement = `
+  Password must contain:
+  1. Minimum length - 8 characters.
+  2. At least one uppercase letter.
+  3. At least one lowercase letter.
+  4. At least one numeric digit.
+  5. At least one special character.`;
+
   const onSubmitClick = () => {
     clearErrors();
 
-    if (state === "login"){
+    if (state === "login") {
 
-      if (isEmpty(email)){
+      if (isEmpty(email)) {
         setEmailError("Please enter your email");
-        return
-      }
-
-      if (!isEmailValid(email)){
-        setEmailError("Please enter a valid email");
         return;
       }
 
+      if (!isEmailValid(email)) {
+        setEmailError("Please enter a valid email");
+        return;
+      }
+      if (isEmpty(password)) {
+        setPasswordError("Please enter a password");
+        return;
+      }
 
     }
-    else if (state === "signup"){
+    else if (state === "signup") {
+      if (isEmpty(signupEmail)) {
+        setSignupEmailError("Please enter your email");
+        return;
+      }
 
+      if (!isEmailValid(signupEmail)) {
+        setSignupEmailError("Please enter a valid email");
+        return;
+      }
+      if (isEmpty(signupPassword)) {
+        setSignupPasswordError("Please enter a password");
+        return;
+      }
+      if (isEmpty(signupRepeatPassword)) {
+        setSignupRepeatPasswordError("Please repeat password");
+        return;
+      }
+      if (!isPasswordValid(signupPassword)) {
+        setSignupPasswordError(emailRegexRequirement);
+        return;
+      }
+
+      if (signupPassword !== signupRepeatPassword) {
+        setSignupRepeatPasswordError("Passwords do not match");
+        return;
+      }
 
     }
     else {
-      console.log("state is not login nor signup")
+      console.log("state is not login nor signup");
     }
 
-    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      setEmailError("Please enter your email");
-      return;
-    }
-
-    if ("" === password) {
-      setPasswordError("Please enter a password");
-      return;
-    }
-
-    if (password.length < 8) {
-      setPasswordError("The password must be 8 characters or longer");
-      return;
-    }
     if (state === "login") {
       console.log('Form submitted with email: ', email, 'and password:', password);
     }
     else if (state === "signup") {
       console.log('REGISTER with data:', email, 'and password:', password, 'and name:', signupName);
+    }
+  };
+
+  const renderLoginFormFields = () => (
+    <div className="form-group form-group--login">
+      {/* Login form fields */}
+      <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
+      <ErrorLabel error={emailError} state={state} groupState="login" />
+      <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
+      <ErrorLabel error={passwordError} state={state} groupState="login" />
+    </div>
+  );
+
+  const renderSignupFormFields = () => (
+    <div className="form-group form-group--signup">
+      {/* Signup form fields */}
+      <Input type="text" id="fullname" label="full name" disabled={state === 'login'} onChange={(ev) => setSignupName(ev.target.value)} />
+      <Input type="text" id="email" label="email" disabled={state === 'login'} onChange={(ev) => setSignupEmail(ev.target.value)} />
+      <ErrorLabel error={signupEmailError} state={state} groupState="signup" />
+      <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setSignupPassword(ev.target.value)} />
+      <ErrorLabel error={signupPasswordError} state={state} groupState="signup" />
+      <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} onChange={(ev) => setSignupRepeatPassword(ev.target.value)} />
+      <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
+    </div>
+  );
+
+  const renderFormFields = () => {
+    if (state === 'login') {
+      return renderLoginFormFields();
+    } else if (state === 'signup') {
+      return renderSignupFormFields();
+    } else {
+      return null; // or handle other states as needed
     }
   };
 
@@ -132,26 +184,12 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
             </div>
           </header>
 
-          <form onSubmit={(e) => {
+          <form className="login-signup-form" onSubmit={(e) => {
             e.preventDefault();
             onSubmitClick();
           }}>
             <div className="form-block__input-wrapper">
-              <div className="form-group form-group--login">
-                <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
-                <ErrorLabel error={emailError} state={state} groupState="login" />
-                <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)}/>
-                <ErrorLabel error={passwordError} state={state} groupState="login" />
-              </div>
-              <div className="form-group form-group--signup">
-                <Input type="text" id="fullname" label="full name" disabled={state === 'login'} onChange={(ev) => setSignupName(ev.target.value)} />
-                <Input type="text" id="email" label="email" disabled={state === 'login'} onChange={(ev) => setSignupEmail(ev.target.value)} />
-                <ErrorLabel error={signupEmailError} state={state} groupState="signup" />
-                <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setCreatePassword(ev.target.value)} />
-                <ErrorLabel error={signupPasswordError} state={state} groupState="signup" />
-                <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} onChange={(ev) => setRepeatPassword(ev.target.value)} />
-                <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
-              </div>
+              {renderFormFields()}
             </div>
             <button className="button button--primary d-flex align-items-center justify-content-center p-3 mt-4 mx-auto" type="submit">{state === 'login' ? 'Log In' : 'Sign Up'}</button>
           </form>
@@ -162,7 +200,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 };
 
 const Input = ({ id, type, label, disabled, value, onChange }) => (
-  <input className="form-group__input" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} value={value} />
+  <input className="form-group__input my-2" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} value={value || ''} />
 );
 
 const ErrorLabel = ({ error, groupState, state }) => (
