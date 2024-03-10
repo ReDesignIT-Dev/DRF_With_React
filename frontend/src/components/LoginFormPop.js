@@ -85,6 +85,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
     }
     else if (state === "signup") {
+
+      if (isEmpty(signupName)) {
+        setSignupName("Anonymous");
+      }
+
       if (isEmpty(signupEmail)) {
         setSignupEmailError("Please enter your email");
         return;
@@ -116,7 +121,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       console.log('Form submitted with email: ', email, 'and password:', password);
     }
     else if (state === "signup") {
-      console.log('REGISTER with data:', email, 'and password:', password, 'and name:', signupName);
+      console.log('REGISTER with data:', signupEmail, 'and password:', signupPassword, 'and name:', signupName);
     }
   };
 
@@ -131,8 +136,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const renderSignupFormFields = () => (
     <div className="form-group form-group--signup">
-      <Input type="text" id="fullname" label="full name" disabled={state === 'login'} onChange={(ev) => setSignupName(ev.target.value)} />
-      <Input type="text" id="email" label="email" disabled={state === 'login'} onChange={(ev) => setSignupEmail(ev.target.value)} />
+      <Input type="text" id="fullname" label="full name" value={signupName} disabled={state === 'login'} onChange={(ev) => setSignupName(ev.target.value)} />
+      <Input type="text" id="signupEmail" label="email" value={signupEmail} disabled={state === 'login'} onChange={(ev) => setSignupEmail(ev.target.value)} />
       <ErrorLabel error={signupEmailError} state={state} groupState="signup" />
       <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setSignupPassword(ev.target.value)} />
       <div className="password-validation d-flex flex-column align-items-center">
@@ -142,7 +147,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         <div className={isDigitValid ? 'valid' : 'invalid'}>At least one numeric digit</div>
         <div className={isSpecialCharValid ? 'valid' : 'invalid'}>At least one special character</div>
       </div>
-      <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} onChange={(ev) => setSignupRepeatPassword(ev.target.value)} />
+      <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} 
+      onChange={(ev) => {
+        setSignupRepeatPassword(ev.target.value);
+        setSignupRepeatPasswordError("");
+        }} />
       <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
     </div>
   );
@@ -153,7 +162,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     } else if (state === 'signup') {
       return renderSignupFormFields();
     } else {
-      return null; // or handle other states as needed
+      return null;
     }
   };
 
@@ -197,8 +206,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   );
 };
 
-const Input = ({ id, type, label, disabled, onChange }) => (
-  <input className="form-group__input my-2" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} />
+const Input = ({ id, type, label, disabled, onChange, value }) => (
+  <input className="form-group__input my-2" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} value={value} />
 );
 
 const ErrorLabel = ({ error, groupState, state }) => (
