@@ -19,7 +19,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   // signup errors
   const [signupEmailError, setSignupEmailError] = useState("");
-  const [signupPasswordError, setSignupPasswordError] = useState("");
   const [signupPasswordRepeatError, setSignupRepeatPasswordError] = useState("");
   // detect if in login or signup mode
   const [state, setState] = useState("login");
@@ -30,6 +29,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const toggleState = () => {
     state === 'login' ? setState('signup') : setState('login');
+    setSignupPassword("");
   };
 
 
@@ -38,7 +38,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     setEmailError("");
     setPasswordError("");
     setSignupEmailError("");
-    setSignupPasswordError("");
     setSignupRepeatPasswordError("");
   }
 
@@ -53,17 +52,17 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const isEmpty = (inputText) => inputText === "";
 
   const isPasswordValid = (passwordToValidate) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.test(passwordToValidate);
+    if (isLengthValid && isUppercaseValid){
+      return true;
+    }
+    return false;
   };
 
-  const emailRegexRequirement = `
-  Password must contain:
-  1. Minimum length - 8 characters.
-  2. At least one uppercase letter.
-  3. At least one lowercase letter.
-  4. At least one numeric digit.
-  5. At least one special character.`;
+  const isLengthValid = signupPassword.length >= 8;
+  const isUppercaseValid = /[A-Z]/.test(signupPassword);
+  const isLowercaseValid = /[a-z]/.test(signupPassword);
+  const isDigitValid = /\d/.test(signupPassword);
+  const isSpecialCharValid = /[@$!%*?&#^()]/.test(signupPassword);
 
   const onSubmitClick = () => {
     clearErrors();
@@ -95,16 +94,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         setSignupEmailError("Please enter a valid email");
         return;
       }
-      if (isEmpty(signupPassword)) {
-        setSignupPasswordError("Please enter a password");
-        return;
-      }
       if (isEmpty(signupRepeatPassword)) {
         setSignupRepeatPasswordError("Please repeat password");
         return;
       }
       if (!isPasswordValid(signupPassword)) {
-        setSignupPasswordError(emailRegexRequirement);
         return;
       }
 
@@ -128,7 +122,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const renderLoginFormFields = () => (
     <div className="form-group form-group--login">
-      {/* Login form fields */}
       <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
       <ErrorLabel error={emailError} state={state} groupState="login" />
       <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
@@ -138,12 +131,17 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const renderSignupFormFields = () => (
     <div className="form-group form-group--signup">
-      {/* Signup form fields */}
       <Input type="text" id="fullname" label="full name" disabled={state === 'login'} onChange={(ev) => setSignupName(ev.target.value)} />
       <Input type="text" id="email" label="email" disabled={state === 'login'} onChange={(ev) => setSignupEmail(ev.target.value)} />
       <ErrorLabel error={signupEmailError} state={state} groupState="signup" />
       <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setSignupPassword(ev.target.value)} />
-      <ErrorLabel error={signupPasswordError} state={state} groupState="signup" />
+      <div className="password-validation d-flex flex-column align-items-center">
+        <div className={isLengthValid ? 'valid' : 'invalid' }>Minimum length - 8 characters</div>
+        <div className={isUppercaseValid ? 'valid' : 'invalid'}>At least one uppercase letter</div>
+        <div className={isLowercaseValid ? 'valid' : 'invalid'}>At least one lowercase letter</div>
+        <div className={isDigitValid ? 'valid' : 'invalid'}>At least one numeric digit</div>
+        <div className={isSpecialCharValid ? 'valid' : 'invalid'}>At least one special character</div>
+      </div>
       <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} onChange={(ev) => setSignupRepeatPassword(ev.target.value)} />
       <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
     </div>
@@ -199,8 +197,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   );
 };
 
-const Input = ({ id, type, label, disabled, value, onChange }) => (
-  <input className="form-group__input my-2" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} value={value || ''} />
+const Input = ({ id, type, label, disabled, onChange }) => (
+  <input className="form-group__input my-2" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} />
 );
 
 const ErrorLabel = ({ error, groupState, state }) => (

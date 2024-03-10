@@ -151,13 +151,13 @@ $yellow: #ed6a5e;
     @include transition(all 0.5s $transitionEasing 0.2s);
   }
 }
-.button--primary{
+.button--primary {
   align-self: flex-end; /* Adjust this property as needed */
-  margin-top: 20px;     /* Adjust this value */
+  margin-top: 20px; /* Adjust this value */
 }
 .form-group {
-    position: static;
-    width: 100%;
+  position: static;
+  width: 100%;
 }
 
 .form-group__input {
@@ -447,3 +447,12 @@ label {
   display: none !important;
 }
 
+.password-validation {
+  font-size: 0.8rem;
+  .valid {
+    color: green;
+  }
+  .invalid {
+    color: red;
+  }
+}
