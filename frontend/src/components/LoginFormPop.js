@@ -52,7 +52,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const isEmpty = (inputText) => inputText === "";
 
   const isPasswordValid = (passwordToValidate) => {
-    if (isLengthValid && isUppercaseValid){
+    if (isLengthValid && isUppercaseValid && isLowercaseValid && isDigitValid && isSpecialCharValid) {
       return true;
     }
     return false;
@@ -66,64 +66,74 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const onSubmitClick = () => {
     clearErrors();
-
-    if (state === "login") {
-
-      if (isEmpty(email)) {
-        setEmailError("Please enter your email");
-        return;
-      }
-
-      if (!isEmailValid(email)) {
-        setEmailError("Please enter a valid email");
-        return;
-      }
-      if (isEmpty(password)) {
-        setPasswordError("Please enter a password");
-        return;
-      }
-
-    }
-    else if (state === "signup") {
-
-      if (isEmpty(signupName)) {
-        setSignupName("Anonymous");
-      }
-
-      if (isEmpty(signupEmail)) {
-        setSignupEmailError("Please enter your email");
-        return;
-      }
-
-      if (!isEmailValid(signupEmail)) {
-        setSignupEmailError("Please enter a valid email");
-        return;
-      }
-      if (isEmpty(signupRepeatPassword)) {
-        setSignupRepeatPasswordError("Please repeat password");
-        return;
-      }
-      if (!isPasswordValid(signupPassword)) {
-        return;
-      }
-
-      if (signupPassword !== signupRepeatPassword) {
-        setSignupRepeatPasswordError("Passwords do not match");
-        return;
-      }
-
-    }
-    else {
-      console.log("state is not login nor signup");
-    }
-
-    if (state === "login") {
-      console.log('Form submitted with email: ', email, 'and password:', password);
-    }
-    else if (state === "signup") {
-      console.log('REGISTER with data:', signupEmail, 'and password:', signupPassword, 'and name:', signupName);
-    }
+    if (state === "login") { handleLogin(); }
+    else if (state === "signup") { handleSignup(); }
+    else { handleInvalidState(); }
   };
+
+  const handleLogin = () => {
+    if (isEmpty(email)) {
+      setEmailError("Please enter your email");
+      return;
+    }
+
+    if (!isEmailValid(email)) {
+      setEmailError("Please enter a valid email");
+      return;
+    }
+
+    if (isEmpty(password)) {
+      setPasswordError("Please enter a password");
+      return;
+    }
+
+    console.log('Form submitted with email:', email, 'and password:', password);
+  };
+
+  const handleSignup = () => {
+    if (isEmpty(signupEmail)) {
+      setSignupEmailError("Please enter your email");
+      return;
+    }
+
+    if (!isEmailValid(signupEmail)) {
+      setSignupEmailError("Please enter a valid email");
+      return;
+    }
+
+    if (isEmpty(signupPassword)) {
+      setSignupRepeatPasswordError("Password required");
+      return;
+    }
+
+    if (!isPasswordValid(signupPassword)) {
+      setSignupRepeatPasswordError("Invalid password");
+      return;
+    }
+
+    if (isEmpty(signupRepeatPassword)) {
+      setSignupRepeatPasswordError("Please repeat password");
+      return;
+    }
+
+
+
+    if (signupPassword !== signupRepeatPassword) {
+      setSignupRepeatPasswordError("Passwords do not match");
+      return;
+    }
+
+    if (isEmpty(signupName)) {
+      // TODO
+    }
+
+    console.log('REGISTER with data:', signupEmail, 'and password:', signupPassword, 'and name:', signupName);
+  };
+
+  const handleInvalidState = () => {
+    console.log("Invalid state. The state must be either 'login' or 'signup'");
+  };
+
 
   const renderLoginFormFields = () => (
     <div className="form-group form-group--login">
@@ -141,16 +151,16 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       <ErrorLabel error={signupEmailError} state={state} groupState="signup" />
       <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setSignupPassword(ev.target.value)} />
       <div className="password-validation d-flex flex-column align-items-center">
-        <div className={isLengthValid ? 'valid' : 'invalid' }>Minimum length - 8 characters</div>
+        <div className={isLengthValid ? 'valid' : 'invalid'}>Minimum length - 8 characters</div>
         <div className={isUppercaseValid ? 'valid' : 'invalid'}>At least one uppercase letter</div>
         <div className={isLowercaseValid ? 'valid' : 'invalid'}>At least one lowercase letter</div>
         <div className={isDigitValid ? 'valid' : 'invalid'}>At least one numeric digit</div>
         <div className={isSpecialCharValid ? 'valid' : 'invalid'}>At least one special character</div>
       </div>
-      <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'} 
-      onChange={(ev) => {
-        setSignupRepeatPassword(ev.target.value);
-        setSignupRepeatPasswordError("");
+      <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'}
+        onChange={(ev) => {
+          setSignupRepeatPassword(ev.target.value);
+          setSignupRepeatPasswordError("");
         }} />
       <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
     </div>
