@@ -13,13 +13,15 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupRepeatPassword, setSignupRepeatPassword] = useState("");
 
-  // login errors
+
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   // signup errors
+  const [signupNameError, setSignupNameError] = useState("");
   const [signupEmailError, setSignupEmailError] = useState("");
   const [signupPasswordRepeatError, setSignupRepeatPasswordError] = useState("");
+
   // detect if in login or signup mode
   const [state, setState] = useState("login");
 
@@ -35,6 +37,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
 
   const clearErrors = () => {
+    setSignupNameError("");
     setEmailError("");
     setPasswordError("");
     setSignupEmailError("");
@@ -88,9 +91,16 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     }
 
     console.log('Form submitted with email:', email, 'and password:', password);
+    //TODO ADD COMMUNICATION WITH THE API
   };
 
   const handleSignup = () => {
+
+    if (isEmpty(signupName)) {
+      setSignupNameError("Please enter username");
+      return;
+    }
+
     if (isEmpty(signupEmail)) {
       setSignupEmailError("Please enter your email");
       return;
@@ -123,15 +133,13 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       return;
     }
 
-    if (isEmpty(signupName)) {
-      // TODO
-    }
-
     console.log('REGISTER with data:', signupEmail, 'and password:', signupPassword, 'and name:', signupName);
+    //TODO ADD COMMUNICATION WITH THE API
   };
 
   const handleInvalidState = () => {
     console.log("Invalid state. The state must be either 'login' or 'signup'");
+    //TODO ADD POPUP WITH ERROR
   };
 
 
@@ -146,7 +154,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const renderSignupFormFields = () => (
     <div className="form-group form-group--signup">
-      <Input type="text" id="fullname" label="full name" value={signupName} disabled={state === 'login'} onChange={(ev) => setSignupName(ev.target.value)} />
+      <Input type="text" id="username" label="username" value={signupName} disabled={state === 'login'} onChange={(ev) => setSignupName(ev.target.value)} />
+      <ErrorLabel error={signupNameError} state={state} groupState="signup" />
       <Input type="text" id="signupEmail" label="email" value={signupEmail} disabled={state === 'login'} onChange={(ev) => setSignupEmail(ev.target.value)} />
       <ErrorLabel error={signupEmailError} state={state} groupState="signup" />
       <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setSignupPassword(ev.target.value)} />
