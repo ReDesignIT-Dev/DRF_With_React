@@ -1,29 +1,21 @@
-import axios from 'components/axiosConfig';
+import { getData } from 'services/apiRequests';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [message, setMessage] = useState('');
-  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Fetch products or data from an API
-    // For now, let's mock some data
-    const mockProducts = [
-      { id: 1, name: 'Product 1', price: 19.99 },
-      { id: 2, name: 'Product 2', price: 29.99 },
-      { id: 3, name: 'Product 3', price: 39.99 },
-    ];
 
-    setProducts(mockProducts);
-  }, []);
-  useEffect(() => {
-    axios.get('')
-      .then(response => {
-        setMessage(response.data.message);
-      })
-      .catch(error => {
+    async function fetchData() {
+      try {
+        const response = await getData('');
+        setMessage(response.message);
+      } catch (error) {
         console.log(error);
-      });
+      }
+    }
+
+    fetchData();
   }, []);
   return (
     <div>
@@ -31,20 +23,8 @@ export default function Home() {
 
       <p>{message}</p>
 
-
-
       <h1>Welcome to Our Shop</h1>
-      <p>Discover our amazing products:</p>
 
-      <ul>
-        {products.map(product => (
-          <li key={product.id}>
-            <h3>{product.name}</h3>
-            <p>Price: ${product.price}</p>
-            {/* Add more product details or buttons as needed */}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
