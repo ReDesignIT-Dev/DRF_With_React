@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap"
+import { postData } from "services/apiRequests";
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
+
+  const [message, setMessage] = useState("");
+
   // login logic
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -74,6 +78,15 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     else { handleInvalidState(); }
   };
 
+  async function registerUser(userData) {
+    try {
+      const response = await postData('register/', userData);
+      setMessage(response.message);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handleLogin = () => {
     if (isEmpty(email)) {
       setEmailError("Please enter your email");
@@ -134,7 +147,15 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     }
 
     console.log('REGISTER with data:', signupEmail, 'and password:', signupPassword, 'and name:', signupName);
-    //TODO ADD COMMUNICATION WITH THE API
+
+    const userData = {
+      username: signupName,
+      email: signupEmail,
+      password: signupPassword,
+    };
+
+    registerUser(userData);
+
   };
 
   const handleInvalidState = () => {
