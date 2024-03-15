@@ -30,6 +30,7 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        print('Incoming JSON data:', request.data)
         serializer = CustomLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
