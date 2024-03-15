@@ -87,6 +87,15 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     }
   }
 
+  async function loginUser(userData) {
+    try {
+      const response = await postData('login/', userData);
+      setMessage(response.message);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handleLogin = () => {
     if (isEmpty(email)) {
       setEmailError("Please enter your email");
@@ -104,7 +113,13 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     }
 
     console.log('Form submitted with email:', email, 'and password:', password);
-    //TODO ADD COMMUNICATION WITH THE API
+
+    const userData = {
+      email: signupEmail,
+      password: signupPassword,
+    };
+
+    loginUser(userData);
   };
 
   const handleSignup = () => {
