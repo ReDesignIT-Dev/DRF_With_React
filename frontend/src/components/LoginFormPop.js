@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap"
 import { postData } from "services/apiRequests";
@@ -78,6 +78,13 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     else { handleInvalidState(); }
   };
 
+  useEffect(() => {
+    if (message !== null) {
+      console.log("Message:", message);
+    }
+  }, [message]);
+
+
   async function registerUser(userData) {
     try {
       const response = await postData('register/', userData);
@@ -115,8 +122,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     console.log('Form submitted with email:', email, 'and password:', password);
 
     const userData = {
-      email: signupEmail,
-      password: signupPassword,
+      email: email,
+      password: password,
     };
 
     loginUser(userData);
