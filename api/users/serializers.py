@@ -4,15 +4,21 @@ from django.contrib.auth import authenticate
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'email', 'email_confirmed', 'first_name', 'last_name', 'password')
+        fields = ('id', 'username', 'email', 'password', 'email_confirmed', 'first_name', 'last_name')
         extra_kwargs = {
             'id': {'read_only': True},
             'email_confirmed': {'read_only': True},
             'first_name': {'required': False},
             'last_name': {'required': False},
         }
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
 
 
 class CustomLoginSerializer(serializers.Serializer):

@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomLoginSerializer, CustomUserSerializer
@@ -11,13 +11,9 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [permissions.AllowAny]
 
-    def post(self, request, *args, **kwargs):
-        print('Incoming JSON data:', request.data)
-        return super().post(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         print('Incoming data after serialization:', serializer.validated_data)
-        user = serializer.save()
+        user = serializer.save(is_active=False)
         # Add custom logic for sending activation email
         self.send_activation_email(user)
 
