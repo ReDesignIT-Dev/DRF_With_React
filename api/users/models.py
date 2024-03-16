@@ -56,11 +56,11 @@ class CustomUserManager(UserManager):
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=30, unique=True)
     email_confirmed = models.BooleanField(default=False)
-    email = models.EmailField(unique=True, blank=True, max_length=254, verbose_name='email address')
+    email = models.EmailField(unique=True, max_length=254, verbose_name='email address')
 
     objects = CustomUserManager()
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.username

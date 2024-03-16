@@ -8,10 +8,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id', 'username', 'email', 'email_confirmed', 'first_name', 'last_name', 'password')
         extra_kwargs = {
-            'id': {'read_only': True},  # Make 'id' read-only
-            'email_confirmed': {'read_only': True},  # Make 'email_confirmed' read-only
-            'first_name': {'required': False},  # Make 'first_name' optional
-            'last_name': {'required': False},  # Make 'last_name' optional
+            'id': {'read_only': True},
+            'email_confirmed': {'read_only': True},
+            'first_name': {'required': False},
+            'last_name': {'required': False},
         }
 
 
