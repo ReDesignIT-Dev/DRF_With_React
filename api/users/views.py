@@ -14,11 +14,9 @@ class RegisterView(generics.CreateAPIView):
     def perform_create(self, serializer):
         print('Incoming data after serialization:', serializer.validated_data)
         user = serializer.save(is_active=False)
-        # Add custom logic for sending activation email
         self.send_activation_email(user)
 
     def send_activation_email(self, user):
-        # Add your custom logic for sending activation email
         pass
 
 
