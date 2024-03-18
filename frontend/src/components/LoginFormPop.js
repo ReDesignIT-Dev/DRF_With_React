@@ -45,12 +45,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-    if (icon === eye){
-      setIcon(eyeOff);
-    }
-    else{
-      setIcon(eye);
-    }
+    setIcon(showPassword ? eye : eyeOff);
   };
 
   const clearErrors = () => {
