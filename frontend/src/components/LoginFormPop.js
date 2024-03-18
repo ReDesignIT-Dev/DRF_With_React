@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap"
 import { postData } from "services/apiRequests";
+import {Icon} from "react-icons-kit";
+import {eyeOff} from "react-icons-kit/feather/eyeOff";
+import {eye} from "react-icons-kit/feather/eye";
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [icon, setIcon] = useState(eyeOff);
 
   // login logic
   const [email, setEmail] = useState("");
@@ -41,6 +45,12 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+    if (icon === eye){
+      setIcon(eyeOff);
+    }
+    else{
+      setIcon(eye);
+    }
   };
 
   const clearErrors = () => {
@@ -195,9 +205,9 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
       <ErrorLabel error={emailError} state={state} groupState="login" />
       <Input  type={showPassword ? 'text' : 'password'} id="password" label="password" value={password} disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
-      <button type="button" onClick={togglePasswordVisibility}>
-        {showPassword ? 'Hide' : 'Show'} Password
-      </button>
+      <span class="flex justify-around items-center" onClick={togglePasswordVisibility}>
+                  <Icon class="absolute mr-10" icon={icon} size={25}/>
+              </span>
       <ErrorLabel error={passwordError} state={state} groupState="login" />
     </div>
   );
