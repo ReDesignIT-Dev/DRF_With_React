@@ -6,6 +6,7 @@ import { postData } from "services/apiRequests";
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // login logic
   const [email, setEmail] = useState("");
@@ -38,7 +39,9 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     setSignupPassword("");
   };
 
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const clearErrors = () => {
     setSignupNameError("");
@@ -57,6 +60,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   }
 
   const isEmpty = (inputText) => inputText === "";
+  const isTheSamePassword = (inputPassword, repeatPassword) => inputPassword === repeatPassword;
 
   const isPasswordValid = (passwordToValidate) => {
     if (isLengthValid && isUppercaseValid && isLowercaseValid && isDigitValid && isSpecialCharValid) {
@@ -163,7 +167,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
 
 
-    if (signupPassword !== signupRepeatPassword) {
+    if (!isTheSamePassword(signupPassword, signupRepeatPassword)) {
       setSignupRepeatPasswordError("Passwords do not match");
       return;
     }
@@ -190,7 +194,10 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     <div className="form-group form-group--login">
       <Input type="text" id="email" label="email" value={email} disabled={state === 'signup'} onChange={(ev) => setEmail(ev.target.value)} />
       <ErrorLabel error={emailError} state={state} groupState="login" />
-      <Input type="password" id="password" label="password" disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
+      <Input  type={showPassword ? 'text' : 'password'} id="password" label="password" value={password} disabled={state === 'signup'} onChange={(ev) => setPassword(ev.target.value)} />
+      <button type="button" onClick={togglePasswordVisibility}>
+        {showPassword ? 'Hide' : 'Show'} Password
+      </button>
       <ErrorLabel error={passwordError} state={state} groupState="login" />
     </div>
   );
