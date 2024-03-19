@@ -10,18 +10,32 @@ export function isTheSamePassword(inputPassword, repeatPassword) {
   return inputPassword === repeatPassword;
 }
 
-export function isPasswordValid(passwordToValidate) {
-  const isLengthValid = passwordToValidate.length >= 8;
-  const isUppercaseValid = /[A-Z]/.test(passwordToValidate);
-  const isLowercaseValid = /[a-z]/.test(passwordToValidate);
-  const isDigitValid = /\d/.test(passwordToValidate);
-  const isSpecialCharValid = /[@$!%*?&#^()]/.test(passwordToValidate);
+export function isLengthValid(password) {
+  return password.length >= 8;
+}
 
-  return (
-    isLengthValid &&
-    isUppercaseValid &&
-    isLowercaseValid &&
-    isDigitValid &&
-    isSpecialCharValid
-  );
+export function isUppercaseValid(password) {
+  return /[A-Z]/.test(password);
+}
+
+export function isLowercaseValid(password) {
+  return /[a-z]/.test(password);
+}
+
+export function isDigitValid(password) {
+  return /\d/.test(password);
+}
+
+export function isSpecialCharValid(password) {
+  return /[@$!%*?&#^()]/.test(password);
+}
+
+export function isPasswordValid(password) {
+  return {
+    isLengthValid: isLengthValid(password),
+    isUppercaseValid: isUppercaseValid(password),
+    isLowercaseValid: isLowercaseValid(password),
+    isDigitValid: isDigitValid(password),
+    isSpecialCharValid: isSpecialCharValid(password),
+  };
 }
