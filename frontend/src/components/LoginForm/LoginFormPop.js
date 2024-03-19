@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./LoginFormPop.scss";
-import "react-bootstrap"
+import "react-bootstrap";
 import { postData } from "services/apiRequests";
 import {Icon} from "react-icons-kit";
 import {eye, eyeOff} from "react-icons-kit/feather";
+import Input from "./Input";
+import ErrorLabel from "./ErrorLabel";
+import { isEmpty, isEmailValid, isPasswordValid, isTheSamePassword } from "utils/validation";
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
@@ -33,9 +36,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   // detect if in login or signup mode
   const [state, setState] = useState("login");
 
-  const handleEscape = () => {
-    handleXClick();
-  };
+  const passwordValidationResult = isPasswordValid(signupPassword);
 
   const toggleState = () => {
     state === 'login' ? setState('signup') : setState('login');
@@ -55,29 +56,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     setSignupRepeatPasswordError("");
   }
 
-  const isEmailValid = (emailToTest) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (emailRegex.test(emailToTest)) {
-      return true;
-    }
-    return false;
-  }
 
-  const isEmpty = (inputText) => inputText === "";
-  const isTheSamePassword = (inputPassword, repeatPassword) => inputPassword === repeatPassword;
-
-  const isPasswordValid = (passwordToValidate) => {
-    if (isLengthValid && isUppercaseValid && isLowercaseValid && isDigitValid && isSpecialCharValid) {
-      return true;
-    }
-    return false;
-  };
-
-  const isLengthValid = signupPassword.length >= 8;
-  const isUppercaseValid = /[A-Z]/.test(signupPassword);
-  const isLowercaseValid = /[a-z]/.test(signupPassword);
-  const isDigitValid = /\d/.test(signupPassword);
-  const isSpecialCharValid = /[@$!%*?&#^()]/.test(signupPassword);
 
   const onSubmitClick = () => {
     clearErrors();
@@ -214,11 +193,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       <ErrorLabel error={signupEmailError} state={state} groupState="signup" />
       <Input type="password" id="createpassword" label="password" disabled={state === 'login'} onChange={(ev) => setSignupPassword(ev.target.value)} />
       <div className="password-validation d-flex flex-column align-items-center">
-        <div className={isLengthValid ? 'valid' : 'invalid'}>Minimum length - 8 characters</div>
-        <div className={isUppercaseValid ? 'valid' : 'invalid'}>At least one uppercase letter</div>
-        <div className={isLowercaseValid ? 'valid' : 'invalid'}>At least one lowercase letter</div>
-        <div className={isDigitValid ? 'valid' : 'invalid'}>At least one numeric digit</div>
-        <div className={isSpecialCharValid ? 'valid' : 'invalid'}>At least one special character</div>
+      <div className={passwordValidationResult.isLengthValid ? 'valid' : 'invalid'}>Minimum length - 8 characters</div>
+    <div className={passwordValidationResult.isUppercaseValid ? 'valid' : 'invalid'}>At least one uppercase letter</div>
+    <div className={passwordValidationResult.isLowercaseValid ? 'valid' : 'invalid'}>At least one lowercase letter</div>
+    <div className={passwordValidationResult.isDigitValid ? 'valid' : 'invalid'}>At least one numeric digit</div>
+    <div className={passwordValidationResult.isSpecialCharValid ? 'valid' : 'invalid'}>At least one special character</div>
       </div>
       <Input type="password" id="repeatpassword" label="repeat password" disabled={state === 'login'}
         onChange={(ev) => {
@@ -244,7 +223,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       <div className={`form-box solid app--is-${state} d-flex flex-column justify-content-center`}>
 
         <div className="d-flex justify-content-end close-button-div">
-          <button className="close-button" onClick={handleEscape}> X </button>
+          <button className="close-button" onClick={handleXClick}> X </button>
         </div>
         <div className={`form-block-wrapper form-block-wrapper--is-${state}`} ></div>
         <section className={`form-block form-block--is-${state}`}>
@@ -279,12 +258,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   );
 };
 
-const Input = ({ id, type, label, disabled, onChange, value }) => (
-  <input className="form-group__input my-2" type={type} id={id} placeholder={label} disabled={disabled} onChange={onChange} value={value} />
-);
 
-const ErrorLabel = ({ error, groupState, state }) => (
-  <label className={`${groupState === state ? "" : "hidden"} errorLabel d-flex justify-content-center text-center px-2`} >{error}</label>
-);
+
+
 
 export default LoginFormPop;
