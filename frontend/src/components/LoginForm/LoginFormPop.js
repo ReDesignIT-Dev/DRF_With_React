@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap";
 import { postData } from "services/apiRequests";
@@ -43,8 +43,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   // detect if in login or signup mode
   const [state, setState] = useState("login");
-
-  const passwordValidationResult = isPasswordValid(password);
 
   const toggleState = () => {
     state === "login" ? setState("signup") : setState("login");
