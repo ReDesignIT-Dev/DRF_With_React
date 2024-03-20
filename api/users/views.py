@@ -12,7 +12,6 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
-        print('Incoming data after serialization:', serializer.validated_data)
         user = serializer.save(is_active=False)
         self.send_activation_email(user)
 
@@ -24,7 +23,6 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        print('Incoming JSON data:', request.data)
         serializer = CustomLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
