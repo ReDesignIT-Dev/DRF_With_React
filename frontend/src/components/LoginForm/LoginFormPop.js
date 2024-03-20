@@ -172,7 +172,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const handleInvalidState = () => {
     console.log("Invalid state. The state must be either 'login' or 'signup'");
-    //TODO ADD POPUP WITH ERROR
   };
 
   const renderLoginFormFields = () => (
