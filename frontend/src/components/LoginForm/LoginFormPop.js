@@ -21,7 +21,6 @@ import {
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [icon, setIcon] = useState(eyeOff);
 
   // login logic
   const [email, setEmail] = useState("");
@@ -47,11 +46,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const toggleState = () => {
     state === "login" ? setState("signup") : setState("login");
     setSignupPassword("");
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-    setIcon(showPassword ? eye : eyeOff);
   };
 
   const clearErrors = () => {
@@ -186,8 +180,9 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         disabled={state === "signup"}
         onChange={(ev) => setPassword(ev.target.value)}
       />
-      <span class="flex justify-around items-center" onClick={togglePasswordVisibility}>
-        <Icon class="absolute mr-10" icon={icon} size={25} />
+      <span className="d-flex justify-content-center btn btn-link p-0 m-0 text-white text-decoration-none" onClick={() => setShowPassword(!showPassword)}>
+        <span>Show password</span>
+        <Icon className="absolute mx-1" icon={showPassword ? eyeOff : eye} size={25} />
       </span>
       <ErrorLabel error={passwordError} state={state} groupState="login" />
     </div>
