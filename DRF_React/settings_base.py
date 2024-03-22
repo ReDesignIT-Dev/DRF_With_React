@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'api.shop',
     'api.users',
     'oauth2_provider',
+    'rest_registration',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
