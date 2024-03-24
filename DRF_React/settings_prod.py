@@ -17,6 +17,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-DRF_RECAPTCHA_SECRET_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')

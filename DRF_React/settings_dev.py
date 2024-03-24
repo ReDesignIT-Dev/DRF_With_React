@@ -13,5 +13,5 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-DRF_RECAPTCHA_SECRET_KEY = getenv('RECAPTCHA_PUBLIC_KEY')
+
 SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
