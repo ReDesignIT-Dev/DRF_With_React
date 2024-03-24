@@ -35,6 +35,8 @@ ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_OPEN = True
 REGISTRATION_SALT = getenv('REGISTRATION_SALT')
 
+DRF_RECAPTCHA_SECRET_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
+
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': True,
     'RESET_PASSWORD_VERIFICATION_ENABLED': True,
@@ -76,6 +78,7 @@ INSTALLED_APPS = [
     'api.users',
     'oauth2_provider',
     'rest_registration',
+    'rest_framework_recaptcha',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

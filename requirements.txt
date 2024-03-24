@@ -10,3 +10,4 @@ psycopg2 # server side needed
 django-oauth-toolkit # security - oauth2_provider
 djangorestframework-oauth # oauth2 required
 django-rest-registration # email verification for drf
+djangorestframework-recaptcha # google recaptcha for registration + login
