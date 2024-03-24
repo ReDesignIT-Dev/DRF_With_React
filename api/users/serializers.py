@@ -1,9 +1,11 @@
 from rest_framework import serializers
+from rest_registration.api.serializers import DefaultRegisterUserSerializer
 from .models import CustomUser
 from django.contrib.auth import authenticate
+from rest_framework_recaptcha.fields import ReCaptchaField
 
-
-class CustomUserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(DefaultRegisterUserSerializer):
+    recaptcha = ReCaptchaField()
     password = serializers.CharField(write_only=True)
 
     class Meta:
