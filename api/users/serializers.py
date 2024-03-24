@@ -4,6 +4,7 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 from rest_framework_recaptcha.fields import ReCaptchaField
 
+
 class CustomUserSerializer(DefaultRegisterUserSerializer):
     recaptcha = ReCaptchaField()
     password = serializers.CharField(write_only=True)
