@@ -1,7 +1,4 @@
-from .settings_base import *
-import os
 from settings_base import *
-from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
 
@@ -20,7 +17,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+DRF_RECAPTCHA_SECRET_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
 
-RECAPTCHA_PUBLIC_KEY = getenv('RECAPTCHA_PUBLIC_KEY')
-RECAPTCHA_PRIVATE_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
