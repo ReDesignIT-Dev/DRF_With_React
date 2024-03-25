@@ -1,15 +1,32 @@
 from rest_framework import generics, permissions, status, exceptions
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomLoginSerializer, CustomUserSerializer
 from django.contrib.auth import login, logout
 import secrets
 import string
+from django.conf import settings
 
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        print(request.data)  # lookup at incoming data
+
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            errors = e.detail
+            # Log or print the validation errors
+            print("Validation errors:", errors)
+            # You can customize the response based on the validation errors
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        # Continue with the normal flow if validation passes
+        return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)

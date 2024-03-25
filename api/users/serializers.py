@@ -2,22 +2,27 @@ from rest_framework import serializers
 from rest_registration.api.serializers import DefaultRegisterUserSerializer
 from .models import CustomUser
 from django.contrib.auth import authenticate
-from rest_framework_recaptcha.fields import ReCaptchaField
+from drf_recaptcha.fields import ReCaptchaV2Field
 
 
 class CustomUserSerializer(DefaultRegisterUserSerializer):
-    recaptcha = ReCaptchaField()
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'email', 'password', 'email_confirmed', 'first_name', 'last_name')
+        fields = ('id', 'username', 'email', 'password', 'email_confirmed', 'first_name', 'last_name', 'recaptcha')
         extra_kwargs = {
             'id': {'read_only': True},
             'email_confirmed': {'read_only': True},
             'first_name': {'required': False},
             'last_name': {'required': False},
+            'recaptcha': {'required': True},
         }
+
+    def get_fields(self):
+        fields = super().get_fields()
+        fields['recaptcha'] = ReCaptchaV2Field()
+        return fields
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)
