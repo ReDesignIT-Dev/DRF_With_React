@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap";
 import { postData } from "services/apiRequests";
@@ -6,6 +6,7 @@ import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 import Input from "./Input";
 import ErrorLabel from "./ErrorLabel";
+import ReCAPTCHA from "react-google-recaptcha";
 import {
   isEmpty,
   isEmailValid,
@@ -19,6 +20,11 @@ import {
 } from "utils/validation";
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
+
+  //ReCAPTCHA
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const recaptchaRef = useRef();
+
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -58,6 +64,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const onSubmitClick = () => {
     clearErrors();
+    handleReCaptcha();
     if (state === "login") {
       handleLogin();
     } else if (state === "signup") {
@@ -65,6 +72,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     } else {
       handleInvalidState();
     }
+    recaptchaRef.current.reset();
+    setRecaptchaToken('');
   };
 
   useEffect(() => {
@@ -72,6 +81,14 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       console.log("Message:", message);
     }
   }, [message]);
+
+  const handleReCaptcha = () => {
+    if (!recaptchaToken) {
+      alert('Please complete the reCAPTCHA verification.');
+      return;
+    }
+  };
+  
 
   async function registerUser(userData) {
     try {
@@ -153,12 +170,14 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       return;
     }
 
-    console.log("REGISTER with data:", signupEmail, "and password:", signupPassword, "and name:", signupName);
+    console.log("REGISTER with data:", signupEmail, "and password:", signupPassword, "and name:", signupName, "and recaptcha:", recaptchaToken);
 
     const userData = {
       username: signupName,
       email: signupEmail,
       password: signupPassword,
+      password_confirm: signupRepeatPassword,
+      recaptcha: recaptchaToken,
     };
 
     registerUser(userData);
@@ -233,6 +252,10 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         }}
       />
       <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
+      <ReCAPTCHA
+      ref={recaptchaRef}
+      sitekey="6Lfe-aIpAAAAAGejJj-v7bPnJoI-H3B2EB8DIaJG"
+      onChange={(token) => setRecaptchaToken(token)}/>
     </div>
   );
 
