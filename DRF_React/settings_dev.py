@@ -16,5 +16,6 @@ DATABASES = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React app
     "http://127.0.0.1:3000",  # React app
+    "http://172.16.0.233:3000" # React app
 ]
 SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
