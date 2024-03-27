@@ -204,6 +204,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         <Icon className="absolute mx-1" icon={showPassword ? eyeOff : eye} size={25} />
       </span>
       <ErrorLabel error={passwordError} state={state} groupState="login" />
+      <ReCAPTCHA
+      className="my-1"
+      ref={recaptchaRef}
+      sitekey="6Lfe-aIpAAAAAGejJj-v7bPnJoI-H3B2EB8DIaJG"
+      onChange={(token) => setRecaptchaToken(token)}/>
     </div>
   );
 
