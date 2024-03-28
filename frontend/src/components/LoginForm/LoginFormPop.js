@@ -46,6 +46,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [signupEmailError, setSignupEmailError] = useState("");
   const [signupPasswordRepeatError, setSignupRepeatPasswordError] = useState("");
 
+  const devRecaptchaToken = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+
   // detect if in login or signup mode
   const [state, setState] = useState("login");
 
@@ -207,7 +209,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       <ReCAPTCHA
       className="my-1"
       ref={recaptchaRef}
-      sitekey="6Lfe-aIpAAAAAGejJj-v7bPnJoI-H3B2EB8DIaJG"
+      sitekey={devRecaptchaToken}
       onChange={(token) => setRecaptchaToken(token)}/>
     </div>
   );
@@ -259,7 +261,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
       <ReCAPTCHA
       ref={recaptchaRef}
-      sitekey="6Lfe-aIpAAAAAGejJj-v7bPnJoI-H3B2EB8DIaJG"
+      sitekey={devRecaptchaToken}
       onChange={(token) => setRecaptchaToken(token)}/>
     </div>
   );
