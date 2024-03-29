@@ -20,7 +20,6 @@ import {
 } from "utils/validation";
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
-
   //ReCAPTCHA
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const recaptchaRef = useRef();
@@ -75,7 +74,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       handleInvalidState();
     }
     recaptchaRef.current.reset();
-    setRecaptchaToken('');
+    setRecaptchaToken("");
   };
 
   useEffect(() => {
@@ -86,11 +85,10 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const handleReCaptcha = () => {
     if (!recaptchaToken) {
-      alert('Please complete the reCAPTCHA verification.');
+      alert("Please complete the reCAPTCHA verification.");
       return;
     }
   };
-  
 
   async function registerUser(userData) {
     try {
@@ -191,7 +189,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const renderLoginFormFields = () => (
     <div className="form-group form-group--login">
-      <Input type="text" id="email" label="email" value={email} disabled={state === "signup"} onChange={(ev) => setEmail(ev.target.value)} />
+      <Input type="email" id="email" label="email" value={email} disabled={state === "signup"} onChange={(ev) => setEmail(ev.target.value)} />
       <ErrorLabel error={emailError} state={state} groupState="login" />
       <Input
         type={showPassword ? "text" : "password"}
@@ -201,16 +199,15 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         disabled={state === "signup"}
         onChange={(ev) => setPassword(ev.target.value)}
       />
-      <span className="d-flex justify-content-center btn btn-link p-0 m-0 text-white text-decoration-none" onClick={() => setShowPassword(!showPassword)}>
+      <span
+        className="d-flex justify-content-center btn btn-link p-0 m-0 text-white text-decoration-none"
+        onClick={() => setShowPassword(!showPassword)}
+      >
         <span>Show password</span>
         <Icon className="absolute mx-1" icon={showPassword ? eyeOff : eye} size={25} />
       </span>
       <ErrorLabel error={passwordError} state={state} groupState="login" />
-      <ReCAPTCHA
-      className="my-1"
-      ref={recaptchaRef}
-      sitekey={devRecaptchaToken}
-      onChange={(token) => setRecaptchaToken(token)}/>
+      <ReCAPTCHA className="my-1" ref={recaptchaRef} sitekey={devRecaptchaToken} onChange={(token) => setRecaptchaToken(token)} />
     </div>
   );
 
@@ -226,7 +223,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       />
       <ErrorLabel error={signupNameError} state={state} groupState="signup" />
       <Input
-        type="text"
+        type="email"
         id="signupEmail"
         label="email"
         value={signupEmail}
@@ -259,10 +256,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         }}
       />
       <ErrorLabel error={signupPasswordRepeatError} state={state} groupState="signup" />
-      <ReCAPTCHA
-      ref={recaptchaRef}
-      sitekey={devRecaptchaToken}
-      onChange={(token) => setRecaptchaToken(token)}/>
+      <ReCAPTCHA ref={recaptchaRef} sitekey={devRecaptchaToken} onChange={(token) => setRecaptchaToken(token)} />
     </div>
   );
 
