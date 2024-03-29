@@ -6,6 +6,7 @@ load_dotenv()
 
 DEBUG = False
 ALLOWED_HOSTS = ['www.redesignit.pl']
+DRF_RECAPTCHA_SECRET_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
 
 DATABASES = {
     'default': {
