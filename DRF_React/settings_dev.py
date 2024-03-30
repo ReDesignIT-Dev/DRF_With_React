@@ -6,9 +6,9 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'localtestdb',
-        'USER': 'testuser',
-        'PASSWORD': 'TestPassword',
+        'NAME': 'localtestdb_DRF_React',
+        'USER': 'testuser_DRF_React',
+        'PASSWORD': 'TestPassword_DRF_React',
         'HOST': 'localhost',
         'PORT': '5432',
     }
