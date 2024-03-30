@@ -68,9 +68,11 @@ db_name = getenv('DJANGO_DB')
 username = getenv('DJANGO_DB_USER')
 password = getenv('DJANGO_DB_PASSWORD')
 
-db_dev_test_name = 'localtestdb'
-db_dev_test_username = 'testuser'
-db_dev_test_password = 'TestPassword'
+project_name = 'DRF_React'
 
-create_database(db_name, username, password)  # comment out if need just dev db
+db_dev_test_name = 'localtestdb_' + project_name
+db_dev_test_username = 'testuser_' + project_name
+db_dev_test_password = 'TestPassword_' + project_name
+
+# create_database(db_name, username, password)  # comment out if need just dev db
 create_database(db_dev_test_name, db_dev_test_username, db_dev_test_password)  # comment out if need prod db
