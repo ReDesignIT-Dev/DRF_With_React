@@ -15,8 +15,6 @@ class CustomUserSerializer(DefaultRegisterUserSerializer):
         extra_kwargs = {
             'id': {'read_only': True},
             'email_confirmed': {'read_only': True},
-            'first_name': {'required': False},
-            'last_name': {'required': False},
             'recaptcha': {'required': True},
         }
 
@@ -26,7 +24,6 @@ class CustomUserSerializer(DefaultRegisterUserSerializer):
         return fields
 
     def create(self, validated_data):
-
         password_confirm = validated_data.pop('password_confirm', None)
         recaptcha = validated_data.pop('recaptcha', None)
         user = CustomUser.objects.create_user(**validated_data)
