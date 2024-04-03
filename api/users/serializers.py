@@ -10,11 +10,8 @@ class CustomUserSerializer(DefaultRegisterUserSerializer):
 
     class Meta:
         model = CustomUser
-        fields = (
-            'id', 'username', 'email', 'password', 'password_confirm', 'email_confirmed', 'recaptcha')
+        fields = ('username', 'email', 'password', 'password_confirm', 'recaptcha')
         extra_kwargs = {
-            'id': {'read_only': True},
-            'email_confirmed': {'read_only': True},
             'recaptcha': {'required': True},
         }
 
@@ -28,6 +25,13 @@ class CustomUserSerializer(DefaultRegisterUserSerializer):
         recaptcha = validated_data.pop('recaptcha', None)
         user = CustomUser.objects.create_user(**validated_data)
         return user
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Remove 'first_name' and 'last_name' fields from serializer
+        self.fields.pop('first_name', None)
+        self.fields.pop('last_name', None)
+        self.fields.pop('email_confirmed', None)
 
 
 class CustomLoginSerializer(serializers.Serializer):
