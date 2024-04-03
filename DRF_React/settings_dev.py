@@ -1,14 +1,16 @@
 from .settings_base import *
 
+PROJECT_NAME_FOR_DEV_DB = "DRF_React"  # my custom name for creating the dev db and user
+
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'localtestdb_DRF_React',
-        'USER': 'testuser_DRF_React',
-        'PASSWORD': 'TestPassword_DRF_React',
+        'NAME': 'localtestdb_' + PROJECT_NAME_FOR_DEV_DB,
+        'USER': 'testuser_' + PROJECT_NAME_FOR_DEV_DB,
+        'PASSWORD': 'TestPassword_' + PROJECT_NAME_FOR_DEV_DB,
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -21,4 +23,5 @@ CORS_ALLOWED_ORIGINS = [
 SILENCED_SYSTEM_CHECKS = ['drf_recaptcha.recaptcha_test_key_error']
 DRF_RECAPTCHA_SECRET_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"  # JUST FOR DEV UNIVERSAL GOOGLE KEY
 # FRONTEND DEVELOPER KEY FOR EVERYONE IS: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
-# BASED ON WEBPAGE INFO: https://developers.google.com/recaptcha/docs/faq?hl=pl#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do
+# BASED ON WEBPAGE INFO:
+# https://developers.google.com/recaptcha/docs/faq?hl=pl#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do
