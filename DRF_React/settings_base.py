@@ -24,7 +24,6 @@ FRONTEND_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'frontend', 'build'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = getenv('DJANGO_SECRET_KEY')
-TIME_ZONE = 'UTC'
 
 # Application definition
 
