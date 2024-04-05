@@ -123,6 +123,17 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+    {
+        'NAME': 'api.users.validators.PasswordCharacterValidator',
+        'OPTIONS': {
+            'min_length_digit': 1,
+            'min_length_alphanumeric': 1,
+            'min_length_special': 1,
+            'min_length_lower': 1,
+            'min_length_upper': 1,
+            'special_characters': r'[@$!%*?&#^()]'
+        }
+    },
 ]
 
 LANGUAGE_CODE = 'en-us'
