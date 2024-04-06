@@ -1,3 +1,4 @@
+import re
 from django.core.exceptions import ValidationError
 from django.utils.translation import ngettext, gettext as _
 
@@ -14,30 +15,32 @@ class PasswordCharacterValidator:
     ):
         self.validation_rules = [
             ('digit', min_length_digit),
-            ('alphanumeric character', min_length_alphanumeric),
-            ('special character', min_length_special),
-            ('lower character', min_length_lower),
-            ('upper character', min_length_upper)
+            ('alphanumeric_character', min_length_alphanumeric),
+            ('special_character', min_length_special),
+            ('lower_character', min_length_lower),
+            ('upper_character', min_length_upper)
         ]
         self.special_characters = special_characters
 
     def validate(self, password, user=None):
         validation_errors = []
         for rule, min_length in self.validation_rules:
-            if rule == 'special character':
-                char_set = self.special_characters
-            elif rule == 'alphanumeric character':
-                char_set = ''.join([chr(x) for x in range(123) if chr(x).isalpha() or chr(x).isdigit()])
+            if rule == 'special_character':
+                regex_pattern = self.special_characters
+            elif rule == 'alphanumeric_character':
+                regex_pattern = r'[a-zA-Z0-9]'
+            elif rule == 'lower_character':
+                regex_pattern = r'[a-z]'
+            elif rule == 'upper_character':
+                regex_pattern = r'[A-Z]'
+            elif rule == 'digit':
+                regex_pattern = r'\d'
             else:
-                char_set = rule + 's' if rule != 'digit' else rule
-            count = sum(1 for char in password if char in char_set)
+                regex_pattern = ''
+            count = len(re.findall(regex_pattern, password))
             if count < min_length:
                 validation_errors.append(ValidationError(
-                    ngettext(
-                        f'This password must contain at least %(min_length)d {rule}.',
-                        f'This password must contain at least %(min_length)d {rule}s.',
-                        min_length
-                    ),
+                    f'This password must contain at least {min_length} {rule.replace("_", " ")}.',
                     params={'min_length': min_length},
                     code=f'min_length_{rule}'
                 ))
@@ -47,13 +50,13 @@ class PasswordCharacterValidator:
     def get_help_text(self):
         validation_req = []
         for rule, min_length in self.validation_rules:
-            if rule == 'special character':
+            if rule == 'special_character':
                 rule_name = _('special character')
             else:
-                rule_name = _(rule + ' letter')
+                rule_name = _(rule.replace('_', ' ') + ' letter')
             validation_req.append(ngettext(
                 "%(min_length)s %(rule_name)s",
                 "%(min_length)s %(rule_name_plural)s",
                 min_length
-            ) % {'min_length': min_length, 'rule_name': rule_name, 'rule_name_plural': _(rule + ' letters')})
+            ) % {'min_length': min_length, 'rule_name': rule_name, 'rule_name_plural': _(rule.replace('_', ' ') + ' letters')})
         return _("This password must contain at least") + ' ' + ', '.join(validation_req) + '.'
