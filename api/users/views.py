@@ -26,11 +26,12 @@ class RegisterView(generics.CreateAPIView):
             # You can customize the response based on the validation errors
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         # Continue with the normal flow if validation passes
-        return super().post(request, *args, **kwargs)
+        return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)
         self.send_activation_email(user)
+
 
     def send_activation_email(self, user):
         pass
