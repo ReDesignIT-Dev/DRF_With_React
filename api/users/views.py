@@ -6,7 +6,6 @@ from .serializers import CustomLoginSerializer, CustomUserSerializer
 from django.contrib.auth import login, logout
 import secrets
 import string
-from django.conf import settings
 
 
 class RegisterView(generics.CreateAPIView):
