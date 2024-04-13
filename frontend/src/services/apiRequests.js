@@ -7,7 +7,7 @@ export async function postData(endpoint, data) {
                 'Content-Type': 'application/json',
             },
         });
-        return response.data;
+        return response;
     } catch (error) {
         throw new Error('Failed to post data');
     }
@@ -20,7 +20,7 @@ export async function getData(endpoint) {
                 'Content-Type': 'application/json',
             },
         });
-        return response.data;
+        return response;
     } catch (error) {
         throw new Error('Failed to get data');
     }
