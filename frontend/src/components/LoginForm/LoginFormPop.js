@@ -96,11 +96,10 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   async function registerUser(userData) {
     try {
       const response = await postData("register/", userData).then((response) => {
-        setMessage(`${response.status}: ${response.message}`);
-        Object.keys(response).forEach((key) => {
-          console.log(`${key}: ${response[key]}`);
-        });
+        setMessage(`${response.status}: ${response.data.message}`);
+        console.log("response: ", response)
         if (response.status === 201) {
+          console.log("in the exit part")
           handleXClick();
           setShowPopup(true);
         }
