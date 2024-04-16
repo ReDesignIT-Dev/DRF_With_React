@@ -98,8 +98,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       const response = await postData("register/", userData).then((response) => {
         setMessage(`${response.status}: ${response.data.message}`);
         console.log("response: ", response)
-        if (response.status === 201) {
-          console.log("in the exit part")
+        if (response.status === 200) {
           handleXClick();
           setShowPopup(true);
         }
