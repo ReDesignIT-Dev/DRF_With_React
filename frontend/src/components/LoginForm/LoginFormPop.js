@@ -7,7 +7,6 @@ import { eye, eyeOff } from "react-icons-kit/feather";
 import Input from "./Input";
 import ErrorLabel from "./ErrorLabel";
 import ReCAPTCHA from "react-google-recaptcha";
-import SignupSuccessfulPop from "./SignupSuccessfulPop";
 import {
   isEmpty,
   isEmailValid,
@@ -46,7 +45,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [signupEmailError, setSignupEmailError] = useState("");
   const [signupPasswordRepeatError, setSignupRepeatPasswordError] = useState("");
 
-  const [showPopup, setShowPopup] = useState(false);
 
   const devRecaptchaToken = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
@@ -95,12 +93,11 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   async function registerUser(userData) {
     try {
-      const response = await postData("register/", userData).then((response) => {
+      await postData("register/", userData).then((response) => {
         setMessage(`${response.status}: ${response.data.message}`);
-        console.log("response: ", response)
+        console.log("response: ", response);
         if (response.status === 200) {
           handleXClick();
-          setShowPopup(true);
         }
       });
     } catch (error) {
@@ -222,7 +219,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const renderSignupFormFields = () => (
     <div className="form-group form-group--signup">
-      {showPopup && <SignupSuccessfulPop message={message} />}
       <Input
         type="text"
         id="username"
