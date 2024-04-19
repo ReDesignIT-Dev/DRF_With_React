@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import './SignupSuccessfulPop.scss'; // You can create a CSS file for styling
 
-const SignupSuccessfulPop = ({ message }) => {
-  const [show, setShow] = useState(true);
+const SignupSuccessfulPop = ({ message, showStatus }) => {
+  const [show, setShow] = useState(showStatus);
 
   useEffect(() => {
     const timer = setTimeout(() => {
