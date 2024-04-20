@@ -1,3 +1,4 @@
+""" Script to create table on postgres as well as the user. Requires minimal settings for postgres """
 import psycopg2
 from psycopg2 import sql
 from os import getenv
