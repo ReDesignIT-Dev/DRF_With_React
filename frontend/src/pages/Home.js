@@ -9,7 +9,7 @@ export default function Home() {
       <p>{message}</p>
 
       <h1>Welcome to Our Shop</h1>
-          <button onClick={handleTestClick}>Test button</button>
+
     </div>
   );
 }
