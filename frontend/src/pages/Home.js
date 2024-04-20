@@ -1,9 +1,7 @@
-import { getData } from 'services/apiRequests';
 import { useState, useEffect } from 'react';
-import SignupSuccessfulPop from "../components/LoginForm/SignupSuccessfulPop";
 export default function Home() {
   const [message, setMessage] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
+
 
   const handleTestClick = () => {
     // Update state to show the popup
@@ -20,8 +18,6 @@ export default function Home() {
 
       <h1>Welcome to Our Shop</h1>
           <button onClick={handleTestClick}>Test button</button>
-      {showPopup && <SignupSuccessfulPop message={message} />}
-
     </div>
   );
 }
