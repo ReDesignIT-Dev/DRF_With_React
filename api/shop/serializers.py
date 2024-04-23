@@ -36,13 +36,12 @@ class ProductSerializer(serializers.ModelSerializer):
         style={'input_type': 'text', 'placeholder': '2000-12-12 12:00'},
     )
     photo = serializers.ImageField(default=None)
-    warranty = serializers.FileField(write_only=True, default=None)
 
     class Meta:
         model = Product
         fields = (
-        'id', 'name', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'current_price', 'cart_items',
-        'photo', 'warranty')
+            'id', 'name', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'current_price', 'cart_items',
+            'photo', 'warranty')
 
     def get_cart_items(self, instance):
         items = ShoppingCartItem.objects.filter(product=instance)
