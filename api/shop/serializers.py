@@ -16,7 +16,6 @@ class ProductSerializer(serializers.ModelSerializer):
     current_price = serializers.FloatField(read_only=True)
     description = serializers.CharField(min_length=2, max_length=200)  # override the model
     cart_items = serializers.SerializerMethodField()
-    # price = serializers.FloatField(min_value=1.00, max_value=100000)
     price = serializers.DecimalField(min_value=Decimal(1.00), max_value=Decimal(100000.00), max_digits=None,
                                      decimal_places=2)
     sale_start = serializers.DateTimeField(
