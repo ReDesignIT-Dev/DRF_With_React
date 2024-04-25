@@ -32,7 +32,6 @@ class RegisterView(generics.CreateAPIView):
         user = serializer.save(is_active=False)
         self.send_activation_email(user)
 
-
     def send_activation_email(self, user):
         pass
 
