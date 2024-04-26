@@ -1,26 +1,43 @@
 from django.db import models
 from api.users.models import CustomUser
+from django.utils.text import slugify
+from unidecode import unidecode
+from image_cropping import ImageRatioField
 
 
-class Category(models.Model):
+class CommonFields(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, blank=True, default="")
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        ascii_name = unidecode(str(self.name))
+        self.slug = f'{slugify(ascii_name)}-{self.pk}'
+        super().save(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+
+
+class Category(CommonFields):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
 
 
-class Product(models.Model):
+class Product(CommonFields):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
     description = models.TextField()
     price = models.FloatField()
     sale_start = models.DateTimeField(blank=True, null=True, default=None)
     sale_end = models.DateTimeField(blank=True, null=True, default=None)
     photo = models.ImageField(blank=True, null=True, default=None, upload_to="products")
     categories = models.ManyToManyField(Category, )
+    cropping = ImageRatioField('image', '800x800')
 
 
-class ShoppingCart(models.Model):
+class ShoppingCart(CommonFields):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
 
@@ -33,8 +50,3 @@ class ShoppingCartItem(models.Model):
     )
     product = models.ForeignKey(Product, related_name="+", on_delete=models.CASCADE)
     quantity = models.IntegerField()
-
-    def __repr__(self):
-        return '<ShoppingCartItem object ({}) {}x "{}">'.format(
-            self.id, self.quantity, self.product.name
-        )
