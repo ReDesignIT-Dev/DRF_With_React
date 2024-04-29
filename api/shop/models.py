@@ -26,19 +26,10 @@ class CommonFields(models.Model):
 class Category(CommonFields):
     id = models.AutoField(primary_key=True)
     description = models.TextField(blank=True)
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.SET_NULL)
 
     class MPTTMeta:
         order_insertion_by = ['level']
-
-    def delete(self, *args, **kwargs):
-        # If the category has children, reassign their parent to the parent of this category
-        if self.children.exists():
-            parent_category = self.parent
-            for child in self.get_descendants(include_self=True):
-                child.parent = parent_category
-                child.save()
-        super().delete(*args, **kwargs)
 
 
 class Product(CommonFields):
