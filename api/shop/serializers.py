@@ -57,7 +57,3 @@ class ProductSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('warranty')
         return Product.objects.create(**validated_data)
-
-
-class ProductStatSerializer(serializers.Serializer):
-    stats = serializers.DictField(child=serializers.ListField(child=serializers.IntegerField()))
