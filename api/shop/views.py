@@ -3,14 +3,13 @@ from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
     RetrieveUpdateDestroyAPIView,
-    GenericAPIView,
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from .serializers import ProductSerializer, ProductStatSerializer
+from .serializers import ProductSerializer
 from .models import Product
 from rest_framework.views import APIView
 from rest_framework import status
@@ -101,19 +100,13 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
         return response
 
 
-class ProductStats(GenericAPIView):
-    lookup_field = "id"
-    serializer_class = ProductStatSerializer
-    queryset = Product.objects.all()
+class ProductView(APIView):
+    pass
 
-    def get(self, request, format=None, id=None):
-        obj = self.get_object()
-        serializer = ProductStatSerializer(
-            {
-                "stats": {
-                    "2019-01-01": [5, 10, 15],
-                    "2019-01-02": [20, 1, 1],
-                }
-            }
-        )
-        return Response(serializer.data)
+
+class CategoryView(APIView):
+    pass
+
+
+class CategoriesView(APIView):
+    pass
