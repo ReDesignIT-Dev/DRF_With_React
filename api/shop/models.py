@@ -8,6 +8,7 @@ from image_cropping import ImageRatioField
 
 
 class CommonFields(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True, default="")
 
@@ -16,7 +17,7 @@ class CommonFields(models.Model):
 
     def save(self, *args, **kwargs):
         ascii_name = unidecode(str(self.name))
-        self.slug = f'{slugify(ascii_name)}-{self.pk}'
+        self.slug = f'{slugify(ascii_name)}-{self.id}'
         super().save(*args, **kwargs)
 
     class Meta:
@@ -24,7 +25,6 @@ class CommonFields(models.Model):
 
 
 class Category(CommonFields):
-    id = models.AutoField(primary_key=True)
     description = models.TextField(blank=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.SET_NULL)
 
@@ -33,18 +33,16 @@ class Category(CommonFields):
 
 
 class Product(CommonFields):
-    id = models.AutoField(primary_key=True)
     description = models.TextField()
     price = models.FloatField()
     sale_start = models.DateTimeField(blank=True, null=True, default=None)
     sale_end = models.DateTimeField(blank=True, null=True, default=None)
-    photo = models.ImageField(blank=True, null=True, default=None, upload_to="products")
+    image = models.ImageField(blank=True, null=True, default='shop_default_image.jpg', upload_to="products")
     categories = models.ManyToManyField(Category, )
     cropping = ImageRatioField('image', '800x800')
 
 
 class ShoppingCart(CommonFields):
-    id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
 
