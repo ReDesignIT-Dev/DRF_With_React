@@ -30,6 +30,7 @@ class ProductsPagination(LimitOffsetPagination):
 
 
 class ProductList(ListAPIView):
+    permission_classes = [AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
@@ -55,6 +56,7 @@ class ProductList(ListAPIView):
 
 class ProductCreate(CreateAPIView):
     serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         try:
