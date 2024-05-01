@@ -34,7 +34,6 @@ class ProductSerializer(serializers.ModelSerializer):
         help_text='Accepted format is "2000-01-01 12:00"',
         style={'input_type': 'text', 'placeholder': '2000-12-12 12:00'},
     )
-    photo = serializers.ImageField(default=None)
 
     class Meta:
         model = Product
