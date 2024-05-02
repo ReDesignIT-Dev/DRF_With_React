@@ -12,7 +12,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    is_on_sale = serializers.BooleanField(read_only=True)
+    is_on_sale = serializers.BooleanField(read_only=True, default=False)
     current_price = serializers.FloatField(read_only=True)
     description = serializers.CharField(min_length=2, max_length=200)  # override the model
     cart_items = serializers.SerializerMethodField()
@@ -38,10 +38,9 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = (
-            'id', 'name', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'current_price', 'cart_items',
-            'photo')
+            'name', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'current_price', 'cart_items',
+            'image')
 
     def get_cart_items(self, instance):
         items = ShoppingCartItem.objects.filter(product=instance)
         return CartItemSerializer(items, many=True).data
-
