@@ -1,24 +1,26 @@
 from django.db import models
 from mptt.fields import TreeForeignKey
-
 from api.users.models import CustomUser
 from django.utils.text import slugify
-from unidecode import unidecode
 from image_cropping import ImageRatioField
 
 
 class CommonFields(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True, default="")
+    slug = models.SlugField(unique=True, blank=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        ascii_name = unidecode(str(self.name))
-        self.slug = f'{slugify(ascii_name)}-{self.id}'
+        if not self.pk:
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+        new_slug = f'{slugify(self.name)}-{self.pk}'
+        if self.slug != new_slug:
+            self.slug = new_slug
+            self.save()
 
     class Meta:
         abstract = True
