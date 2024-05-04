@@ -24,5 +24,5 @@ urlpatterns = [
     path('', include('api.shop.urls')),
     path('', include('api.users.urls')),
     re_path(r'^oauth2/', include('oauth2_provider.urls', namespace='oauth2')),
-    re_path(r'^(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
 ]
