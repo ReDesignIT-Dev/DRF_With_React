@@ -17,7 +17,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-FRONTEND_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'frontend', 'build'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -143,8 +142,9 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'media/'
+FRONTEND_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'frontend', 'build'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
