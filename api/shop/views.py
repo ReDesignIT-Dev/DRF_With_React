@@ -10,7 +10,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategorySerializer
-from .models import Product
+from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework import status
 
@@ -68,7 +68,7 @@ class ProductCreate(CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
+class ProductEditView(RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
@@ -117,3 +117,13 @@ class CategoriesView(APIView):
 class CategoryCreateView(CreateAPIView):
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
+
+
+class CategoryEditView(RetrieveUpdateDestroyAPIView):
+    lookup_field = "slug"
+    serializer_class = CategorySerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        slug = self.kwargs.get('slug')
+        return Category.objects.filter(slug=slug)
