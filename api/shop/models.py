@@ -27,7 +27,7 @@ class CommonFields(models.Model):
 
 
 class Category(CommonFields):
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.SET_NULL)
 
     class MPTTMeta:
@@ -40,7 +40,7 @@ class Product(CommonFields):
     sale_start = models.DateTimeField(blank=True, null=True, default=None)
     sale_end = models.DateTimeField(blank=True, null=True, default=None)
     image = models.ImageField(blank=True, default='shop_default_image.jpg', upload_to="products")
-    categories = models.ManyToManyField(Category, )
+    categories = models.ManyToManyField(Category)
     cropping = ImageRatioField('image', '800x800')
 
 
