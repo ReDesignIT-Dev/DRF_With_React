@@ -39,7 +39,7 @@ class Product(CommonFields):
     price = models.FloatField()
     sale_start = models.DateTimeField(blank=True, null=True, default=None)
     sale_end = models.DateTimeField(blank=True, null=True, default=None)
-    image = models.ImageField(blank=True, null=True, default='shop_default_image.jpg', upload_to="products")
+    image = models.ImageField(blank=True, default='shop_default_image.jpg', upload_to="products")
     categories = models.ManyToManyField(Category, )
     cropping = ImageRatioField('image', '800x800')
 
