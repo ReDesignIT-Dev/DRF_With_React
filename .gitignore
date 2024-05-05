@@ -1,4 +1,6 @@
+
 # mine:
+media/
 Exercise Files
 .idea
 .env
@@ -164,3 +166,4 @@ cython_debug/
 #.idea/
 api/shop/migrations/*
 api/users/migrations/*
+/media/
