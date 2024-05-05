@@ -4,7 +4,7 @@ django-cors-headers # to connect drf with react
 django-crispy-forms
 crispy-bootstrap5
 django-filter
-pillow
+pillow # work with images
 python-dotenv # for secure data
 psycopg2 # server side needed
 django-oauth-toolkit # security - oauth2_provider
@@ -13,4 +13,5 @@ django-rest-registration # email verification for drf
 drf-recaptcha # google recaptcha for registration + login
 unidecode #to deal with polish letters in slugs
 django-image-cropping #crop added images
+easy-thumbnails # works with the django-image-cropping
 django-mptt #for a easy use of tree in shop app (easy loop through categories)
