@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, ShoppingCartItem
+from .models import Product, ShoppingCartItem, Category
 from decimal import Decimal
 
 
@@ -9,6 +9,12 @@ class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShoppingCartItem
         fields = ('product', 'quantity')
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('name', 'description', 'parent')
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -38,7 +44,8 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = (
-            'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'current_price', 'cart_items',
+            'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'current_price',
+            'cart_items',
             'image', 'cropping')
 
     def get_cart_items(self, instance):

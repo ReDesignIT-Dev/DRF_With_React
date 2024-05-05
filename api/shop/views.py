@@ -9,7 +9,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer, CategorySerializer
 from .models import Product
 from rest_framework.views import APIView
 from rest_framework import status
@@ -112,3 +112,8 @@ class CategoryView(APIView):
 
 class CategoriesView(APIView):
     pass
+
+
+class CategoryCreateView(CreateAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [AllowAny]
