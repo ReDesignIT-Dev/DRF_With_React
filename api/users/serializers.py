@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_registration.api.serializers import DefaultRegisterUserSerializer
+from rest_registration.api.serializers import DefaultRegisterUserSerializer, DefaultLoginSerializer
 from .models import CustomUser
 from django.contrib.auth import authenticate
 from drf_recaptcha.fields import ReCaptchaV2Field
@@ -34,9 +34,7 @@ class CustomUserSerializer(DefaultRegisterUserSerializer):
         self.fields.pop('email_confirmed', None)
 
 
-class CustomLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
+class CustomLoginSerializer(DefaultLoginSerializer):
 
     def validate(self, data):
         email = data.get('email')
