@@ -2,14 +2,14 @@ from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import CustomLoginSerializer, CustomUserSerializer
+from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer
 from django.contrib.auth import login, logout
 import secrets
 import string
 
 
 class RegisterView(generics.CreateAPIView):
-    serializer_class = CustomUserSerializer
+    serializer_class = CustomUserRegisterSerializer
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
@@ -40,7 +40,7 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = CustomLoginSerializer(data=request.data)
+        serializer = CustomUserLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
             login(request, user)
