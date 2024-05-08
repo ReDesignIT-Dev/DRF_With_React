@@ -2,7 +2,6 @@ from django.db import models
 from mptt.fields import TreeForeignKey
 from api.users.models import CustomUser
 from django.utils.text import slugify
-from image_cropping import ImageRatioField
 
 
 class CommonFields(models.Model):
@@ -41,7 +40,6 @@ class Product(CommonFields):
     sale_end = models.DateTimeField(blank=True, null=True, default=None)
     image = models.ImageField(blank=True, default='shop_default_image.jpg', upload_to="products")
     categories = models.ManyToManyField(Category)
-    cropping = ImageRatioField('image', '800x800')
 
 
 class ShoppingCart(CommonFields):
