@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
-from easy_thumbnails.conf import Settings as thumbnail_settings  # image cropping settings
 
 load_dotenv()
 
@@ -24,14 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = getenv('DJANGO_SECRET_KEY')
-
-# Application definition
-
-# image cropping settings
-
-THUMBNAIL_PROCESSORS = (
-                           'image_cropping.thumbnail_processors.crop_corners',
-                       ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -49,16 +40,9 @@ REST_REGISTRATION = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-    ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-}
-
-OAUTH2_PROVIDER = {
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
 }
 
 INSTALLED_APPS = [
@@ -69,15 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'easy_thumbnails',
-    'image_cropping',
     "corsheaders",
     'django_filters',
-    'crispy_forms',
-    'crispy_bootstrap5',
     'api.shop',
     'api.users',
-    'oauth2_provider',
     'rest_registration',
     'drf_recaptcha',
 ]
