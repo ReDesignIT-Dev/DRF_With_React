@@ -58,5 +58,6 @@ class PasswordCharacterValidator:
                 "%(min_length)s %(rule_name)s",
                 "%(min_length)s %(rule_name_plural)s",
                 min_length
-            ) % {'min_length': min_length, 'rule_name': rule_name, 'rule_name_plural': _(rule.replace('_', ' ') + ' letters')})
+            ) % {'min_length': min_length, 'rule_name': rule_name,
+                 'rule_name_plural': _(rule.replace('_', ' ') + ' letters')})
         return _("This password must contain at least") + ' ' + ', '.join(validation_req) + '.'
