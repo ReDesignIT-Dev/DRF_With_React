@@ -28,7 +28,6 @@ LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'users.CustomUser'
 ACCOUNT_ACTIVATION_DAYS = 7
 
-REGISTRATION_OPEN = True
 REGISTRATION_SALT = getenv('REGISTRATION_SALT')
 
 REST_FRAMEWORK = {
@@ -49,13 +48,8 @@ INSTALLED_APPS = [
     'django_filters',
     'api.shop',
     'api.users',
-    'rest_registration',
     'drf_recaptcha',
 ]
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-
-CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
