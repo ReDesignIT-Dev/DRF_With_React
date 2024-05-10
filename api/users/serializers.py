@@ -2,6 +2,7 @@ from rest_framework.serializers import Serializer, ModelSerializer, CharField, V
 from .models import CustomUser
 from django.contrib.auth import authenticate
 from drf_recaptcha.fields import ReCaptchaV2Field
+from django.contrib.auth.password_validation import validate_password
 
 
 class V2Serializer(Serializer):
@@ -19,7 +20,17 @@ class CustomUserRegisterSerializer(ModelSerializer, V2Serializer):
     def create(self, validated_data):
         validated_data.pop('recaptcha')
         validated_data.pop('password_confirm')
-        return super().create(validated_data)
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password_confirm = attrs.get('password_confirm')
+
+        if password != password_confirm:
+            raise ValidationError("Passwords do not match")
+        validate_password(password)
+        return attrs
 
 
 class CustomUserLoginSerializer(ModelSerializer, V2Serializer):
