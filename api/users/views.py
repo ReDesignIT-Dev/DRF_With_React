@@ -13,19 +13,15 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)  # lookup at incoming data
-
+        print(request.data)  # TODO delete after tests
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
         except ValidationError as e:
             errors = e.detail
-            # Log or print the validation errors
             print("Validation errors:", errors)
-            # You can customize the response based on the validation errors
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-        # Continue with the normal flow if validation passes
         return Response({'message': 'User created successfully.'}, status=200)
 
     def perform_create(self, serializer):
