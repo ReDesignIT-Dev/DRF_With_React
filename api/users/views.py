@@ -50,16 +50,3 @@ class LogoutView(APIView):
     def post(self, request):
         logout(request)
         return Response({'message': 'Logout successful.'})
-
-
-def generate_random_password():
-    characters = string.ascii_letters + string.digits
-    password = ''.join(secrets.choice(characters) for _ in range(12))
-    return password
-
-
-def generate_random_username():
-    characters = string.ascii_letters + string.digits
-    username = "TestUser."
-    username += ''.join(secrets.choice(characters) for _ in range(7))
-    return str(username)
