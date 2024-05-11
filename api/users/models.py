@@ -5,6 +5,28 @@ import unicodedata
 
 class CustomUserManager(UserManager):
 
+    @classmethod
+    def normalize_username(cls, username):
+        return (
+            unicodedata.normalize("NFKC", username)
+            if isinstance(username, str)
+            else username
+        )
+
+    @classmethod
+    def normalize_email(cls, email):
+        """
+        Normalize the email address by lowercasing the domain part of it.
+        """
+        email = email or ""
+        try:
+            email_name, domain_part = email.strip().rsplit("@", 1)
+        except ValueError:
+            pass
+        else:
+            email = email_name.lower() + "@" + domain_part.lower()
+        return email
+
     def _create_user(self, username, email, password, **extra_fields):
         if not username:
             raise ValueError("Username is required")
