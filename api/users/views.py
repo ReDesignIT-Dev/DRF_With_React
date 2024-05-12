@@ -3,9 +3,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer
-from django.contrib.auth import login, logout
-import secrets
-import string
+from django.contrib.auth import logout, authenticate
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
 
 
 class RegisterView(generics.CreateAPIView):
@@ -22,7 +22,7 @@ class RegisterView(generics.CreateAPIView):
             errors = e.detail
             print("Validation errors:", errors)
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({'message': 'User created successfully.'}, status=200)
+        return Response({'message': 'User created successfully.'}, status=status.HTTP_200_OK)
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)
@@ -33,15 +33,17 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(APIView):
-    permission_classes = [permissions.AllowAny]
+    authentication_classes = [TokenAuthentication]
+    serializer_class = CustomUserLoginSerializer
 
     def post(self, request):
-        serializer = CustomUserLoginSerializer(data=request.data)
-        if serializer.is_valid():
+        serializer = self.serializer_class(data=request.data, context={"request": request})
+        if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
-            login(request, user)
-            return Response({'message': 'Login successful.'})
-        return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+            if user:
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({'token': [token.key], "Success": "Login SuccessFully"}, status=status.HTTP_201_CREATED)
+            return Response({'Massage': 'Invalid Username and Password'}, status=401)
 
 
 class LogoutView(APIView):
