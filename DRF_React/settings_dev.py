@@ -30,6 +30,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 SILENCED_SYSTEM_CHECKS = ['drf_recaptcha.recaptcha_test_key_error']
 DRF_RECAPTCHA_SECRET_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"  # JUST FOR DEV UNIVERSAL GOOGLE KEY
+DRF_RECAPTCHA_TESTING=True
+DRF_RECAPTCHA_TESTING_PASS=True
 # FRONTEND DEVELOPER KEY FOR EVERYONE IS: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
 # BASED ON WEBPAGE INFO:
 # https://developers.google.com/recaptcha/docs/faq?hl=pl#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do
