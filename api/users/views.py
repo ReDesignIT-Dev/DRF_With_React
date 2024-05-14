@@ -20,7 +20,7 @@ class RegisterView(generics.CreateAPIView):
             self.perform_create(serializer)
         except ValidationError as e:
             errors = e.detail
-            print("Validation errors:", errors)
+            print("Validation errors:", errors)  # TODO delete after tests
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'User created successfully.'}, status=status.HTTP_200_OK)
 
@@ -41,12 +41,14 @@ class LoginView(APIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
             if user:
+                # Token.objects.filter(user=user).delete() # delete token if need to refresh from login to login
                 token, created = Token.objects.get_or_create(user=user)
                 return Response({'token': [token.key], "Success": "Login SuccessFully"}, status=status.HTTP_201_CREATED)
             return Response({'Massage': 'Invalid Username and Password'}, status=401)
 
 
 class LogoutView(APIView):
+    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
