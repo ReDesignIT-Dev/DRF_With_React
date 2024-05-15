@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
+from datetime import timedelta
+from rest_framework.settings import api_settings
 
 load_dotenv()
 
@@ -38,6 +40,21 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.TokenAuthentication',
         'knox.auth.TokenAuthentication',
     )
+}
+
+KNOX_TOKEN_MODEL = 'knox.AuthToken'
+
+REST_KNOX = {
+    'SECURE_HASH_ALGORITHM': 'hashlib.sha512',  # may require direct download crypto.py to work
+    'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+    'TOKEN_TTL': timedelta(hours=10),
+    'USER_SERIALIZER': 'api.users.serializers.CustomUserLoginSerializer',
+    'TOKEN_LIMIT_PER_USER': None,
+    'AUTO_REFRESH': True,
+    'MIN_REFRESH_INTERVAL': 60,
+    'AUTH_HEADER_PREFIX': 'Token',
+    'EXPIRY_DATETIME_FORMAT': api_settings.DATETIME_FORMAT,
+    'TOKEN_MODEL': 'knox.AuthToken',
 }
 
 INSTALLED_APPS = [
