@@ -3,6 +3,7 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 from drf_recaptcha.fields import ReCaptchaV2Field
 from django.contrib.auth.password_validation import validate_password
+from rest_framework.authentication import get_authorization_header
 
 
 class V2Serializer(Serializer):
