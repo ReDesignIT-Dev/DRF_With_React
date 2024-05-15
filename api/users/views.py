@@ -1,11 +1,17 @@
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer
-from django.contrib.auth import logout, authenticate
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
+from django.contrib.auth import logout
+# from rest_framework.authentication import TokenAuthentication
+# from rest_framework.authtoken.models import Token
+from django.contrib.auth import login
+from knox.views import LoginView as KnoxLoginView
+from knox.views import LogoutView as KnoxLogoutView
+from knox.auth import TokenAuthentication
+from rest_framework.authentication import BasicAuthentication
 
 
 class RegisterView(generics.CreateAPIView):
@@ -32,25 +38,33 @@ class RegisterView(generics.CreateAPIView):
         pass
 
 
-class LoginView(APIView):
-    authentication_classes = [TokenAuthentication]
-    serializer_class = CustomUserLoginSerializer
+class LoginView(KnoxLoginView):
+    authentication_classes = [BasicAuthentication]
+    serializer_class = CustomUserLoginSerializer  # serializer taken from knox in settings.py
 
-    def post(self, request):
+    def get_post_response_data(self, request, token, instance):
         serializer = self.serializer_class(data=request.data, context={"request": request})
+
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
-            if user:
-                # Token.objects.filter(user=user).delete() # delete token if need to refresh from login to login
-                token, created = Token.objects.get_or_create(user=user)
-                return Response({'token': [token.key], "Success": "Login SuccessFully"}, status=status.HTTP_201_CREATED)
-            return Response({'Massage': 'Invalid Username and Password'}, status=401)
+            data = {'expiry': self.format_expiry_datetime(instance.expiry), 'token': token, 'user': user.username}
+            return data
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LogoutView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+class LogoutView(KnoxLogoutView):
+    def get_post_response(self, request):
+        return Response({"bye-bye": request.user.username}, status=200)
 
-    def post(self, request):
-        logout(request)
-        return Response({'message': 'Logout successful.'})
+
+class ForLoggedInOnlyView(APIView):
+    authentication_classes = (TokenAuthentication,)
+
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        content = {
+            'foo': 'bar'
+        }
+        return Response(content)
