@@ -44,7 +44,6 @@ class CustomUserLoginSerializer(V2Serializer):
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')
-
         if email and password:
             user = authenticate(request=self.context.get('request'), username=email, password=password)
             if not user:
