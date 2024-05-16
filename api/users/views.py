@@ -30,10 +30,6 @@ class RegisterView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)
-        self.send_activation_email(user)
-
-    def send_activation_email(self, user):
-        pass
 
 
 class LoginView(KnoxLoginView):
