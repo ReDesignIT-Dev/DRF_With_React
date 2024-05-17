@@ -17,7 +17,7 @@ class EmailSender:
         if self.credentials.username is None:
             self.credentials.username = getenv('EMAIL')
         if self.credentials.password is None:
-            self.credentials.password = getenv('GMAIL_PASSWORD_FOR_APPLICATION')
+            self.credentials.password = getenv('EMAIL_PASSWORD')
 
         self.msg['From'] = self.credentials.username
 
