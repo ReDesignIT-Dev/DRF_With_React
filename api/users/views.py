@@ -1,9 +1,9 @@
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer
+from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer, UserActivationSerializer
 from knox.views import LoginView as KnoxLoginView
 from knox.views import LogoutView as KnoxLogoutView
 from knox.views import LogoutAllView as KnoxLogoutAllView
@@ -30,6 +30,18 @@ class RegisterView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=False)
+
+
+class UserActivationView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserActivationSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data={'token': kwargs.get('token')})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
 class LoginView(KnoxLoginView):

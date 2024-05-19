@@ -1,3 +1,5 @@
+import secrets
+
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 import unicodedata
@@ -57,6 +59,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=30, unique=True)
     email_confirmed = models.BooleanField(default=False)
     email = models.EmailField(unique=True, max_length=254, verbose_name='email address')
+    activation_token = models.CharField(max_length=64, blank=True, null=True)
 
     objects = CustomUserManager()
     USERNAME_FIELD = "email"
@@ -64,3 +67,15 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def generate_activation_token(self):
+        max_attempts = 100  # Set a reasonable limit for attempts
+        attempts = 0
+        while attempts < max_attempts:
+            token = secrets.token_urlsafe(32)
+            if not CustomUser.objects.filter(activation_token=token).exists():
+                self.activation_token = token
+                self.save()
+                return
+            attempts += 1
+        raise Exception("Failed to generate a unique activation token after multiple attempts")
