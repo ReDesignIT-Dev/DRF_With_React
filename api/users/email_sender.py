@@ -22,12 +22,13 @@ class EmailSender:
         self.msg['From'] = self.credentials.username
 
     def __enter__(self):
-        if not self.ssl_enabled:
-            self.connection = smtplib.SMTP(self.smtp_server, self.port)
-        else:
+        if self.ssl_enabled:
             context = ssl.create_default_context()
             self.connection = smtplib.SMTP_SSL(self.smtp_server, self.port, context=context)
+        else:
+            self.connection = smtplib.SMTP(self.smtp_server, self.port)
 
+        self.connection.connect(self.smtp_server, self.port)
         self.connection.login(self.credentials.username, self.credentials.password)
 
         return self
