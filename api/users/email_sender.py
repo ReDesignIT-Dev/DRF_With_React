@@ -1,13 +1,11 @@
 import smtplib
+from django.conf import settings
 import ssl
 from email.message import EmailMessage
-from os import getenv
-from dotenv import load_dotenv
 
 
 class EmailSender:
-    def __init__(self, port, smtp_server, credentials, ssl_enabled=False):
-        load_dotenv()
+    def __init__(self, port=None, smtp_server=None, credentials=None, ssl_enabled=None):
         self.port = port
         self.smtp_server = smtp_server
         self.credentials = credentials
@@ -15,9 +13,15 @@ class EmailSender:
 
         self.msg = EmailMessage()
         if self.credentials.username is None:
-            self.credentials.username = getenv('EMAIL')
+            self.credentials.username = settings.EMAIL
         if self.credentials.password is None:
-            self.credentials.password = getenv('EMAIL_PASSWORD')
+            self.credentials.password = settings.EMAIL_PASSWORD
+        if self.port is None:
+            self.port = settings.EMAIL_PORT
+        if self.smtp_server is None:
+            self.smtp_server = settings.EMAIL_SMTP
+        if self.ssl_enabled is None:
+            self.ssl_enabled = settings.EMAIL_SSL_ENABLED
 
         self.msg['From'] = self.credentials.username
 

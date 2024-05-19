@@ -1,12 +1,45 @@
 from rest_framework.serializers import Serializer, ModelSerializer, CharField, ValidationError, EmailField
+from .email_sender import EmailSender
 from .models import CustomUser
 from django.contrib.auth import authenticate
 from drf_recaptcha.fields import ReCaptchaV2Field
 from django.contrib.auth.password_validation import validate_password
+from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class V2Serializer(Serializer):
     recaptcha = ReCaptchaV2Field()
+
+
+class UserActivationSerializer(Serializer):
+    token = CharField()
+
+    class Meta:
+        model = CustomUser
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = None
+
+    def validate_token(self, value):
+        try:
+            self.user = self.Meta.model.objects.get(activation_token=value)
+        except ObjectDoesNotExist:
+            raise ValidationError('Invalid activation token')
+        return value
+
+    def save(self):
+        self.user.is_active = True
+        self.user.save()
+        self.user.activation_token = None  # Clear the token after activation
+        self.user.save()
+        return self.user
+
+
+class UserPasswordResetSerializer(Serializer):
+    class Meta:
+        model = CustomUser
 
 
 class CustomUserRegisterSerializer(ModelSerializer, V2Serializer):
@@ -21,7 +54,20 @@ class CustomUserRegisterSerializer(ModelSerializer, V2Serializer):
         validated_data.pop('recaptcha')
         validated_data.pop('password_confirm')
         user = CustomUser.objects.create_user(**validated_data)
+        user.generate_activation_token()
+        self.send_activation_email(user)
         return user
+
+    def send_activation_email(self, user):
+        activation_link = self.context['request'].build_absolute_uri(
+            reverse('activate-user', kwargs={'token': user.activation_token})
+        )
+        with EmailSender() as email_sender:
+            email_sender.send_email(
+                recipient=user.email,
+                subject='Activate your account',
+                message_content=f'Click the following link to activate your account: {activation_link}'
+            )
 
     def validate(self, attrs):
         password = attrs.get('password')
