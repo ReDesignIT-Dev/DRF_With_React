@@ -69,13 +69,6 @@ class CustomUser(AbstractUser):
         return self.username
 
     def generate_activation_token(self):
-        max_attempts = 100  # Set a reasonable limit for attempts
-        attempts = 0
-        while attempts < max_attempts:
-            token = secrets.token_urlsafe(32)
-            if not CustomUser.objects.filter(activation_token=token).exists():
-                self.activation_token = token
-                self.save()
-                return
-            attempts += 1
-        raise Exception("Failed to generate a unique activation token after multiple attempts")
+        token = secrets.token_urlsafe(32)
+        self.activation_token = token + str(self.pk)
+        self.save()
