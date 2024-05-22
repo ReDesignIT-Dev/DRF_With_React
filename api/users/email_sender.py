@@ -2,7 +2,7 @@ import smtplib
 from django.conf import settings
 import ssl
 from email.message import EmailMessage
-
+from collections import namedtuple
 
 class EmailSender:
     def __init__(self, port=None, smtp_server=None, credentials=None, ssl_enabled=None):
@@ -11,11 +11,17 @@ class EmailSender:
         self.credentials = credentials
         self.ssl_enabled = ssl_enabled
 
+        if credentials is None:
+            Credentials = namedtuple('Credentials', 'username, password')
+            self.credentials = Credentials(settings.EMAIL, settings.EMAIL_PASSWORD)
+        else:
+            if self.credentials.username is None:
+                self.credentials.username = settings.EMAIL
+            if self.credentials.password is None:
+                self.credentials.password = settings.EMAIL_PASSWORD
+
         self.msg = EmailMessage()
-        if self.credentials.username is None:
-            self.credentials.username = settings.EMAIL
-        if self.credentials.password is None:
-            self.credentials.password = settings.EMAIL_PASSWORD
+
         if self.port is None:
             self.port = settings.EMAIL_PORT
         if self.smtp_server is None:
