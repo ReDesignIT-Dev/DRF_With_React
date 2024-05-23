@@ -3,7 +3,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer, UserActivationSerializer
+from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer, UserActivationSerializer, \
+    PasswordResetSerializer, PasswordResetActivationSerializer
 from knox.views import LoginView as KnoxLoginView
 from knox.views import LogoutView as KnoxLogoutView
 from knox.views import LogoutAllView as KnoxLogoutAllView
@@ -43,6 +44,29 @@ class UserActivationView(APIView):
             return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
+
+class UserPasswordResetView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+
+        if serializer.is_valid():
+            return Response({'detail': 'Password reset sent to user email'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+
+class UserPasswordResetActivationView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetActivationSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data={'token': kwargs.get('token')})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 class LoginView(KnoxLoginView):
     authentication_classes = [BasicAuthentication]
