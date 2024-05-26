@@ -68,6 +68,7 @@ class UserPasswordResetActivationView(APIView):
             return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
+
 class LoginView(KnoxLoginView):
     authentication_classes = [BasicAuthentication]
     serializer_class = CustomUserLoginSerializer
