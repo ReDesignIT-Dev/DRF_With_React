@@ -64,8 +64,7 @@ class UserPasswordResetActivationView(APIView):
     def get(self, request, *args, **kwargs):
         serializer = self.serializer_class(data={'token': kwargs.get('token')})
         if serializer.is_valid():
-            serializer.save()
-            return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)
+            return Response({'detail': 'Password recovery token OK.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
