@@ -81,6 +81,7 @@ class PasswordResetSerializer(Serializer):
                 message_content=html_content
             )
 
+
 class PasswordResetActivationSerializer(Serializer):
     token = CharField()
 
