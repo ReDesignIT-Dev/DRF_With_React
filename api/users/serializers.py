@@ -54,7 +54,10 @@ class PasswordResetSerializer(Serializer):
         try:
             self.user = self.Meta.model.objects.get(email=email)
             if not self.user.is_active:
-                raise ValidationError('User not activated yet')
+                if self.user.email_confirmed:
+                    raise ValidationError('User banned')
+                else:
+                    raise ValidationError('User not activated yet')
             elif self.user.activation_token is not None:
                 raise ValidationError('Password recovery link already sent')
             else:
@@ -96,16 +99,8 @@ class PasswordResetActivationSerializer(Serializer):
         try:
             self.user = self.Meta.model.objects.get(activation_token=value)
         except ObjectDoesNotExist:
-            raise ValidationError('Invalid activation token')
+            raise ValidationError('Invalid password recovery token')
         return value
-
-    def save(self):
-        self.user.is_active = True
-        self.user.email_confirmed = True
-        self.user.save()
-        self.user.activation_token = None  # Clear the token after activation
-        self.user.save()
-        return self.user
 
 
 class CustomUserRegisterSerializer(ModelSerializer, V2Serializer):
