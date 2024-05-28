@@ -34,8 +34,7 @@ class UserActivationSerializer(Serializer):
     def save(self):
         self.user.is_active = True
         self.user.email_confirmed = True
-        self.user.save()
-        self.user.activation_token = None  # Clear the token after activation
+        self.user.activation_token = None
         self.user.save()
         return self.user
 
