@@ -102,6 +102,11 @@ class PasswordResetActivationSerializer(Serializer):
         return value
 
 
+class PasswordSetNewPasswordSerializer(Serializer):
+    password = CharField(max_length=128)
+    password_repeat = CharField(max_length=128)
+
+
 class CustomUserRegisterSerializer(ModelSerializer, V2Serializer):
     password = CharField(write_only=True)
     password_confirm = CharField(write_only=True)
