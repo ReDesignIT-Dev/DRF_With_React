@@ -60,6 +60,7 @@ class CustomUser(AbstractUser):
     email_confirmed = models.BooleanField(default=False)
     email = models.EmailField(unique=True, max_length=254, verbose_name='email address')
     activation_token = models.CharField(max_length=64, blank=True, null=True)
+    token_created_at = models.DateTimeField(auto_now_add=True)
 
     objects = CustomUserManager()
     USERNAME_FIELD = "email"
