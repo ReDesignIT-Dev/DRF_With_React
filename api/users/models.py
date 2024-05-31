@@ -60,8 +60,8 @@ class CustomUser(AbstractUser):
     email_confirmed = models.BooleanField(default=False)
     email = models.EmailField(unique=True, max_length=254, verbose_name='email address')
     activation_token = models.CharField(max_length=64, blank=True, null=True)
-    password_token = models.CharField(max_length=64, blank=True, null=True)
-    password_token_created_at = models.DateTimeField(blank=True, null=True, default=None)
+    password_reset_token = models.CharField(max_length=64, blank=True, null=True)
+    password_reset_token_created_at = models.DateTimeField(blank=True, null=True, default=None)
 
     objects = CustomUserManager()
     USERNAME_FIELD = "email"
@@ -75,8 +75,8 @@ class CustomUser(AbstractUser):
         self.save()
 
     def generate_password_reset_token(self):
-        self.password_token = self._generate_user_based_token()
-        self.password_token_created_at = timezone.now()
+        self.password_reset_token = self._generate_user_based_token()
+        self.password_reset_token_created_at = timezone.now()
         self.save()
 
     @staticmethod
