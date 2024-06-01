@@ -51,8 +51,8 @@ class UserPasswordResetView(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data, context={'request': request})
-
         if serializer.is_valid():
+            serializer.send_password_recovery_email()
             return Response({'detail': 'Password reset sent to user email'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
