@@ -1,10 +1,10 @@
 from rest_framework import generics, permissions, status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer, UserActivationSerializer, \
-    PasswordResetSerializer, PasswordResetActivationSerializer
+    PasswordResetSerializer, PasswordResetActivationSerializer, PasswordSetNewPasswordSerializer
 from knox.views import LoginView as KnoxLoginView
 from knox.views import LogoutView as KnoxLogoutView
 from knox.views import LogoutAllView as KnoxLogoutAllView
@@ -60,13 +60,36 @@ class UserPasswordResetView(APIView):
 
 class UserPasswordResetActivationView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = PasswordResetActivationSerializer
 
     def get(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data={'token': kwargs.get('token')})
+        serializer = self.get_serializer(data={'token': kwargs.get('token')})
         if serializer.is_valid():
             return Response({'detail': 'Password recovery token OK.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, *args, **kwargs):
+        data = {
+            'token': kwargs.get('token'),
+            'password': request.data.get('password'),
+            'password_confirm': request.data.get('password_confirm')
+        }
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'detail': 'Password reset successfully.'}, status=status.HTTP_200_OK)
+        print('errors:', serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        return serializer_class(*args, **kwargs)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return PasswordResetActivationSerializer
+        elif self.request.method == 'POST':
+            return PasswordSetNewPasswordSerializer
+        raise MethodNotAllowed(self.request.method)
 
 
 class LoginView(KnoxLoginView):
