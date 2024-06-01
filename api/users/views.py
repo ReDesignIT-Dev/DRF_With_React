@@ -77,7 +77,6 @@ class UserPasswordResetActivationView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'detail': 'Password reset successfully.'}, status=status.HTTP_200_OK)
-        print('errors:', serializer.errors)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
     def get_serializer(self, *args, **kwargs):
