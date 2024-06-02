@@ -18,14 +18,12 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)  # TODO delete after tests
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
         except ValidationError as e:
             errors = e.detail
-            print("Validation errors:", errors)  # TODO delete after tests
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'User created successfully.'}, status=status.HTTP_200_OK)
 
@@ -43,6 +41,22 @@ class UserActivationView(APIView):
             serializer.save()
             return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+
+class LoginView(KnoxLoginView):
+    authentication_classes = [BasicAuthentication]
+    serializer_class = CustomUserLoginSerializer
+
+    def get_post_response_data(self, request, token, instance):
+        data = {
+            'expiry': self.format_expiry_datetime(instance.expiry),
+            'token': token
+        }
+        serializer = self.serializer_class(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            data['user'] = user.username
+        return data
 
 
 class UserPasswordResetView(APIView):
@@ -89,22 +103,6 @@ class UserPasswordResetActivationView(APIView):
         elif self.request.method == 'POST':
             return PasswordSetNewPasswordSerializer
         raise MethodNotAllowed(self.request.method)
-
-
-class LoginView(KnoxLoginView):
-    authentication_classes = [BasicAuthentication]
-    serializer_class = CustomUserLoginSerializer
-
-    def get_post_response_data(self, request, token, instance):
-        data = {
-            'expiry': self.format_expiry_datetime(instance.expiry),
-            'token': token
-        }
-        serializer = self.serializer_class(data=request.data, context={"request": request})
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.validated_data['user']
-            data['user'] = user.username
-        return data
 
 
 class LogoutView(KnoxLogoutView):
