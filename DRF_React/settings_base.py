@@ -11,6 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 
+AUTHENTICATION_BACKENDS = ['api.users.backends.CustomBackend']
+
 LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'users.CustomUser'
 ACCOUNT_ACTIVATION_DAYS = 7
