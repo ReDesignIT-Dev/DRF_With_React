@@ -135,13 +135,17 @@ class PasswordSetNewPasswordSerializer(TokenSerializer):
 
         return value
 
+    def validate_password(self, password):
+        validate_password(password)
+        return password
+
     def validate(self, attrs):
         password = attrs.get('password')
         password_confirm = attrs.get('password_confirm')
 
         if password != password_confirm:
-            raise ValidationError("Passwords do not match")
-        validate_password(password)
+            raise ValidationError({'password_confirm': ["Passwords do not match"]})
+
         return attrs
 
     def save(self):
