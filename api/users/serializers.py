@@ -5,7 +5,6 @@ from rest_framework.fields import empty
 from rest_framework.serializers import Serializer, ModelSerializer, CharField, ValidationError, EmailField
 from .email_sender import EmailSender
 from .models import CustomUser
-from django.contrib.auth import authenticate
 from drf_recaptcha.fields import ReCaptchaV2Field
 from django.contrib.auth.password_validation import validate_password
 from django.urls import reverse
@@ -14,6 +13,52 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class V2Serializer(Serializer):
     recaptcha = ReCaptchaV2Field()
+
+
+class PasswordValidationMixin(Serializer):
+    password = CharField(write_only=True, max_length=128)
+    password_confirm = CharField(write_only=True, max_length=128)
+
+    def validate_password(self, password):
+        validate_password(password)
+        return password
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password_confirm = attrs.get('password_confirm')
+        if password != password_confirm:
+            raise ValidationError({'password_confirm': ["Passwords do not match"]})
+
+        return attrs
+
+
+class CustomUserRegisterSerializer(PasswordValidationMixin, ModelSerializer, V2Serializer):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password', 'password_confirm', 'recaptcha')
+
+    def create(self, validated_data):
+        validated_data.pop('recaptcha')
+        validated_data.pop('password_confirm')
+        user = CustomUser.objects.create_user(**validated_data)
+        user.generate_activation_token()
+        # self.send_activation_email(user)
+        return user
+
+    def send_activation_email(self, user):
+        activation_link = self.context['request'].build_absolute_uri(
+            reverse('activate-user', kwargs={'token': user.activation_token})
+        )
+        html_content = render_to_string('user_activation_template.html', {
+            'username': user.username,
+            'activation_link': activation_link,
+        })
+        with EmailSender() as email_sender:
+            email_sender.send_email(
+                recipient=user.email,
+                subject='Activate your account',
+                message_content=html_content
+            )
 
 
 class UserActivationSerializer(Serializer):
@@ -39,6 +84,21 @@ class UserActivationSerializer(Serializer):
         self.user.activation_token = None
         self.user.save()
         return self.user
+
+
+class CustomUserLoginSerializer(V2Serializer):
+    class Meta:
+        model = CustomUser
+        fields = ('recaptcha',)
+
+    def validate(self, data):
+        user = self.context['request'].user
+        if not user or not user.is_authenticated:
+            raise ValidationError("Invalid login credentials. Please try again.")
+        if not user.is_active:
+            raise ValidationError("User not activated yet - check email")
+        data['user'] = user
+        return data
 
 
 class PasswordResetSerializer(Serializer):
@@ -108,9 +168,7 @@ class PasswordResetActivationSerializer(TokenSerializer):
         return value
 
 
-class PasswordSetNewPasswordSerializer(TokenSerializer):
-    password = CharField(max_length=128)
-    password_confirm = CharField(max_length=128)
+class PasswordSetNewPasswordSerializer(PasswordValidationMixin, TokenSerializer):
     TOKEN_EXPIRE_TIME_HOURS = 1
 
     class Meta:
@@ -135,85 +193,9 @@ class PasswordSetNewPasswordSerializer(TokenSerializer):
 
         return value
 
-    def validate_password(self, password):
-        validate_password(password)
-        return password
-
-    def validate(self, attrs):
-        password = attrs.get('password')
-        password_confirm = attrs.get('password_confirm')
-
-        if password != password_confirm:
-            raise ValidationError({'password_confirm': ["Passwords do not match"]})
-
-        return attrs
-
     def save(self):
         if not self.user:
             raise ValidationError("User not found. Validate the token first.")
         self.user.set_password(self.validated_data['password'])
         self.user.password_reset_token = None
         self.user.save()
-
-
-class CustomUserRegisterSerializer(ModelSerializer, V2Serializer):
-    password = CharField(write_only=True)
-    password_confirm = CharField(write_only=True)
-
-    class Meta:
-        model = CustomUser
-        fields = ('username', 'email', 'password', 'password_confirm', 'recaptcha')
-
-    def create(self, validated_data):
-        validated_data.pop('recaptcha')
-        validated_data.pop('password_confirm')
-        user = CustomUser.objects.create_user(**validated_data)
-        user.generate_activation_token()
-        self.send_activation_email(user)
-        return user
-
-    def send_activation_email(self, user):
-        activation_link = self.context['request'].build_absolute_uri(
-            reverse('activate-user', kwargs={'token': user.activation_token})
-        )
-        html_content = render_to_string('user_activation_template.html', {
-            'username': user.username,
-            'activation_link': activation_link,
-        })
-        with EmailSender() as email_sender:
-            email_sender.send_email(
-                recipient=user.email,
-                subject='Activate your account',
-                message_content=html_content
-            )
-
-    def validate(self, attrs):
-        password = attrs.get('password')
-        password_confirm = attrs.get('password_confirm')
-
-        if password != password_confirm:
-            raise ValidationError("Passwords do not match")
-        validate_password(password)
-        return attrs
-
-
-class CustomUserLoginSerializer(V2Serializer):
-    email = EmailField(write_only=True)
-    password = CharField(write_only=True)
-
-    class Meta:
-        model = CustomUser
-        fields = ('email', 'password', 'recaptcha')
-
-    def validate(self, data):
-        email = data.get('email')
-        password = data.get('password')
-        if email and password:
-            user = authenticate(request=self.context.get('request'), username=email, password=password)
-            if not user:
-                raise ValidationError("Invalid login credentials. Please try again.")
-            data['user'] = user
-        else:
-            raise ValidationError("Both email and password are required for login.")
-
-        return data
