@@ -18,10 +18,12 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls.static import serve
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.shop.urls')),
     path('', include('api.users.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
 ]
