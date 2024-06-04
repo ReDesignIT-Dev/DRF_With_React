@@ -138,7 +138,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles",
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 FRONTEND_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'frontend', 'build'))
 
