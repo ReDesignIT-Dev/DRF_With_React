@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
 from .models import Product, ShoppingCartItem, Category
 from decimal import Decimal
 
@@ -16,14 +18,23 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('name', 'description', 'parent')
 
+    def validate(self, data):
+        name = data.get('name')
+        parent = data.get('parent')
+
+        if Category.objects.filter(name=name, parent=parent).exists():
+            raise ValidationError("Category with this name in this parent category already exists.")
+
+        return data
+
 
 class ProductSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(min_length=2, max_length=500)
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
-    current_price = serializers.FloatField(read_only=True)
-    description = serializers.CharField(min_length=2, max_length=200)  # override the model
     cart_items = serializers.SerializerMethodField()
-    price = serializers.DecimalField(min_value=Decimal(1.00), max_value=Decimal(100000.00), max_digits=None,
-                                     decimal_places=2)
+    price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
+                                     max_digits=None)
+
     sale_start = serializers.DateTimeField(
         required=False,
         input_formats=['%Y-%m-%d %H:%M'],
@@ -31,6 +42,7 @@ class ProductSerializer(serializers.ModelSerializer):
         allow_null=True,
         help_text='Accepted format is "2000-01-01 12:00"',
         style={'input_type': 'text', 'placeholder': '2000-12-12 12:00'},
+        default=None,
     )
     sale_end = serializers.DateTimeField(
         required=False,
@@ -39,14 +51,14 @@ class ProductSerializer(serializers.ModelSerializer):
         allow_null=True,
         help_text='Accepted format is "2000-01-01 12:00"',
         style={'input_type': 'text', 'placeholder': '2000-12-12 12:00'},
+        default=None,
     )
 
     class Meta:
         model = Product
         fields = (
-            'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'current_price',
-            'cart_items',
-            'image', 'cropping')
+            'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
+            'cart_items', 'image')
 
     def get_cart_items(self, instance):
         items = ShoppingCartItem.objects.filter(product=instance)
