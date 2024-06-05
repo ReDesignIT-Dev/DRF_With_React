@@ -34,12 +34,8 @@ class Category(CommonFields):
 
 
 class Product(CommonFields):
-    description = models.TextField()
-    price = models.FloatField()
-    sale_start = models.DateTimeField(blank=True, null=True, default=None)
-    sale_end = models.DateTimeField(blank=True, null=True, default=None)
-    image = models.ImageField(blank=True, default='shop_default_image.jpg', upload_to="products")
     categories = models.ManyToManyField(Category)
+    image = models.ImageField(blank=True, default='shop_default_image.jpg', upload_to="products")
 
 
 class ShoppingCart(CommonFields):
