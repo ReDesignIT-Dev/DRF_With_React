@@ -27,8 +27,8 @@ class CommonFields(models.Model):
 
 class Category(CommonFields, MPTTModel):
     description = models.TextField(blank=True, null=True)
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', default=1,
-                            on_delete=models.SET_DEFAULT)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children',
+                            on_delete=models.SET_NULL)
 
     class MPTTMeta:
         order_insertion_by = ['level']
