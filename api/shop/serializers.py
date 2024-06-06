@@ -16,7 +16,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('name', 'description', 'parent')
+        fields = ('name', 'description', 'parent', 'level')
 
     def validate(self, data):
         name = data.get('name')
@@ -29,6 +29,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    category_names = serializers.SerializerMethodField()
     description = serializers.CharField(min_length=2, max_length=500)
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
     cart_items = serializers.SerializerMethodField()
@@ -58,8 +59,11 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = (
             'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
-            'cart_items', 'image')
+            'cart_items', 'image', 'category_names',)
 
     def get_cart_items(self, instance):
         items = ShoppingCartItem.objects.filter(product=instance)
         return CartItemSerializer(items, many=True).data
+
+    def get_category_names(self, instance):
+        return [category.name for category in instance.categories.all()]
