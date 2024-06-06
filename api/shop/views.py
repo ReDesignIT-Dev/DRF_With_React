@@ -1,4 +1,3 @@
-from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
@@ -58,48 +57,18 @@ class ProductCreate(CreateAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
-    def create(self, request, *args, **kwargs):
-        try:
-            price = request.data.get("price")
-            if price is not None and float(price) <= 0.0:
-                raise ValidationError({"price": "Must be above 0"})
-        except:
-            raise ValidationError({"price": "A valid number is required"})
-        return super().create(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProductEditView(RetrieveUpdateDestroyAPIView):
-    lookup_field = "id"
+    lookup_field = "slug"
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-
-    def delete(self, request, *args, **kwargs):
-        product_id = request.data.get("id")
-        response = super().delete(request, *args, **kwargs)
-        if response.status_code == 204:
-            from django.core.cache import cache
-
-            cache.delete("product_data_{}".format(product_id))
-        return response
-
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        product = Product.objects.get(id=response.data["id"])
-        product.save()
-        if response.status_code == 200:
-            from django.core.cache import cache
-
-            product = response.data
-            cache.set(
-                "product_data_{}".format(product["id"]),
-                {
-                    "name": product["name"],
-                    "description": product["description"],
-                    "price": product["price"],
-                },
-            )
-
-        return response
 
 
 class ProductView(APIView):
@@ -110,8 +79,9 @@ class CategoryView(APIView):
     pass
 
 
-class CategoriesView(APIView):
-    pass
+class CategoriesView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 
 class CategoryCreateView(CreateAPIView):
