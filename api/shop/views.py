@@ -1,7 +1,7 @@
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
-    RetrieveUpdateDestroyAPIView,
+    RetrieveUpdateDestroyAPIView, RetrieveAPIView,
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
@@ -71,8 +71,10 @@ class ProductEditView(RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
 
 
-class ProductView(APIView):
-    pass
+class ProductView(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'slug'
 
 
 class CategoryView(APIView):
