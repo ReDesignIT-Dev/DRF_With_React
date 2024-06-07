@@ -34,17 +34,11 @@ class Category(CommonFields, MPTTModel):
         order_insertion_by = ['level']
 
     def delete(self, *args, **kwargs):
-        # Update products to point to the parent category
         parent_category = self.parent
         for product in Product.objects.filter(categories=self):
             product.categories.remove(self)
-            if parent_category:
-                product.categories.add(parent_category)
-
-        # Update child categories to point to the parent category
+            product.categories.add(parent_category)
         self.children.update(parent=self.parent)
-
-        # Call the superclass delete method to perform the actual delete
         super().delete(*args, **kwargs)
 
 
