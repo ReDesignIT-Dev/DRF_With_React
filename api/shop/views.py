@@ -81,19 +81,12 @@ class ProductView(RetrieveAPIView):
 class CategoryView(APIView):
     def get(self, request, slug, format=None):
         category = get_object_or_404(Category, slug=slug)
-
-        # Get the products in this category
         products = Product.objects.filter(categories=category)
-
-        # Get the child categories of this category
         child_categories = category.children.all()
-
-        # Serialize the data
         category_serializer = CategorySerializer(category)
         product_serializer = ProductSerializer(products, many=True)
         child_category_serializer = CategorySerializer(child_categories, many=True)
 
-        # Combine the data into a single response
         response_data = {
             'category': category_serializer.data,
             'products': product_serializer.data,
@@ -123,15 +116,9 @@ class CategoryEditView(RetrieveUpdateDestroyAPIView):
         return Category.objects.filter(slug=slug)
 
     def perform_destroy(self, instance):
-        # Check if the category has no parent
         if instance.parent is None:
-            # Check if the category has child categories
             has_children = instance.children.exists()
-            # Check if the category has associated products
             has_products = Product.objects.filter(categories=instance).exists()
-
             if has_children or has_products:
                 raise ValidationError("Cannot delete a root category that has child categories or associated products.")
-
-        # Call the superclass method to perform the actual delete
         super().perform_destroy(instance)
