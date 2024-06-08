@@ -1,6 +1,8 @@
 
 # mine:
 media/
+static/
+staticfiles/
 Exercise Files
 .idea
 .env
