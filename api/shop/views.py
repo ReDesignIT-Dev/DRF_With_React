@@ -2,7 +2,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
-    RetrieveUpdateDestroyAPIView, RetrieveAPIView,
+    RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404,
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
@@ -79,7 +79,28 @@ class ProductView(RetrieveAPIView):
 
 
 class CategoryView(APIView):
-    pass
+    def get(self, request, slug, format=None):
+        category = get_object_or_404(Category, slug=slug)
+
+        # Get the products in this category
+        products = Product.objects.filter(categories=category)
+
+        # Get the child categories of this category
+        child_categories = category.children.all()
+
+        # Serialize the data
+        category_serializer = CategorySerializer(category)
+        product_serializer = ProductSerializer(products, many=True)
+        child_category_serializer = CategorySerializer(child_categories, many=True)
+
+        # Combine the data into a single response
+        response_data = {
+            'category': category_serializer.data,
+            'products': product_serializer.data,
+            'child_categories': child_category_serializer.data
+        }
+
+        return Response(response_data)
 
 
 class CategoriesView(ListAPIView):
