@@ -124,7 +124,12 @@ class CategoryEditView(RetrieveUpdateDestroyAPIView):
         super().perform_destroy(instance)
 
 
-class ShopAdminPanel(ListAPIView):
+class ShopAdminPanel(APIView):
     permission_classes = [IsAdminUser]
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+
+    def get(self, request):
+        response_data = {
+            'products_quantity': Product.objects.all().count(),
+            'categories_quantity': Category.objects.all().count(),
+        }
+        return Response(response_data)
