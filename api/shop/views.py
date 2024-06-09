@@ -7,7 +7,7 @@ from rest_framework.generics import (
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategorySerializer
 from .models import Product, Category
@@ -122,3 +122,9 @@ class CategoryEditView(RetrieveUpdateDestroyAPIView):
             if has_children or has_products:
                 raise ValidationError("Cannot delete a root category that has child categories or associated products.")
         super().perform_destroy(instance)
+
+
+class ShopAdminPanel(ListAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
