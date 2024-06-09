@@ -66,8 +66,8 @@ class CustomUser(AbstractUser):
     password_reset_token_created_at = models.DateTimeField(blank=True, null=True, default=None)
 
     objects = CustomUserManager()
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.username
