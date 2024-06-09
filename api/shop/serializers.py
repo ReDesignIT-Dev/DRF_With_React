@@ -32,7 +32,6 @@ class ProductSerializer(serializers.ModelSerializer):
     category_names = serializers.SerializerMethodField()
     description = serializers.CharField(min_length=2, max_length=500)
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
-    cart_items = serializers.SerializerMethodField()
     price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
                                      max_digits=None)
 
@@ -59,11 +58,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = (
             'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
-            'cart_items', 'image', 'category_names',)
-
-    def get_cart_items(self, instance):
-        items = ShoppingCartItem.objects.filter(product=instance)
-        return CartItemSerializer(items, many=True).data
+            'image', 'category_names',)
 
     def get_category_names(self, instance):
         return [category.name for category in instance.categories.all()]
