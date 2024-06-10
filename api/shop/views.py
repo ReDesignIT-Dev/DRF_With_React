@@ -4,8 +4,7 @@ from rest_framework.generics import (
     CreateAPIView,
     RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404,
 )
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
+from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
@@ -33,9 +32,6 @@ class ProductList(ListAPIView):
     permission_classes = [AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = (DjangoFilterBackend, SearchFilter)
-    filterset_fields = ("id",)
-    search_fields = ("name", "description")
     pagination_class = ProductsPagination
 
     def get_queryset(self):
@@ -133,3 +129,11 @@ class ShopAdminPanel(APIView):
             'categories_quantity': Category.objects.all().count(),
         }
         return Response(response_data)
+
+
+class ShopAdminPanelProducts(ListAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
