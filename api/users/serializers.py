@@ -42,7 +42,7 @@ class CustomUserRegisterSerializer(PasswordValidationMixin, ModelSerializer, V2S
         validated_data.pop('password_confirm')
         user = CustomUser.objects.create_user(**validated_data)
         user.generate_activation_token()
-        # self.send_activation_email(user)
+        self.send_activation_email(user)
         return user
 
     def send_activation_email(self, user):
