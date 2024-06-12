@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap";
-import { postData } from "services/apiRequests";
+import { postData, postLogin } from "services/apiRequests";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 import Input from "./Input";
@@ -105,9 +105,9 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     }
   }
 
-  async function loginUser(userData) {
+  async function loginUser(email, password, recaptcha) {
     try {
-      const response = await postData("login/", userData);
+      const response = await postLogin(email, password, recaptcha);
       setMessage(response.message);
     } catch (error) {
       console.log(error);
@@ -130,14 +130,9 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       return;
     }
 
-    console.log("Form submitted with email:", email, "and password:", password);
+    console.log("Form submitted with email:", email, "and password:", password, "and token:", recaptchaToken);
 
-    const userData = {
-      email: email,
-      password: password,
-    };
-
-    loginUser(userData);
+    loginUser(email, password, recaptchaToken);
   };
 
   const handleSignup = () => {
