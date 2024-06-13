@@ -26,9 +26,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework.authentication.TokenAuthentication',
         'knox.auth.TokenAuthentication',
-    )
+    ),
 }
-
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 KNOX_TOKEN_MODEL = 'knox.AuthToken'
 
 REST_KNOX = {
@@ -79,7 +79,6 @@ EMAIL_PASSWORD = getenv('EMAIL_PASSWORD')
 EMAIL_SMTP = getenv('SMTP_SERVER')
 EMAIL_SSL_ENABLED = getenv('SSL_ENABLED')
 EMAIL_PORT = getenv('EMAIL_PORT')
-
 
 ROOT_URLCONF = 'DRF_React.urls'
 
@@ -133,7 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
+USE_L10N = False
 USE_TZ = True
 
 STATIC_URL = '/static/'
