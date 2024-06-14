@@ -29,6 +29,9 @@ REST_FRAMEWORK = {
     ),
 }
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+DATE_INPUT_FORMAT = "%Y-%m-%d %H"
+DATE_FORMAT = '%Y-%m-%d %H'
+
 KNOX_TOKEN_MODEL = 'knox.AuthToken'
 
 REST_KNOX = {
