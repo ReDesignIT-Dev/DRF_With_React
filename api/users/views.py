@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError, MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -55,6 +56,8 @@ class LoginView(KnoxLoginView):
         serializer = self.serializer_class(data=request.data, context={"request": request})
         if serializer.is_valid():
             user = serializer.validated_data['user']
+            user.last_login = timezone.now().replace(microsecond=0)
+            user.save(update_fields=['last_login'])
             data['user'] = user.username
         return data
 

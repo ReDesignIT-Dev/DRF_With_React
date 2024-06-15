@@ -38,7 +38,8 @@ class CustomUserManager(UserManager):
             raise ValueError("Password is required")
         username = self.normalize_username(username)
         email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
+        date_joined = timezone.now().replace(microsecond=0)
+        user = self.model(username=username, email=email, date_joined=date_joined, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
