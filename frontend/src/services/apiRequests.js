@@ -44,3 +44,17 @@ export async function getData(endpoint) {
         throw new Error('Failed to get data');
     }
 }
+
+export async function getDataUsingUserToken(endpoint, token) {
+    try {
+        const response = await axios.get(endpoint, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+        });
+        return response;
+    } catch (error) {
+        throw new Error('Failed to get data');
+    }
+}
