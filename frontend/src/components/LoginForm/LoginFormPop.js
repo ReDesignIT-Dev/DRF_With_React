@@ -18,6 +18,7 @@ import {
   isDigitValid,
   isSpecialCharValid,
 } from "utils/validation";
+import Cookies from 'js-cookie';
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   //ReCAPTCHA
@@ -108,7 +109,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   async function loginUser(email, password, recaptcha) {
     try {
       const response = await postLogin(email, password, recaptcha);
-      setMessage(response.message);
+      const token = response.data.token;
+      Cookies.set('token', token, { secure: true, sameSite: 'Strict', expires: 1 }); // expires in 1 day
     } catch (error) {
       console.log(error);
     }
