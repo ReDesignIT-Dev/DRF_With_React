@@ -1,60 +1,85 @@
-import axios from 'services/axiosConfig';
+import apiClient from "services/axiosConfig";
 
 export async function postData(endpoint, data) {
-    try {
-        const response = await axios.post(endpoint, data, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response;
-    } catch (error) {
-        throw new Error('Failed to post data');
-    }
+  try {
+    const response = await apiClient.post(endpoint, data, {});
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
 }
 
 export async function postLogin(username, password, recaptcha) {
-    try {
+  try {
+    const authString = `${username}:${password}`;
+    const encodedAuthString = btoa(authString);
 
-        const authString = `${username}:${password}`;
-        const encodedAuthString = btoa(authString);
-
-        const response = await axios.post('login/', { recaptcha: recaptcha }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${encodedAuthString}`,
-            },
-        });
-        return response;
-    } catch (error) {
-        console.error('Error posting data:', error.response || error.message);
-        throw new Error('Failed to post data');
-    }
+    const response = await apiClient.post(
+      "login/",
+      { recaptcha: recaptcha },
+      {
+        headers: {
+          ...apiClient.defaults.headers,
+          Authorization: `Basic ${encodedAuthString}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
 }
 
 export async function getData(endpoint) {
-    try {
-        const response = await axios.get(endpoint, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response;
-    } catch (error) {
-        throw new Error('Failed to get data');
-    }
+  try {
+    const response = await apiClient.get(endpoint);
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
 }
 
 export async function getDataUsingUserToken(endpoint, token) {
+  try {
+    const response = await apiClient.get(endpoint, {
+      headers: {
+        ...apiClient.defaults.headers,
+        Authorization: `Token ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
+}
+
+export async function logoutUser(token) {
     try {
-        const response = await axios.get(endpoint, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`
-            },
-        });
-        return response;
+      const response = await apiClient.post("logout/", {}, {
+        headers: {
+            ...apiClient.defaults.headers,
+          Authorization: `Token ${token}`,
+        },
+      });
+      console.log("Bye");
+      return response;
     } catch (error) {
-        throw new Error('Failed to get data');
+      handleApiError(error);
     }
+  }
+
+function handleApiError(error) {
+  if (error.response) {
+    // Server responded with a status other than 200 range
+    console.error("API Error:", error.response.data);
+    throw new Error(`API Error: ${error.response.statusText}`);
+  } else if (error.request) {
+    // Request was made but no response was received
+    console.error("Network Error:", error.request);
+    throw new Error("Network Error: Please check your internet connection.");
+  } else {
+    // Something else caused the error
+    console.error("Error:", error.message);
+    throw new Error(`Error: ${error.message}`);
+  }
 }
