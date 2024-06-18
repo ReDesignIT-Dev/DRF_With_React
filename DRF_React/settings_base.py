@@ -13,6 +13,8 @@ SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 
 AUTHENTICATION_BACKENDS = ['api.users.backends.CustomBackend']
 
+FRONTEND_URL = getenv('FRONTEND_URL')
+
 LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'users.CustomUser'
 ACCOUNT_ACTIVATION_DAYS = 7

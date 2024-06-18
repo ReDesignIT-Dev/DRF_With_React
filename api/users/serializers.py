@@ -9,6 +9,9 @@ from drf_recaptcha.fields import ReCaptchaV2Field
 from django.contrib.auth.password_validation import validate_password
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+
+frontend_url = settings.FRONTEND_URL
 
 
 class V2Serializer(Serializer):
@@ -37,25 +40,27 @@ class CustomUserRegisterSerializer(PasswordValidationMixin, ModelSerializer, V2S
         model = CustomUser
         fields = ('username', 'email', 'password', 'password_confirm', 'recaptcha')
 
+    def __init__(self, instance=None, data=empty, **kwargs):
+        super().__init__(instance, data, **kwargs)
+        self.user = None
+
     def create(self, validated_data):
         validated_data.pop('recaptcha')
         validated_data.pop('password_confirm')
-        user = CustomUser.objects.create_user(**validated_data)
-        user.generate_activation_token()
-        self.send_activation_email(user)
-        return user
+        self.user = CustomUser.objects.create_user(**validated_data)
+        self.user.generate_activation_token()
+        self.send_activation_email()
+        return self.user
 
-    def send_activation_email(self, user):
-        activation_link = self.context['request'].build_absolute_uri(
-            reverse('activate-user', kwargs={'token': user.activation_token})
-        )
+    def send_activation_email(self):
+        activation_link = f"{frontend_url}/activate/{self.user.activation_token}"
         html_content = render_to_string('user_activation_template.html', {
-            'username': user.username,
+            'username': self.user.username,
             'activation_link': activation_link,
         })
         with EmailSender() as email_sender:
             email_sender.send_email(
-                recipient=user.email,
+                recipient=self.user.email,
                 subject='Activate your account',
                 message_content=html_content
             )
@@ -129,8 +134,7 @@ class PasswordResetSerializer(Serializer):
         request = self.context.get('request')
         if not request:
             raise ValidationError('Request context is missing')
-        recovery_path = reverse('password-reset-activation', kwargs={'token': self.user.password_reset_token})
-        recovery_link = request.build_absolute_uri(recovery_path)
+        recovery_link = f"{frontend_url}/password-reset/{self.user.password_reset_token}"
         html_content = render_to_string('user_password_recovery_template.html', {
             'username': self.user.username,
             'recovery_link': recovery_link,
