@@ -18,7 +18,7 @@ import {
   isDigitValid,
   isSpecialCharValid,
 } from "utils/validation";
-import Cookies from 'js-cookie';
+import { setToken } from "utils/cookies";
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   //ReCAPTCHA
@@ -46,6 +46,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [signupEmailError, setSignupEmailError] = useState("");
   const [signupPasswordRepeatError, setSignupRepeatPasswordError] = useState("");
 
+  const [apiError, setApiError] = useState(null);
 
   const devRecaptchaToken = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
@@ -96,13 +97,12 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     try {
       await postData("register/", userData).then((response) => {
         setMessage(`${response.status}: ${response.data.message}`);
-        console.log("response: ", response);
         if (response.status === 200) {
           handleXClick();
         }
       });
     } catch (error) {
-      console.log(error);
+      setApiError(error.message);
     }
   }
 
@@ -110,9 +110,13 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     try {
       const response = await postLogin(email, password, recaptcha);
       const token = response.data.token;
-      Cookies.set('token', token, { secure: true, sameSite: 'Strict', expires: 1 }); // expires in 1 day
+      setToken(token);
+      if (response.status === 200) {
+        handleXClick();
+      }
     } catch (error) {
-      console.log(error);
+      setApiError(error.message);
+      console.log(apiError); //TODO DELETE LATER
     }
   }
 
