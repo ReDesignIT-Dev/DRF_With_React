@@ -6,6 +6,8 @@ import About from "pages/About";
 import Contact from "pages/Contact";
 import Header from "components/Header";
 import Footer from "components/Footer";
+import NotFound from "pages/NotFound";
+import PasswordReset from "pages/PasswordReset";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/password-reset/:token" element={<PasswordReset />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>
