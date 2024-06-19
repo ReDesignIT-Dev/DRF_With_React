@@ -20,7 +20,7 @@ module.exports = {
     ],
     rules: {
       'no-unused-vars': ['error', { 'varsIgnorePattern': '^_' }],
-      // Add more rules as needed
+      'react/react-in-jsx-scope': 'off',
     },
     settings: {
       react: {
