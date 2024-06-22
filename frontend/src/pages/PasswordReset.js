@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import NewPasswordField from "components/Fields/NewPasswordField";
 import { PASSWORD_RESET_API_URL } from "config";
 import { getDataUsingUserToken } from "services/apiRequests";
-import ReactLoading from "react-loading";
-import "./PasswordReset.scss";
+import Loading from "components/Loading";
+
 // import {
 //   isEmpty,
 //   isPasswordValid,
@@ -48,14 +48,7 @@ const PasswordReset = () => {
   }, [token]);
 
   if (loading) {
-    return (
-      <div className='loading-div'>
-        <div className='loading-component mb-5 mt-5'>
-          <ReactLoading type={"spinningBubbles"} color={"green"} height={"100%"} width={"100%"} />
-        </div>
-        <div className='fs-3'>Please wait</div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
