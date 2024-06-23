@@ -24,10 +24,8 @@ export default function NewPasswordWithPasswordRepeatField() {
       setIsValid(newPasswordIsValid && passwordRepeatIsValid);
     }
   
-
   return (
     <div className='d-flex flex-column'>
-      {isValid}
       <NewPasswordField onChange={handleNewPasswordChange} onValidate={setNewPasswordIsValid} />
       <PasswordRepeatField newPassword={newPassword} onValidate={setPasswordRepeatIsValid}/>
     </div>
