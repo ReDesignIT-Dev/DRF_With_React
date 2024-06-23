@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   isLengthValid,
   isUppercaseValid,
@@ -9,15 +9,20 @@ import {
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 
-export default function NewPasswordField() {
+export default function NewPasswordField({onChange, onValidate}) {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    const isValid = validatePassword(newPassword);
+    onValidate(isValid);
+  }, [newPassword]);
+
   const handleChange = (e) => {
     const value = e.target.value;
     setNewPassword(value);
-    validatePassword(value);
+    onChange(value);
   };
 
   const validatePassword = (value) => {
@@ -35,7 +40,9 @@ export default function NewPasswordField() {
       setNewPasswordError("Password must contain at least one special character");
     } else {
       setNewPasswordError("");
+      return true;
     }
+    return false;
   };
 
   return (
