@@ -14,7 +14,7 @@ export default function NewPasswordWithPasswordRepeatField() {
 
   useEffect(() => {
     console.log('form valid:', isValid);
-  }, [isValid]);
+  }, [isValid]); // TODO DELETE AFTER MORE DEBUG TESTS
 
   const handleNewPasswordChange = (value) => {
     setNewPassword(value);

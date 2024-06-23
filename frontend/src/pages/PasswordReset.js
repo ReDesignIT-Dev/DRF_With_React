@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import NewPasswordField from "components/Fields/NewPasswordField";
 import { PASSWORD_RESET_API_URL } from "config";
 import { getDataUsingUserToken } from "services/apiRequests";
 import Loading from "components/Loading";
+import NewPasswordWithPasswordRepeatField from "components/Fields/NewPasswordWithPasswordRepeatField";
 
 // import {
 //   isEmpty,
@@ -55,7 +55,7 @@ const PasswordReset = () => {
     <div className='container d-flex flex-column align-items-center'>
       {isValidToken ? (
         <div className='' style={{ maxWidth: "200px" }}>
-          <NewPasswordField />
+          <NewPasswordWithPasswordRepeatField />
         </div>
       ) : (
         <div>{errorMessage}</div> // Show an error message if the token is invalid
