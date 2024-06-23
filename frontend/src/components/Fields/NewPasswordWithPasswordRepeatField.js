@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import NewPasswordField from "./NewPasswordField";
 import PasswordRepeatField from "./PasswordRepeatField";
 
-export default function NewPasswordWithPasswordRepeatField() {
+export default function NewPasswordWithPasswordRepeatField({onValidate}) {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordIsValid, setNewPasswordIsValid] = useState(false);
   const [passwordRepeatIsValid, setPasswordRepeatIsValid] = useState(false);
@@ -13,8 +13,8 @@ export default function NewPasswordWithPasswordRepeatField() {
   }, [newPasswordIsValid, passwordRepeatIsValid]);
 
   useEffect(() => {
-    console.log('form valid:', isValid);
-  }, [isValid]); // TODO DELETE AFTER MORE DEBUG TESTS
+    onValidate(isValid);
+  }, [isValid]);
 
   const handleNewPasswordChange = (value) => {
     setNewPassword(value);

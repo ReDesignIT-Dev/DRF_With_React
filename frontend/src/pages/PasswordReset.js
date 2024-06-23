@@ -23,6 +23,7 @@ const PasswordReset = () => {
   const [isValidToken, setIsValidToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
     const checkTokenValidity = async () => {
@@ -47,6 +48,13 @@ const PasswordReset = () => {
     checkTokenValidity();
   }, [token]);
 
+  useEffect(() => {
+    if (isValid && isValidToken){
+      console.log("OK?");
+      // TODO SENT POST TO set new password
+    }
+  }, [isValidToken]);
+
   if (loading) {
     return <Loading />;
   }
@@ -55,7 +63,7 @@ const PasswordReset = () => {
     <div className='container d-flex flex-column align-items-center'>
       {isValidToken ? (
         <div className='' style={{ maxWidth: "200px" }}>
-          <NewPasswordWithPasswordRepeatField />
+          <NewPasswordWithPasswordRepeatField onValidate={setIsValid}/>
         </div>
       ) : (
         <div>{errorMessage}</div> // Show an error message if the token is invalid
