@@ -5,19 +5,6 @@ import { getDataUsingUserToken } from "services/apiRequests";
 import Loading from "components/Loading";
 import NewPasswordWithPasswordRepeatField from "components/Fields/NewPasswordWithPasswordRepeatField";
 
-// import {
-//   isEmpty,
-//   isPasswordValid,
-//   isTheSamePassword,
-//   isLengthValid,
-//   isUppercaseValid,
-//   isLowercaseValid,
-//   isDigitValid,
-//   isSpecialCharValid,
-// } from "utils/validation";
-
-//TODO FIELD WITH VALIDATION
-
 const PasswordReset = () => {
   const { token } = useParams();
   const [isValidToken, setIsValidToken] = useState(null);
