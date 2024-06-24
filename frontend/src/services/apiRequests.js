@@ -2,7 +2,11 @@ import apiClient from "services/axiosConfig";
 
 export async function postData(endpoint, data) {
   try {
-    const response = await apiClient.post(endpoint, data, {});
+    const response = await apiClient.post(endpoint, data, {
+      headers: {
+        ...apiClient.defaults.headers,
+      },
+    });
     return response;
   } catch (error) {
     handleApiError(error);
@@ -53,20 +57,40 @@ export async function getDataUsingUserToken(endpoint, token) {
   }
 }
 
+export async function postPasswordReset(endpoint, password, password_confirm) {
+  try {
+    const response = await apiClient.post(endpoint, { 
+      password, 
+      password_confirm 
+    }, {
+      headers: {
+        ...apiClient.defaults.headers,
+      },
+    });
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
+}
+
 export async function logoutUser(token) {
-    try {
-      const response = await apiClient.post("logout/", {}, {
+  try {
+    const response = await apiClient.post(
+      "logout/",
+      {},
+      {
         headers: {
-            ...apiClient.defaults.headers,
+          ...apiClient.defaults.headers,
           Authorization: `Token ${token}`,
         },
-      });
-      console.log("Bye");
-      return response;
-    } catch (error) {
-      handleApiError(error);
-    }
+      }
+    );
+    console.log("Bye");
+    return response;
+  } catch (error) {
+    handleApiError(error);
   }
+}
 
 function handleApiError(error) {
   if (error.response) {
