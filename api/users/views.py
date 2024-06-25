@@ -40,7 +40,7 @@ class UserActivationView(APIView):
         serializer = self.serializer_class(data={'token': kwargs.get('token')})
         if serializer.is_valid():
             serializer.save()
-            return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)
+            return Response({'message': 'User activated successfully.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -71,7 +71,7 @@ class UserPasswordResetView(APIView):
         if serializer.is_valid():
             serializer.save()
             serializer.send_password_recovery_email()
-            return Response({'detail': 'Password reset sent to user email'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Password reset sent to user email'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -81,7 +81,7 @@ class UserPasswordResetActivationView(APIView):
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(data={'token': kwargs.get('token')})
         if serializer.is_valid():
-            return Response({'detail': 'Password recovery token OK.'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Password recovery token OK.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, *args, **kwargs):
@@ -93,7 +93,7 @@ class UserPasswordResetActivationView(APIView):
         serializer = self.get_serializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'detail': 'Password reset successfully.'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Password reset successfully.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
     def get_serializer(self, *args, **kwargs):
