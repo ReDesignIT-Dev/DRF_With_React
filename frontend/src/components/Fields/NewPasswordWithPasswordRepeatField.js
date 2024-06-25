@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import NewPasswordField from "./NewPasswordField";
 import PasswordRepeatField from "./PasswordRepeatField";
 
-export default function NewPasswordWithPasswordRepeatField({onValidate}) {
+export default function NewPasswordWithPasswordRepeatField({passwordValue, passwordRepeatValue, onValidate}) {
   const [newPassword, setNewPassword] = useState("");
+  const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
   const [newPasswordIsValid, setNewPasswordIsValid] = useState(false);
   const [passwordRepeatIsValid, setPasswordRepeatIsValid] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -14,11 +15,9 @@ export default function NewPasswordWithPasswordRepeatField({onValidate}) {
 
   useEffect(() => {
     onValidate(isValid);
+    passwordValue(newPassword);
+    passwordRepeatValue(newPasswordRepeat);
   }, [isValid]);
-
-  const handleNewPasswordChange = (value) => {
-    setNewPassword(value);
-  }
 
   const validateFields = () => {
       setIsValid(newPasswordIsValid && passwordRepeatIsValid);
@@ -26,8 +25,8 @@ export default function NewPasswordWithPasswordRepeatField({onValidate}) {
   
   return (
     <div className='d-flex flex-column'>
-      <NewPasswordField onChange={handleNewPasswordChange} onValidate={setNewPasswordIsValid} />
-      <PasswordRepeatField newPassword={newPassword} onValidate={setPasswordRepeatIsValid}/>
+      <NewPasswordField onChange={setNewPassword} onValidate={setNewPasswordIsValid} />
+      <PasswordRepeatField onChange={setNewPasswordRepeat} newPassword={newPassword} onValidate={setPasswordRepeatIsValid}/>
     </div>
   );
 }

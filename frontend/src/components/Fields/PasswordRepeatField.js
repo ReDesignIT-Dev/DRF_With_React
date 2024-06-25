@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function PasswordRepeatField({ newPassword, onValidate }) {
+export default function PasswordRepeatField({ onChange, newPassword, onValidate }) {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [repeatPasswordError, setRepeatPasswordError] = useState("");
 
@@ -12,6 +12,7 @@ export default function PasswordRepeatField({ newPassword, onValidate }) {
   const handleChange = (e) => {
     const value = e.target.value;
     setRepeatPassword(value);
+    onChange(value);
   };
 
   const validateRepeatPassword = (value) => {
