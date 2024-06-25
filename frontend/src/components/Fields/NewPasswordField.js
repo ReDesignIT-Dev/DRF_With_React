@@ -46,7 +46,7 @@ export default function NewPasswordField({onChange, onValidate}) {
   };
 
   return (
-    <div className='d-flex flex-column'>
+    <div className='d-flex flex-column mt-2'>
       <input
         type={showPassword ? "text" : "password"}
         id='newpassword'

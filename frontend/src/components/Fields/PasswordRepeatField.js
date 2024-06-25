@@ -28,7 +28,7 @@ export default function PasswordRepeatField({ onChange, newPassword, onValidate 
   };
 
   return (
-    <div className='d-flex flex-column'>
+    <div className='d-flex flex-column mt-2'>
       <input
         type="password"
         id='repeatpassword'
