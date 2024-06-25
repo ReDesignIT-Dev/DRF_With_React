@@ -14,6 +14,7 @@ const PasswordReset = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [passwordChangePostSuccess, setPasswordChangePostSuccess] = useState(false);
 
   useEffect(() => {
     const checkTokenValidity = async () => {
@@ -46,36 +47,53 @@ const PasswordReset = () => {
     event.preventDefault();
     if (isValid) {
       try {
-      const response = await postPasswordReset(`${PASSWORD_RESET_API_URL}${token}/`, newPassword, newPasswordRepeat);
+        const response = await postPasswordReset(
+          `${PASSWORD_RESET_API_URL}${token}/`,
+          newPassword,
+          newPasswordRepeat
+        );
 
-      if (response.status === 200) {
-        setSuccessMessage('Password has been reset successfully!');
-        setErrorMessage('');
-        console.log(successMessage);
-      } else {
-        const errorData = response.data;
-        setErrorMessage(errorData.message || 'Failed to reset password.');
-        setSuccessMessage('');
+        if (response.status === 200) {
+          const returnMessage = response.data.message;
+          setSuccessMessage(returnMessage);
+          setPasswordChangePostSuccess(true);
+          setErrorMessage("");
+          console.log(returnMessage);
+        } else {
+          const errorData = response.data;
+          setErrorMessage(errorData.message || "Failed to reset password.");
+          setSuccessMessage("");
+        }
+      } catch (error) {
+        setErrorMessage("An error occurred. Please try again.");
+        setSuccessMessage("");
       }
-    } catch (error) {
-      setErrorMessage('An error occurred. Please try again.');
-      setSuccessMessage('');
+    } else {
+      setErrorMessage("Passwords do not match.");
+      setSuccessMessage("");
     }
-  } else {
-    setErrorMessage('Passwords do not match.');
-    setSuccessMessage('');
-  }
-};
+  };
 
   return (
     <div className='container d-flex flex-column align-items-center'>
-      {isValidToken ? (
-        <form onSubmit={handleSubmit} className='d-flex flex-column justify-content-center align-items-center'>
-          <NewPasswordWithPasswordRepeatField passwordValue={setNewPassword} passwordRepeatValue={setNewPasswordRepeat} onValidate={setIsValid} />
-          <button type="submit" className="btn btn-primary mt-3" disabled={!isValid}>Submit</button>
+      {passwordChangePostSuccess ? (
+        <div className="alert alert-success mt-3">{successMessage}</div>
+      ) : isValidToken ? (
+        <form
+          onSubmit={handleSubmit}
+          className='d-flex flex-column justify-content-center align-items-center'
+        >
+          <NewPasswordWithPasswordRepeatField
+            passwordValue={setNewPassword}
+            passwordRepeatValue={setNewPasswordRepeat}
+            onValidate={setIsValid}
+          />
+          <button type='submit' className='btn btn-primary mt-3' disabled={!isValid}>
+            Submit
+          </button>
         </form>
       ) : (
-        <div>{errorMessage}</div> // Show an error message if the token is invalid
+        <div className="alert alert-danger mt-3">{errorMessage}</div> // Show an error message if the token is invalid
       )}
     </div>
   );
