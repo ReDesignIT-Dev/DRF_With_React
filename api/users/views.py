@@ -93,7 +93,7 @@ class UserPasswordResetActivationView(APIView):
         serializer = self.get_serializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Password reset successfully.'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Have a nice day with your new password :)'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
     def get_serializer(self, *args, **kwargs):
