@@ -244,7 +244,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         onChange={(ev) => setSignupPassword(ev.target.value)}
       />
       <div className="password-validation d-flex flex-column align-items-center">
-        <div className={isLengthValid(signupPassword, 8) ? "valid" : "invalid"}>Minimum length - 8 characters</div>
+        <div className={isLengthValid(signupPassword) ? "valid" : "invalid"}>Minimum length - 8 characters</div>
         <div className={isUppercaseValid(signupPassword) ? "valid" : "invalid"}>At least one uppercase letter</div>
         <div className={isLowercaseValid(signupPassword) ? "valid" : "invalid"}>At least one lowercase letter</div>
         <div className={isDigitValid(signupPassword) ? "valid" : "invalid"}>At least one numeric digit</div>
