@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { isPasswordValid } from "utils/validation";
+import {
+  isPasswordValid,
+  isLengthValid,
+  isDigitValid,
+  isLowercaseValid,
+  isSpecialCharValid,
+  isUppercaseValid,
+} from "utils/validation";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 
