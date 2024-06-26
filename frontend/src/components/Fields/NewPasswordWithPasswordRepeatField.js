@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NewPasswordField from "./NewPasswordField";
-import PasswordRepeatField from "./PasswordRepeatField";
+import PasswordRepeatField from "./PasswordConfirmField";
 
 export default function NewPasswordWithPasswordRepeatField({customClassesForNewPassword, customClassesForPasswordRepeat, passwordValue, passwordRepeatValue, onValidate}) {
   const [newPassword, setNewPassword] = useState("");
