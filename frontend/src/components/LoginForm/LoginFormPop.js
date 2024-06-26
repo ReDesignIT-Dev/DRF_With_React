@@ -8,10 +8,8 @@ import Input from "./Input";
 import ErrorLabel from "./ErrorLabel";
 import ReCAPTCHA from "react-google-recaptcha";
 import {
-  isEmpty,
   isEmailValid,
   isPasswordValid,
-  isTheSamePassword,
   isLengthValid,
   isUppercaseValid,
   isLowercaseValid,
@@ -121,7 +119,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   }
 
   const handleLogin = () => {
-    if (isEmpty(email)) {
+    if (!email) {
       setEmailError("Please enter your email");
       return;
     }
@@ -131,7 +129,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       return;
     }
 
-    if (isEmpty(password)) {
+    if (!password) {
       setPasswordError("Please enter a password");
       return;
     }
@@ -142,12 +140,12 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   };
 
   const handleSignup = () => {
-    if (isEmpty(signupName)) {
+    if (!signupName) {
       setSignupNameError("Please enter username");
       return;
     }
 
-    if (isEmpty(signupEmail)) {
+    if (!signupEmail) {
       setSignupEmailError("Please enter your email");
       return;
     }
@@ -157,7 +155,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       return;
     }
 
-    if (isEmpty(signupPassword)) {
+    if (!signupPassword) {
       setSignupRepeatPasswordError("Password required");
       return;
     }
@@ -167,12 +165,12 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       return;
     }
 
-    if (isEmpty(signupRepeatPassword)) {
+    if (signupRepeatPassword === "") {
       setSignupRepeatPasswordError("Please repeat password");
       return;
     }
 
-    if (!isTheSamePassword(signupPassword, signupRepeatPassword)) {
+    if (signupPassword !== signupRepeatPassword) {
       setSignupRepeatPasswordError("Passwords do not match");
       return;
     }
@@ -246,7 +244,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         onChange={(ev) => setSignupPassword(ev.target.value)}
       />
       <div className="password-validation d-flex flex-column align-items-center">
-        <div className={isLengthValid(signupPassword) ? "valid" : "invalid"}>Minimum length - 8 characters</div>
+        <div className={isLengthValid(signupPassword, 8) ? "valid" : "invalid"}>Minimum length - 8 characters</div>
         <div className={isUppercaseValid(signupPassword) ? "valid" : "invalid"}>At least one uppercase letter</div>
         <div className={isLowercaseValid(signupPassword) ? "valid" : "invalid"}>At least one lowercase letter</div>
         <div className={isDigitValid(signupPassword) ? "valid" : "invalid"}>At least one numeric digit</div>

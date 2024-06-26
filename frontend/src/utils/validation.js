@@ -3,15 +3,8 @@ export function isEmailValid(emailToTest) {
   return emailRegex.test(emailToTest);
 }
 
-export function isEmpty(inputText) {
-  return inputText === "";
-}
-export function isTheSamePassword(inputPassword, repeatPassword) {
-  return inputPassword === repeatPassword;
-}
-
-export function isLengthValid(password) {
-  return password.length >= 8;
+export function isLengthValid(password, minLength = 8) {
+  return password.length >= minLength;
 }
 
 export function isUppercaseValid(password) {
