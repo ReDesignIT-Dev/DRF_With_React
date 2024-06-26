@@ -25,7 +25,7 @@ export default function PasswordRepeatField({ customClasses, onChange, newPasswo
     <div className={`d-flex flex-column mt-2 ${customClasses}`}>
       <input
         type='password'
-        id='passwordConfirm'
+        id='passwordConfirmField'
         placeholder='repeat passsword'
         value={repeatPassword}
         onChange={handleChange}
