@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  isLengthValid,
-  isUppercaseValid,
-  isLowercaseValid,
-  isDigitValid,
-  isSpecialCharValid,
-} from "utils/validation";
+import { isPasswordValid } from "utils/validation";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 
-export default function NewPasswordField({onChange, onValidate}) {
+export default function NewPasswordField({ customClasses, onChange, onValidate }) {
   const [newPassword, setNewPassword] = useState("");
-  const [newPasswordError, setNewPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const isValid = validatePassword(newPassword);
+    const isValid = isPasswordValid(newPassword);
     onValidate(isValid);
   }, [newPassword]);
 
@@ -25,35 +18,15 @@ export default function NewPasswordField({onChange, onValidate}) {
     onChange(value);
   };
 
-  const validatePassword = (value) => {
-    if (!value) {
-      setNewPasswordError("Password is required");
-    } else if (!isLengthValid(value)) {
-      setNewPasswordError("Password must be at least 8 characters long");
-    } else if (!isUppercaseValid(value)) {
-      setNewPasswordError("Password must contain at least one uppercase letter");
-    } else if (!isLowercaseValid(value)) {
-      setNewPasswordError("Password must contain at least one lowercase letter");
-    } else if (!isDigitValid(value)) {
-      setNewPasswordError("Password must contain at least one numeric digit");
-    } else if (!isSpecialCharValid(value)) {
-      setNewPasswordError("Password must contain at least one special character");
-    } else {
-      setNewPasswordError("");
-      return true;
-    }
-    return false;
-  };
-
   return (
-    <div className='d-flex flex-column mt-2'>
+    <div className={`d-flex flex-column mt-2 ${customClasses}`}>
       <input
         type={showPassword ? "text" : "password"}
         id='newpassword'
         label='password'
         value={newPassword}
         onChange={handleChange}
-        className="text-center"
+        className='text-center'
       />
       <span
         className='d-flex justify-content-center btn btn-link p-0 m-0 text-black text-decoration-none'
@@ -79,7 +52,6 @@ export default function NewPasswordField({onChange, onValidate}) {
           At least one special character
         </div>
       </div>
-      <label>{newPasswordError}</label>
     </div>
   );
 }
