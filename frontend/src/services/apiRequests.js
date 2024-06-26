@@ -57,11 +57,12 @@ export async function getDataUsingUserToken(endpoint, token) {
   }
 }
 
-export async function postPasswordReset(endpoint, password, password_confirm) {
+export async function postPasswordReset(endpoint, password, password_confirm, recaptcha) {
   try {
     const response = await apiClient.post(endpoint, { 
       password, 
-      password_confirm 
+      password_confirm,
+      recaptcha
     }, {
       headers: {
         ...apiClient.defaults.headers,
