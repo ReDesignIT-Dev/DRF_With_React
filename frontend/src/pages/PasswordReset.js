@@ -4,10 +4,13 @@ import { PASSWORD_RESET_API_URL } from "config";
 import { getDataUsingUserToken, postPasswordReset } from "services/apiRequests";
 import Loading from "components/Loading";
 import NewPasswordWithPasswordRepeatField from "components/Fields/NewPasswordWithPasswordRepeatField";
+import RecaptchaField from "components/Fields/RecaptchaField";
 
 const PasswordReset = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
+  const [reCaptchaToken, setReCaptchaToken] = useState("");
+  const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState(false);
   const { token } = useParams();
   const [isValidToken, setIsValidToken] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,6 +18,11 @@ const PasswordReset = () => {
   const [isValid, setIsValid] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [passwordChangePostSuccess, setPasswordChangePostSuccess] = useState(false);
+
+  useEffect(() => {
+    setIsValid(isValidReCaptchaToken && isValidToken);
+  }, [isValidReCaptchaToken]);
+
 
   useEffect(() => {
     const checkTokenValidity = async () => {
@@ -50,7 +58,8 @@ const PasswordReset = () => {
         const response = await postPasswordReset(
           `${PASSWORD_RESET_API_URL}${token}/`,
           newPassword,
-          newPasswordRepeat
+          newPasswordRepeat,
+          reCaptchaToken
         );
 
         if (response.status === 200) {
@@ -88,6 +97,7 @@ const PasswordReset = () => {
             passwordRepeatValue={setNewPasswordRepeat}
             onValidate={setIsValid}
           />
+          <RecaptchaField onValidate={setIsValidRecaptchaToken} setReturnToken={setReCaptchaToken}/>
           <button type='submit' className='btn btn-primary mt-3' disabled={!isValid}>
             Submit
           </button>
