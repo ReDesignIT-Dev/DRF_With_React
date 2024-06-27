@@ -74,6 +74,22 @@ export async function postPasswordReset(endpoint, password, password_confirm, re
   }
 }
 
+export async function postPasswordRecovery(endpoint, email, recaptcha) {
+  try {
+    const response = await apiClient.post(endpoint, { 
+      email, 
+      recaptcha
+    }, {
+      headers: {
+        ...apiClient.defaults.headers,
+      },
+    });
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
+}
+
 export async function logoutUser(token) {
   try {
     const response = await apiClient.post(
