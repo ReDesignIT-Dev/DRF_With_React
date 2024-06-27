@@ -7,7 +7,6 @@ from .email_sender import EmailSender
 from .models import CustomUser
 from drf_recaptcha.fields import ReCaptchaV2Field
 from django.contrib.auth.password_validation import validate_password
-from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
@@ -106,11 +105,12 @@ class CustomUserLoginSerializer(V2Serializer):
         return data
 
 
-class PasswordResetSerializer(Serializer):
+class PasswordResetSerializer(V2Serializer):
     email = EmailField(max_length=255)
 
     class Meta:
         model = CustomUser
+        fields = ('recaptcha',)
 
     def __init__(self, instance=None, data=empty, **kwargs):
         super().__init__(instance, data, **kwargs)
@@ -152,11 +152,9 @@ class PasswordResetSerializer(Serializer):
         self.user.generate_password_reset_token()
 
 
-class TokenSerializer(Serializer):
+class PasswordResetActivationSerializer(Serializer):
     token = CharField()
 
-
-class PasswordResetActivationSerializer(TokenSerializer):
     class Meta:
         model = CustomUser
 
@@ -172,11 +170,13 @@ class PasswordResetActivationSerializer(TokenSerializer):
         return value
 
 
-class PasswordSetNewPasswordSerializer(PasswordValidationMixin, TokenSerializer):
+class PasswordSetNewPasswordSerializer(PasswordValidationMixin, V2Serializer):
     TOKEN_EXPIRE_TIME_HOURS = 1
+    token = CharField()
 
     class Meta:
         model = CustomUser
+        fields = ('recaptcha',)
 
     def __init__(self, instance=None, data=empty, **kwargs):
         super().__init__(instance, data, **kwargs)

@@ -88,7 +88,8 @@ class UserPasswordResetActivationView(APIView):
         data = {
             'token': kwargs.get('token'),
             'password': request.data.get('password'),
-            'password_confirm': request.data.get('password_confirm')
+            'password_confirm': request.data.get('password_confirm'),
+            'recaptcha': request.data.get('recaptcha')
         }
         serializer = self.get_serializer(data=data)
         if serializer.is_valid():
