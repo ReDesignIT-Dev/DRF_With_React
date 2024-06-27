@@ -25,7 +25,7 @@ export function isSpecialCharValid(password) {
 }
 
 export function isPasswordValid(password) {
-  validations = [
+  const validations = [
     isLengthValid,
     isUppercaseValid,
     isLowercaseValid,
