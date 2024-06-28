@@ -47,6 +47,7 @@ const PasswordRecovery = () => {
       onSubmit={handleSubmit}
       className='d-flex flex-column justify-content-center align-items-center'
     >
+      <label className="text-black">{"Enter your user account's verified email address and we will send you a password reset link."}</label>
       <EmailField
         customClasses='my-2 text-center'
         onChange={setEmail}
