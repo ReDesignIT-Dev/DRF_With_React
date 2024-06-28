@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { isEmailValid } from "utils/validation";
+import "./EmailField.scss";
 
 export default function EmailField({ disabled, customClasses, onChange, onValidate }) {
   const [email, setEmail] = useState("");
