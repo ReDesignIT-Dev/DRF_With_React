@@ -7,6 +7,7 @@ export default function NewPasswordWithPasswordRepeatField({customClassesForNewP
   const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
   const [newPasswordIsValid, setNewPasswordIsValid] = useState(false);
   const [passwordRepeatIsValid, setPasswordRepeatIsValid] = useState(false);
+  const [passwordRepeatError, setPasswordRepeatError] = useState("");
   const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
@@ -21,12 +22,14 @@ export default function NewPasswordWithPasswordRepeatField({customClassesForNewP
 
   const validateFields = () => {
       setIsValid(newPasswordIsValid && passwordRepeatIsValid);
-    }
+      setPasswordRepeatError(passwordRepeatIsValid ? "" : "Passwords do not match");
+      }
   
   return (
     <div className='d-flex flex-column'>
       <NewPasswordField customClasses={customClassesForNewPassword} onChange={setNewPassword} onValidate={setNewPasswordIsValid} />
       <PasswordRepeatField customClasses={customClassesForPasswordRepeat} onChange={setNewPasswordRepeat} newPassword={newPassword} onValidate={setPasswordRepeatIsValid}/>
+      <label className="text-danger">{passwordRepeatError}</label>
     </div>
   );
 }
