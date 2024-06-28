@@ -118,7 +118,7 @@ class PasswordResetSerializer(V2Serializer):
 
     def validate_email(self, email):
         try:
-            self.user = self.Meta.model.objects.get(email=email)
+            self.user = self.Meta.model.objects.get(email=email.lower())
             if not self.user.is_active:
                 if self.user.email_confirmed:
                     raise ValidationError('User banned')
