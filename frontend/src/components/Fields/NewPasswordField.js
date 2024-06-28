@@ -34,6 +34,7 @@ export default function NewPasswordField({ customClasses, onChange, onValidate }
         value={newPassword}
         onChange={handleChange}
         className='text-center'
+        placeholder="password"
       />
       <span
         className='d-flex justify-content-center btn btn-link p-0 m-0 text-black text-decoration-none'
