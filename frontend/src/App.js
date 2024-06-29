@@ -10,7 +10,7 @@ import NotFound from "pages/NotFound";
 import PasswordReset from "pages/PasswordReset.js";
 import UserActivation from "pages/UserActivation.js";
 import PasswordRecovery from 'pages/PasswordRecovery';
-import { PASSWORD_RESET_URL, ACTIVATE_USER_URL, PASSWORD_RECOVERY_API_URL } from 'config';
+import { PASSWORD_RESET_URL, ACTIVATE_USER_URL, PASSWORD_RECOVERY_FRONTEND_URL } from 'config';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} /> 
-        <Route path={PASSWORD_RECOVERY_API_URL} element={<PasswordRecovery />} />
+        <Route path={PASSWORD_RECOVERY_FRONTEND_URL} element={<PasswordRecovery />} />
         <Route path={PASSWORD_RESET_URL} element={<PasswordReset />} />
         <Route path={ACTIVATE_USER_URL} element={<UserActivation />} />
         <Route path="*" element={<NotFound />} />
