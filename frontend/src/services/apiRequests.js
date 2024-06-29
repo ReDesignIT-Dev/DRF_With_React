@@ -58,9 +58,23 @@ export async function getDataUsingUserToken(endpoint, token) {
   }
 }
 
-export async function postPasswordReset(endpoint, password, password_confirm, recaptcha) {
+export async function validatePasswordResetToken(token) {
   try {
-    const response = await apiClient.post(endpoint, { 
+    const response = await apiClient.get(`${PASSWORD_RESET_API_URL}${token}/`, {
+      headers: {
+        ...apiClient.defaults.headers,
+        Authorization: `Token ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
+}
+
+export async function postPasswordReset(password, password_confirm, recaptcha) {
+  try {
+    const response = await apiClient.post(`${PASSWORD_RESET_API_URL}${token}/`, { 
       password, 
       password_confirm,
       recaptcha

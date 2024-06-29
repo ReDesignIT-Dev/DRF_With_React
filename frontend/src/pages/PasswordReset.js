@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { PASSWORD_RESET_API_URL } from "config";
-import { getDataUsingUserToken, postPasswordReset } from "services/apiRequests";
+import { validatePasswordResetToken, postPasswordReset } from "services/apiRequests";
 import Loading from "components/Loading";
 import NewPasswordWithPasswordRepeatField from "components/Fields/NewPasswordWithPasswordRepeatField";
 import RecaptchaField from "components/Fields/RecaptchaField";
@@ -27,7 +26,7 @@ const PasswordReset = () => {
   useEffect(() => {
     const checkTokenValidity = async () => {
       try {
-        const response = await getDataUsingUserToken(`${PASSWORD_RESET_API_URL}${token}/`, token);
+        const response = await validatePasswordResetToken(token);
         if (response.status === 200) {
           setIsValidToken(true);
         }
@@ -56,7 +55,6 @@ const PasswordReset = () => {
     if (isValid) {
       try {
         const response = await postPasswordReset(
-          `${PASSWORD_RESET_API_URL}${token}/`,
           newPassword,
           newPasswordRepeat,
           reCaptchaToken
