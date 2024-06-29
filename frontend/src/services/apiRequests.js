@@ -1,5 +1,5 @@
 import apiClient from "services/axiosConfig";
-import { PASSWORD_RESET_API_URL } from "config";
+import { API_PASSWORD_RESET_URL, API_ACTIVATE_USER_URL } from "config";
 
 export async function postData(endpoint, data) {
   try {
@@ -58,12 +58,11 @@ export async function getDataUsingUserToken(endpoint, token) {
   }
 }
 
-export async function validatePasswordResetToken(token) {
+export async function activateUser(token) {
   try {
-    const response = await apiClient.get(`${PASSWORD_RESET_API_URL}${token}/`, {
+    const response = await apiClient.post(`${API_ACTIVATE_USER_URL}${token}/`, {
       headers: {
         ...apiClient.defaults.headers,
-        Authorization: `Token ${token}`,
       },
     });
     return response;
@@ -72,17 +71,34 @@ export async function validatePasswordResetToken(token) {
   }
 }
 
-export async function postPasswordReset(password, password_confirm, recaptcha) {
+export async function validatePasswordResetToken(token) {
   try {
-    const response = await apiClient.post(`${PASSWORD_RESET_API_URL}${token}/`, { 
-      password, 
-      password_confirm,
-      recaptcha
-    }, {
+    const response = await apiClient.get(`${API_PASSWORD_RESET_URL}${token}/`, {
       headers: {
         ...apiClient.defaults.headers,
       },
     });
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
+}
+
+export async function postPasswordReset(token, password, password_confirm, recaptcha) {
+  try {
+    const response = await apiClient.post(
+      `${API_PASSWORD_RESET_URL}${token}/`,
+      {
+        password,
+        password_confirm,
+        recaptcha,
+      },
+      {
+        headers: {
+          ...apiClient.defaults.headers,
+        },
+      }
+    );
     return response;
   } catch (error) {
     handleApiError(error);
@@ -91,14 +107,18 @@ export async function postPasswordReset(password, password_confirm, recaptcha) {
 
 export async function postPasswordRecovery(email, recaptcha) {
   try {
-    const response = await apiClient.post(`${PASSWORD_RESET_API_URL}`, { 
-      email, 
-      recaptcha
-    }, {
-      headers: {
-        ...apiClient.defaults.headers,
+    const response = await apiClient.post(
+      `${API_PASSWORD_RESET_URL}`,
+      {
+        email,
+        recaptcha,
       },
-    });
+      {
+        headers: {
+          ...apiClient.defaults.headers,
+        },
+      }
+    );
     return response;
   } catch (error) {
     handleApiError(error);
