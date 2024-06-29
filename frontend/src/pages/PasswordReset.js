@@ -55,6 +55,7 @@ const PasswordReset = () => {
     if (isValid) {
       try {
         const response = await postPasswordReset(
+          token,
           newPassword,
           newPasswordRepeat,
           reCaptchaToken
