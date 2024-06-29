@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError, MethodNotAllowed
@@ -36,7 +37,7 @@ class UserActivationView(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserActivationSerializer
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data={'token': kwargs.get('token')})
         if serializer.is_valid():
             serializer.save()
@@ -112,10 +113,18 @@ class UserPasswordResetActivationView(APIView):
 class LogoutView(KnoxLogoutView):
 
     def post(self, request, format=None):
-        request._auth.delete()
-        user_logged_out.send(sender=request.user.__class__,
-                             request=request, user=request.user)
-        return Response(None, status=status.HTTP_200_OK)
+        try:
+            # Attempt to delete the authentication token
+            request._auth.delete()
+            # Send the user_logged_out signal
+            user_logged_out.send(sender=request.user.__class__, request=request, user=request.user)
+            return Response(None, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            # If the user or token does not exist, return a 404 response
+            return Response({"message": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            # For any other exceptions, return a 500 response
+            return Response({"message": "There might be a problem with the server"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class LogoutAllView(KnoxLogoutAllView):
