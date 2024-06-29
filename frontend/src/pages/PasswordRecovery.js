@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import RecaptchaField from "components/Fields/RecaptchaField";
 import EmailField from "components/Fields/EmailField";
-import { PASSWORD_RESET_API_URL } from "config";
 import { postPasswordRecovery } from "services/apiRequests";
 
 const PasswordRecovery = () => {
@@ -22,11 +21,9 @@ const PasswordRecovery = () => {
     if (isValid) {
       try {
         const response = await postPasswordRecovery(
-          `${PASSWORD_RESET_API_URL}`,
           email,
           reCaptchaToken
         );
-
         if (response.status === 200) {
           const returnMessage = response.data.message;
           console.log(returnMessage);

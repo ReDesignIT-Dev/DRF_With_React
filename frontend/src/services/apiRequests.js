@@ -1,4 +1,5 @@
 import apiClient from "services/axiosConfig";
+import { PASSWORD_RESET_API_URL } from "config";
 
 export async function postData(endpoint, data) {
   try {
@@ -74,9 +75,9 @@ export async function postPasswordReset(endpoint, password, password_confirm, re
   }
 }
 
-export async function postPasswordRecovery(endpoint, email, recaptcha) {
+export async function postPasswordRecovery(email, recaptcha) {
   try {
-    const response = await apiClient.post(endpoint, { 
+    const response = await apiClient.post(`${PASSWORD_RESET_API_URL}`, { 
       email, 
       recaptcha
     }, {
