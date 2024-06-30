@@ -148,7 +148,12 @@ function handleApiError(error) {
   if (error.response) {
     // Server responded with a status other than 200 range
     console.error("API Error:", error.response.data);
-    throw new Error(`API Error: ${error.response.statusText}`);
+    if (error.response.data.email) {
+      // Specific error message for email
+      throw new Error(error.response.data.email[0]);
+    } else {
+      throw new Error(`API Error: ${error.response.statusText}`);
+    }
   } else if (error.request) {
     // Request was made but no response was received
     console.error("Network Error:", error.request);
