@@ -1,5 +1,5 @@
 import apiClient from "services/axiosConfig";
-import { API_PASSWORD_RESET_URL, API_ACTIVATE_USER_URL } from "config";
+import { API_PASSWORD_RESET_URL, API_ACTIVATE_USER_URL, API_REGISTER_USER_URL } from "config";
 
 export async function postData(endpoint, data) {
   try {
@@ -34,6 +34,27 @@ export async function postLogin(username, password, recaptcha) {
     handleApiError(error);
   }
 }
+
+export async function registerUser(username, email, password, password_confirm, recaptcha) {
+  try {
+    const response = await apiClient.post(API_REGISTER_USER_URL,
+    {
+      username,
+      email,
+      password,
+      password_confirm,
+      recaptcha,
+    }, {
+      headers: {
+        ...apiClient.defaults.headers,
+      },
+    });
+    return response;
+  } catch (error) {
+    handleApiError(error);
+  }
+}
+
 
 export async function getData(endpoint) {
   try {

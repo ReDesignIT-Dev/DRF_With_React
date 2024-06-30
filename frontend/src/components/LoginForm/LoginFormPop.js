@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap";
-import { postData, postLogin } from "services/apiRequests";
+import { registerUser, postLogin } from "services/apiRequests";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 import Input from "./Input";
@@ -24,7 +24,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const recaptchaRef = useRef();
 
-  const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   // login logic
@@ -81,11 +80,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
     setRecaptchaToken("");
   };
 
-  useEffect(() => {
-    if (message !== null) {
-      console.log("Message:", message);
-    }
-  }, [message]);
 
   const handleReCaptcha = () => {
     if (!recaptchaToken) {
@@ -93,19 +87,6 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       return;
     }
   };
-
-  async function registerUser(userData) {
-    try {
-      await postData("register/", userData).then((response) => {
-        setMessage(`${response.status}: ${response.data.message}`);
-        if (response.status === 200) {
-          handleXClick();
-        }
-      });
-    } catch (error) {
-      setApiError(error.message);
-    }
-  }
 
   async function loginUser(email, password, recaptcha) {
     try {
@@ -181,15 +162,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
     console.log("REGISTER with data:", signupEmail, "and password:", signupPassword, "and name:", signupName, "and recaptcha:", recaptchaToken);
 
-    const userData = {
-      username: signupName,
-      email: signupEmail,
-      password: signupPassword,
-      password_confirm: signupRepeatPassword,
-      recaptcha: recaptchaToken,
-    };
-
-    registerUser(userData);
+    registerUser(signupName, signupEmail, signupPassword, signupRepeatPassword, recaptchaToken);
   };
 
   const handleInvalidState = () => {
