@@ -125,7 +125,7 @@ class PasswordResetSerializer(V2Serializer):
                 else:
                     raise ValidationError('User not activated yet')
             elif self.user.password_reset_token is not None:
-                raise ValidationError('Password recovery link already sent')
+                raise ValidationError('Password recovery link already sent, check your email')
         except ObjectDoesNotExist:
             raise ValidationError('User with this email does not exist')
         return email
