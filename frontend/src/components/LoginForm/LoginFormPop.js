@@ -17,6 +17,7 @@ import {
   isSpecialCharValid,
 } from "utils/validation";
 import { setToken } from "utils/cookies";
+import { useNavigate } from 'react-router-dom';
 
 const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   //ReCAPTCHA
@@ -45,6 +46,8 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
   const [signupPasswordRepeatError, setSignupRepeatPasswordError] = useState("");
 
   const [apiError, setApiError] = useState(null);
+
+  const navigate = useNavigate();
 
   const devRecaptchaToken = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
@@ -111,6 +114,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
       setToken(token);
       if (response.status === 200) {
         handleXClick();
+        navigate("");
       }
     } catch (error) {
       setApiError(error.message);
