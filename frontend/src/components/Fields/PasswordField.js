@@ -2,14 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 
-export default function PasswordField({ customClasses, onChange, onValidate }) {
+export default function PasswordField({ value, customClasses, onChange, onValidate }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  
   useEffect(() => {
     const isValid = password !== "";
     onValidate(isValid);
   }, [password]);
+
+  useEffect(() => {
+    setPassword(value);
+  }, [value]);
 
   const handleChange = (e) => {
     const value = e.target.value;
