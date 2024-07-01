@@ -1,5 +1,11 @@
 import apiClient from "services/axiosConfig";
-import { API_PASSWORD_RESET_URL, API_ACTIVATE_USER_URL, API_REGISTER_USER_URL } from "config";
+import {
+  API_PASSWORD_RESET_URL,
+  API_ACTIVATE_USER_URL,
+  API_REGISTER_USER_URL,
+  API_LOGIN_USER_URL,
+  API_LOGOUT_USER_URL,
+} from "config";
 
 export async function postData(endpoint, data) {
   try {
@@ -20,7 +26,7 @@ export async function postLogin(username, password, recaptcha) {
     const encodedAuthString = btoa(authString);
 
     const response = await apiClient.post(
-      "login/",
+      API_LOGIN_USER_URL,
       { recaptcha: recaptcha },
       {
         headers: {
@@ -37,24 +43,26 @@ export async function postLogin(username, password, recaptcha) {
 
 export async function registerUser(username, email, password, password_confirm, recaptcha) {
   try {
-    const response = await apiClient.post(API_REGISTER_USER_URL,
-    {
-      username,
-      email,
-      password,
-      password_confirm,
-      recaptcha,
-    }, {
-      headers: {
-        ...apiClient.defaults.headers,
+    const response = await apiClient.post(
+      API_REGISTER_USER_URL,
+      {
+        username,
+        email,
+        password,
+        password_confirm,
+        recaptcha,
       },
-    });
+      {
+        headers: {
+          ...apiClient.defaults.headers,
+        },
+      }
+    );
     return response;
   } catch (error) {
     handleApiError(error);
   }
 }
-
 
 export async function getData(endpoint) {
   try {
@@ -149,7 +157,7 @@ export async function postPasswordRecovery(email, recaptcha) {
 export async function logoutUser(token) {
   try {
     const response = await apiClient.post(
-      "logout/",
+      API_LOGOUT_USER_URL,
       {},
       {
         headers: {
