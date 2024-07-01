@@ -30,18 +30,15 @@ const Login = () => {
       setErrorMessage("");
       try {
         const response = await postLogin(email, password, reCaptchaToken);
-        const returnMessage = response.data.message;
         if (response.status === 200) {
           setPostSuccess(true);
-          setSuccessMessage(returnMessage);
+          setSuccessMessage("Successful login");
           setErrorMessage("");
-          console.log(returnMessage);
         } else {
-          setErrorMessage(returnMessage);
+          setErrorMessage("Something went wrong");
         }
       } catch (error) {
-          setErrorMessage(error.message);
-          console.log(error.message);
+        setErrorMessage("Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -61,11 +58,15 @@ const Login = () => {
           className='d-flex flex-column justify-content-center align-items-center'
         >
           <EmailField
+            value={email}
             customClasses='my-2 text-center'
             onChange={setEmail}
             onValidate={setIsEmailValid}
           />
-          <PasswordField onChange={setPassword} onValidate={setIsPasswordValid} />
+          <PasswordField 
+          value={password} 
+          onChange={setPassword} 
+          onValidate={setIsPasswordValid} />
           <RecaptchaField
             onValidate={setIsValidRecaptchaToken}
             setReturnToken={setReCaptchaToken}
