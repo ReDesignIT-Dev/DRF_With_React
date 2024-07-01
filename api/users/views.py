@@ -56,7 +56,7 @@ class LoginView(KnoxLoginView):
         }
         serializer = self.serializer_class(data=request.data, context={"request": request})
         if serializer.is_valid():
-            user = serializer.validated_data['user']
+            user = request.user
             user.last_login = timezone.now().replace(microsecond=0)
             user.save(update_fields=['last_login'])
             data['user'] = user.username

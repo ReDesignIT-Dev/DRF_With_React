@@ -95,15 +95,6 @@ class CustomUserLoginSerializer(V2Serializer):
         model = CustomUser
         fields = ('recaptcha',)
 
-    def validate(self, data):
-        user = self.context['request'].user
-        if not user or not user.is_authenticated:
-            raise ValidationError("Invalid login credentials. Please try again.")
-        if not user.is_active:
-            raise ValidationError("User not activated yet - check email")
-        data['user'] = user
-        return data
-
 
 class PasswordResetSerializer(V2Serializer):
     email = EmailField(max_length=255)
