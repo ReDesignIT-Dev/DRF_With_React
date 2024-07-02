@@ -124,7 +124,8 @@ class LogoutView(KnoxLogoutView):
             return Response({"message": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             # For any other exceptions, return a 500 response
-            return Response({"message": "There might be a problem with the server"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"message": "There might be a problem with the server"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class LogoutAllView(KnoxLogoutAllView):
@@ -136,12 +137,9 @@ class LogoutAllView(KnoxLogoutAllView):
         return Response(None, status=status.HTTP_200_OK)
 
 
-class ForLoggedInOnlyView(APIView):
+class ValidateToken(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        content = {
-            'foo': 'bar'
-        }
-        return Response(content)
+        return Response(status.HTTP_200_OK)
