@@ -6,6 +6,7 @@ import {
   API_LOGIN_USER_URL,
   API_LOGOUT_USER_URL,
 } from "config";
+import { setToken } from "utils/cookies";
 
 export async function postData(endpoint, data) {
   try {
@@ -35,6 +36,11 @@ export async function postLogin(username, password, recaptcha) {
         },
       }
     );
+    if (response.status === 200) {
+      const token = response.data.token;
+      const expire = new Date(response.data.expiry);
+      setToken(token, expire);
+    }
     return response;
   } catch (error) {
     handleApiError(error);
@@ -176,11 +182,14 @@ export async function logoutUser(token) {
 function handleApiError(error) {
   if (error.response) {
     // Server responded with a status other than 200 range
-    console.error("API Error:", error.response.data);
+    //console.error("API Error:", error.response.data);
     if (error.response.data.email) {
       // Specific error message for email
       throw new Error(error.response.data.email[0]);
-    } else {
+    } else if (error.response.data.detail) {
+      throw new Error(error.response.data.detail);
+    } 
+    else {
       throw new Error(`API Error: ${error.response.statusText}`);
     }
   } else if (error.request) {
