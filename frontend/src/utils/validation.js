@@ -43,3 +43,8 @@ export function isPasswordValid(password) {
   }
   return true;
 }
+
+export function isUserLoggedIn(){
+  const token = getToken();
+  return token ? true : false;
+}
