@@ -1,5 +1,5 @@
 .loginicon {
-  min-width: 80px;
+  min-width: 100px; 
   text-decoration: none;
   font-weight: bolder;
   color: black;
@@ -9,9 +9,17 @@
   background: #2bc6ff;
   border-radius: 24px;
   cursor: pointer;
-
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
 }
-
+.loginicon p {
+  margin: 0;
+  line-height: 1;
+}
 .loginicon:hover {
   color: white;
 }

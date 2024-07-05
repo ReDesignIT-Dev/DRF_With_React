@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import "./SignInButton.css";
 import "react-bootstrap";
-import { logoutUser } from "services/apiRequests";
-import { isUserLoggedIn } from "utils/validation";
 
-export default function SignInButton({isLoggedIn, handleLogout, handleLoginClick }) {
-
+export default function SignInButton({ isLoggedIn, handleLogout, handleLoginClick }) {
   const handleClick = () => {
     if (isLoggedIn) {
-        handleLogout();
+      handleLogout();
     } else {
       handleLoginClick();
     }
@@ -16,7 +13,7 @@ export default function SignInButton({isLoggedIn, handleLogout, handleLoginClick
 
   return (
     <div onClick={handleClick} className='loginicon'>
-      {isLoggedIn ? "Log Out" : "Sign In"}
+      <p>{isLoggedIn ? "Log Out" : "Log In / Signup"}</p>
     </div>
   );
 }
