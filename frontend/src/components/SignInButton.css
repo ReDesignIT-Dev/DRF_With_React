@@ -1,5 +1,5 @@
 .loginicon {
-  min-width: 100px; 
+  min-width: 40px; 
   text-decoration: none;
   font-weight: bolder;
   color: black;
@@ -7,7 +7,7 @@
   line-height: 38px;
   text-align: center;
   background: #2bc6ff;
-  border-radius: 24px;
+  border-radius: 20px;
   cursor: pointer;
   padding-left: 10px;
   padding-right: 10px;
