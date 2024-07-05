@@ -1,7 +1,20 @@
 import Cookies from "js-cookie";
 
 export const getToken = () => {
-  return Cookies.get("token");
+  const token = Cookies.get("token");
+  if (token){
+    const expirationDate = getExpiryDateOfToken();
+    const currentDate = new Date();
+    if (currentDate > expirationDate){
+      removeToken();
+      return null;
+    }
+  }
+  return token;
+};
+
+export const getExpiryDateOfToken = () => {
+  return Cookies.get("token").expires;
 };
 
 export const removeToken = () => {
