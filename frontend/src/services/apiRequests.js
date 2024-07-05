@@ -163,19 +163,21 @@ export async function postPasswordRecovery(email, recaptcha) {
 export async function logoutUser() {
   try {
     const token = getToken();
-    const response = await apiClient.post(
-      API_LOGOUT_USER_URL,
-      {},
-      {
-        headers: {
-          ...apiClient.defaults.headers,
-          Authorization: `Token ${token}`,
-        },
-      }
-    );
-    removeToken();
-    console.log("Bye");
-    return response;
+    if (token) {
+      const response = await apiClient.post(
+        API_LOGOUT_USER_URL,
+        {},
+        {
+          headers: {
+            ...apiClient.defaults.headers,
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      removeToken();
+      console.log("Bye");
+      return response;
+    }
   } catch (error) {
     handleApiError(error);
   }
@@ -190,8 +192,7 @@ function handleApiError(error) {
       throw new Error(error.response.data.email[0]);
     } else if (error.response.data.detail) {
       throw new Error(error.response.data.detail);
-    } 
-    else {
+    } else {
       throw new Error(`API Error: ${error.response.statusText}`);
     }
   } else if (error.request) {
