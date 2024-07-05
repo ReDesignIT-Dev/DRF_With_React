@@ -6,7 +6,7 @@ import {
   API_LOGIN_USER_URL,
   API_LOGOUT_USER_URL,
 } from "config";
-import { setToken } from "utils/cookies";
+import { getToken, removeToken, setToken } from "utils/cookies";
 
 export async function postData(endpoint, data) {
   try {
@@ -160,8 +160,9 @@ export async function postPasswordRecovery(email, recaptcha) {
   }
 }
 
-export async function logoutUser(token) {
+export async function logoutUser() {
   try {
+    const token = getToken();
     const response = await apiClient.post(
       API_LOGOUT_USER_URL,
       {},
@@ -172,6 +173,7 @@ export async function logoutUser(token) {
         },
       }
     );
+    removeToken();
     console.log("Bye");
     return response;
   } catch (error) {
