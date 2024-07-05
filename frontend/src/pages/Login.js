@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Loading from "components/Loading";
 import { postLogin } from "services/apiRequests";
 
-const Login = () => {
+const Login = ({isLoggedIn, onLoginSuccess }) => {
   const [isValid, setIsValid] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -13,11 +13,9 @@ const Login = () => {
   const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState(false);
   const [password, setPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [postSuccess, setPostSuccess] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
+  
   useEffect(() => {
     const valid = isEmailValid && isValidReCaptchaToken && isPasswordValid;
     setIsValid(valid);
@@ -30,15 +28,17 @@ const Login = () => {
       setErrorMessage("");
       try {
         const response = await postLogin(email, password, reCaptchaToken);
+        const returnMessage = response.data.message;
         if (response.status === 200) {
-          setPostSuccess(true);
-          setSuccessMessage("Successful login");
+          onLoginSuccess();
           setErrorMessage("");
         } else {
-          setErrorMessage("Something went wrong");
+          setErrorMessage(returnMessage);
+          console.log(returnMessage);
         }
       } catch (error) {
-        setErrorMessage("Something went wrong");
+        setErrorMessage(error.message);
+        console.log(error.message);
       } finally {
         setLoading(false);
       }
@@ -50,8 +50,8 @@ const Login = () => {
     <div>
       {loading ? (
         <Loading />
-      ) : postSuccess ? (
-        <label className='alert alert-success'>{successMessage}</label>
+      ) : isLoggedIn ? (
+        <label className='alert alert-success'>{"You are logged in"}</label>
       ) : (
         <form
           onSubmit={handleSubmit}
@@ -63,10 +63,7 @@ const Login = () => {
             onChange={setEmail}
             onValidate={setIsEmailValid}
           />
-          <PasswordField 
-          value={password} 
-          onChange={setPassword} 
-          onValidate={setIsPasswordValid} />
+          <PasswordField value={password} onChange={setPassword} onValidate={setIsPasswordValid} />
           <RecaptchaField
             onValidate={setIsValidRecaptchaToken}
             setReturnToken={setReCaptchaToken}
