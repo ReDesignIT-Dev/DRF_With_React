@@ -1,36 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./SignInButton.css";
 import "react-bootstrap";
-import { getToken, removeToken } from "utils/cookies";
 import { logoutUser } from "services/apiRequests";
+import { isUserLoggedIn } from "utils/validation";
 
-export default function SignInButton({ handleLoginClick }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = getToken();
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+export default function SignInButton({isLoggedIn, handleLogout, handleLoginClick }) {
 
   const handleClick = () => {
     if (isLoggedIn) {
-      const token = getToken();
-      try {
-        logoutUser(token);
-      } catch (error) {
-        console.log(error.message);
-      }
-      removeToken();
-      setIsLoggedIn(false);
+        handleLogout();
     } else {
       handleLoginClick();
     }
   };
 
   return (
-    <div onClick={handleClick} className="loginicon">
+    <div onClick={handleClick} className='loginicon'>
       {isLoggedIn ? "Log Out" : "Sign In"}
     </div>
   );
