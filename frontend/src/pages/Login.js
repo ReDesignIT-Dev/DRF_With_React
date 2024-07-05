@@ -4,8 +4,9 @@ import RecaptchaField from "components/Fields/RecaptchaField";
 import { useEffect, useState } from "react";
 import Loading from "components/Loading";
 import { postLogin } from "services/apiRequests";
+import "./Login.css"; // Import the CSS file
 
-const Login = ({isLoggedIn, onLoginSuccess }) => {
+const Login = ({ isLoggedIn, onLoginSuccess }) => {
   const [isValid, setIsValid] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -15,7 +16,7 @@ const Login = ({isLoggedIn, onLoginSuccess }) => {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     const valid = isEmailValid && isValidReCaptchaToken && isPasswordValid;
     setIsValid(valid);
@@ -46,32 +47,44 @@ const Login = ({isLoggedIn, onLoginSuccess }) => {
       setErrorMessage("FORM IS NOT VALID");
     }
   };
+
   return (
     <div>
       {loading ? (
         <Loading />
       ) : isLoggedIn ? (
-        <label className='alert alert-success'>{"You are logged in"}</label>
+        <label className="alert alert-success">{"You are logged in"}</label>
       ) : (
         <form
           onSubmit={handleSubmit}
-          className='d-flex flex-column justify-content-center align-items-center'
+          className="login-form-custom d-flex flex-column justify-content-center align-items-center mx-auto"
         >
-          <EmailField
-            value={email}
-            customClasses='my-2 text-center'
-            onChange={setEmail}
-            onValidate={setIsEmailValid}
-          />
-          <PasswordField value={password} onChange={setPassword} onValidate={setIsPasswordValid} />
+          <div className="input-group-login">
+            <label className="input-label-login">Email</label>
+            <EmailField
+              value={email}
+              customClasses="text-center mx-auto"
+              onChange={setEmail}
+              onValidate={setIsEmailValid}
+            />
+          </div>
+          <div className="input-group-login">
+            <label className="input-label-login">Password</label>
+            <PasswordField
+            customClasses="mx-auto"
+              value={password}
+              onChange={setPassword}
+              onValidate={setIsPasswordValid}
+            />
+          </div>
           <RecaptchaField
             onValidate={setIsValidRecaptchaToken}
             setReturnToken={setReCaptchaToken}
           />
-          <button type='submit' className='btn btn-primary mt-3' disabled={!isValid}>
+          <button type="submit" className="btn btn-primary mt-3" disabled={!isValid}>
             Submit
           </button>
-          {errorMessage && <label className='alert alert-warning'>{errorMessage}</label>}
+          {errorMessage && <label className="alert alert-warning">{errorMessage}</label>}
         </form>
       )}
     </div>

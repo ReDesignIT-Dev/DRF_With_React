@@ -23,7 +23,7 @@ export default function PasswordField({ value, customClasses, onChange, onValida
   };
 
   return (
-    <div className={`d-flex flex-column mt-2 ${customClasses}`}>
+    <div className={`d-flex flex-column ${customClasses}`}>
       <input
         type={showPassword ? "text" : "password"}
         id='newPasswordField'
