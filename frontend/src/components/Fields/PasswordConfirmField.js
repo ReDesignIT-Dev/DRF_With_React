@@ -26,7 +26,7 @@ export default function PasswordRepeatField({ customClasses, onChange, newPasswo
       <input
         type='password'
         id='passwordConfirmField'
-        placeholder='repeat passsword'
+        placeholder='repeat password'
         value={repeatPassword}
         onChange={handleChange}
         className='text-center'
