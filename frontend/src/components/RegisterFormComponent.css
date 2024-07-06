@@ -1,0 +1,22 @@
+.input-group-register {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 400px;
+    margin: 10px 0;
+  }
+  
+  .input-label-register {
+    color: black;
+    font-size: smaller;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-left: 0;
+    text-align: left; 
+  }
+  
+  
+.register-form-custom {
+    width: auto;
+    max-width: 400px;
+  }
