@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 
-export default function UsernameField({ disabled, customClasses, onChange, onValidate }) {
+export default function UsernameField({ value, disabled, customClasses, onChange, onValidate }) {
   const [username, setUsername] = useState("");
   const [usernameFieldError, setUsernameFieldError] = useState("");
+
+  useEffect(() => {
+    setUsername(value);
+  }, [value]);
 
   useEffect(() => {
     const isValid = isUsernameValid(username);
@@ -25,8 +29,9 @@ export default function UsernameField({ disabled, customClasses, onChange, onVal
   };
 
   return (
-    <div className="d-flex flex-column">
+    <div className='d-flex flex-column'>
       <input
+        value={username}
         className={customClasses}
         type='text'
         id='usernameField'
