@@ -7,6 +7,8 @@ import {
   API_LOGOUT_USER_URL,
 } from "config";
 import { getToken, removeToken, setToken } from "utils/cookies";
+import { GeneralApiError, MultipleFieldErrors } from "./CustomErrors";
+
 
 export async function postData(endpoint, data) {
   try {
@@ -185,23 +187,28 @@ export async function logoutUser() {
 
 function handleApiError(error) {
   if (error.response) {
-    // Server responded with a status other than 200 range
-    //console.error("API Error:", error.response.data);
-    if (error.response.data.email) {
-      // Specific error message for email
-      throw new Error(error.response.data.email[0]);
-    } else if (error.response.data.detail) {
-      throw new Error(error.response.data.detail);
-    } else {
-      throw new Error(`API Error: ${error.response.statusText}`);
+    const errors = [];
+
+    if (error.response.data.username) {
+      errors.push({ field: "username", message: error.response.data.username.join(", ") });
     }
+    if (error.response.data.email) {
+      errors.push({ field: "email", message: error.response.data.email.join(", ") });
+    }
+    if (error.response.data.detail) {
+      errors.push({ field: "detail", message: error.response.data.detail });
+    }
+
+    if (errors.length > 0) {
+      throw new MultipleFieldErrors(errors);
+    }
+
+    throw new GeneralApiError(`API Error: ${error.response.statusText}`);
   } else if (error.request) {
-    // Request was made but no response was received
     console.error("Network Error:", error.request);
-    throw new Error("Network Error: Please check your internet connection.");
+    throw new GeneralApiError("Network Error: Please check your internet connection.");
   } else {
-    // Something else caused the error
     console.error("Error:", error.message);
-    throw new Error(`Error: ${error.message}`);
+    throw new GeneralApiError(`Error: ${error.message}`);
   }
 }
