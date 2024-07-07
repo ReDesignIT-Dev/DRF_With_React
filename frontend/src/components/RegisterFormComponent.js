@@ -86,9 +86,10 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
             <label className="input-label-register">Password</label>
             <NewPasswordWithPasswordRepeatField
             customClasses="mx-auto"
-              value={password}
-              passwordValue={setPassword}
-              passwordRepeatValue={setPasswordConfirm}
+              passwordValue={password}
+              passwordRepeatValue={passwordConfirm}
+              onChangePassword={setPassword}
+              onChangePasswordConfirm={setPasswordConfirm}
               onValidate={setIsPasswordWithPasswordConfirmValid}
             />
           </div>
