@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
+import "./CommonStyles.css";
 
 export default function PasswordField({ value, customClasses, onChange, onValidate }) {
   const [password, setPassword] = useState("");
@@ -23,14 +24,15 @@ export default function PasswordField({ value, customClasses, onChange, onValida
   };
 
   return (
-    <div className={`d-flex flex-column ${customClasses}`}>
+    <div className={`${customClasses}`}>
+      <label className='input-label'>Password</label>
       <input
         type={showPassword ? "text" : "password"}
         id='newPasswordField'
         label='password'
         value={password}
         onChange={handleChange}
-        className='text-center'
+        className='text-center w-100'
         placeholder='password'
       />
       <span

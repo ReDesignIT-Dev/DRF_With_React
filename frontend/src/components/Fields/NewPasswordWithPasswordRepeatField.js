@@ -40,7 +40,7 @@ export default function NewPasswordWithPasswordRepeatField({customClassesForNewP
       }
   
   return (
-    <div className='d-flex flex-column'>
+    <div className='d-flex flex-column w-100 gap-2'>
       <NewPasswordField value={newPassword} customClasses={customClassesForNewPassword} onChange={handlePasswordChange} onValidate={setNewPasswordIsValid} />
       <PasswordRepeatField value={newPasswordRepeat} customClasses={customClassesForPasswordRepeat} onChange={handlePasswordConfirmChange} newPassword={newPassword} onValidate={setPasswordRepeatIsValid}/>
       <label className="text-danger">{passwordRepeatError}</label>

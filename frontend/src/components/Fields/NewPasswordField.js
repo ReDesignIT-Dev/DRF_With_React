@@ -9,6 +9,7 @@ import {
 } from "utils/validation";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
+import "./CommonStyles.css";
 
 export default function NewPasswordField({ value, customClasses, onChange, onValidate }) {
   const [newPassword, setNewPassword] = useState("");
@@ -30,14 +31,15 @@ export default function NewPasswordField({ value, customClasses, onChange, onVal
   };
 
   return (
-    <div className={`d-flex flex-column mt-2 ${customClasses}`}>
+    <div className={`d-flex flex-column ${customClasses}`}>
+      <label className='input-label'>Password</label>
       <input
         type={showPassword ? "text" : "password"}
         id='newPasswordField'
         label='password'
         value={newPassword}
         onChange={handleChange}
-        className='text-center'
+        className='text-center w-100'
         placeholder="password"
       />
       <span

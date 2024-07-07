@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./CommonStyles.css";
 
 export default function PasswordRepeatField({ value, customClasses, onChange, newPassword, onValidate }) {
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -26,14 +27,15 @@ export default function PasswordRepeatField({ value, customClasses, onChange, ne
   };
 
   return (
-    <div className={`d-flex flex-column mt-2 ${customClasses}`}>
+    <div className={`${customClasses}`}>
+      <label className='input-label'>Confirm Password</label>
       <input
         type='password'
         id='passwordConfirmField'
         placeholder='repeat password'
         value={repeatPassword}
         onChange={handleChange}
-        className='text-center'
+        className='text-center w-100'
       />
     </div>
   );

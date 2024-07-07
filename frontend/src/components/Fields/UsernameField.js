@@ -1,45 +1,38 @@
 import { useState, useEffect } from "react";
+import "./CommonStyles.css";
 
 export default function UsernameField({ value, disabled, customClasses, onChange, onValidate }) {
   const [username, setUsername] = useState("");
-  const [usernameFieldError, setUsernameFieldError] = useState("");
 
   useEffect(() => {
     setUsername(value);
+    validate(value);
   }, [value]);
-
-  useEffect(() => {
-    const isValid = isUsernameValid(username);
-    if (isValid) {
-      setUsernameFieldError("");
-    } else {
-      setUsernameFieldError("Require 3-30 chars");
-    }
-    onValidate(isValid);
-  }, [username]);
 
   const handleChange = (e) => {
     const value = e.target.value;
+    validate(value);
     setUsername(value);
     onChange(value);
   };
 
-  const isUsernameValid = (value) => {
-    return value.length >= 3 && value.length <= 30;
+  const validate = (value) => {
+    const isValid = value.length >= 3 && value.length <= 30;
+    onValidate(isValid);
   };
 
   return (
-    <div className='d-flex flex-column'>
+    <div className={`${customClasses}`}>
+      <label className='input-label'>Username</label>
       <input
         value={username}
-        className={customClasses}
+        className='text-center w-100'
         type='text'
         id='usernameField'
         placeholder='username'
         onChange={handleChange}
         disabled={disabled}
       />
-      <label className='text-danger'>{usernameFieldError}</label>
     </div>
   );
 }
