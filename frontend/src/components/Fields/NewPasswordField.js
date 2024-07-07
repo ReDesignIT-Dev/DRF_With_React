@@ -10,7 +10,7 @@ import {
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 
-export default function NewPasswordField({ customClasses, onChange, onValidate }) {
+export default function NewPasswordField({ value, customClasses, onChange, onValidate }) {
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -18,6 +18,10 @@ export default function NewPasswordField({ customClasses, onChange, onValidate }
     const isValid = isPasswordValid(newPassword);
     onValidate(isValid);
   }, [newPassword]);
+
+  useEffect(() => {
+    setNewPassword(value);
+  }, [value]);
 
   const handleChange = (e) => {
     const value = e.target.value;
