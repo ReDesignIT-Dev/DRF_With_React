@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import NewPasswordField from "./NewPasswordField";
 import PasswordRepeatField from "./PasswordConfirmField";
 
-export default function NewPasswordWithPasswordRepeatField({customClassesForNewPassword, customClassesForPasswordRepeat, passwordValue, passwordRepeatValue, onValidate}) {
+export default function NewPasswordWithPasswordRepeatField({customClassesForNewPassword, customClassesForPasswordRepeat, passwordValue, passwordRepeatValue, onChangePassword, onChangePasswordConfirm, onValidate}) {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
   const [newPasswordIsValid, setNewPasswordIsValid] = useState(false);
@@ -11,14 +11,28 @@ export default function NewPasswordWithPasswordRepeatField({customClassesForNewP
   const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
+    setNewPassword(passwordValue);
+  }, [passwordValue]);
+
+  useEffect(() => {
+    setNewPasswordRepeat(passwordRepeatValue);
+  }, [passwordRepeatValue]);
+
+  useEffect(() => {
     validateFields();
   }, [newPasswordIsValid, passwordRepeatIsValid]);
 
   useEffect(() => {
     onValidate(isValid);
-    passwordValue(newPassword);
-    passwordRepeatValue(newPasswordRepeat);
   }, [isValid]);
+
+  const handlePasswordChange = (value) => {
+    onChangePassword(value);
+  };
+
+  const handlePasswordConfirmChange = (value) => {
+    onChangePasswordConfirm(value);
+  };
 
   const validateFields = () => {
       setIsValid(newPasswordIsValid && passwordRepeatIsValid);
@@ -27,8 +41,8 @@ export default function NewPasswordWithPasswordRepeatField({customClassesForNewP
   
   return (
     <div className='d-flex flex-column'>
-      <NewPasswordField customClasses={customClassesForNewPassword} onChange={setNewPassword} onValidate={setNewPasswordIsValid} />
-      <PasswordRepeatField customClasses={customClassesForPasswordRepeat} onChange={setNewPasswordRepeat} newPassword={newPassword} onValidate={setPasswordRepeatIsValid}/>
+      <NewPasswordField value={newPassword} customClasses={customClassesForNewPassword} onChange={handlePasswordChange} onValidate={setNewPasswordIsValid} />
+      <PasswordRepeatField value={newPasswordRepeat} customClasses={customClassesForPasswordRepeat} onChange={handlePasswordConfirmChange} newPassword={newPassword} onValidate={setPasswordRepeatIsValid}/>
       <label className="text-danger">{passwordRepeatError}</label>
     </div>
   );
