@@ -1,34 +1,39 @@
 import { isEmailValid } from "utils/validation";
-import "./EmailField.scss";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import "./CommonStyles.css";
 
 export default function EmailField({ value, disabled, customClasses, onChange, onValidate }) {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    const isValid = isEmailValid(email);
-    onValidate(isValid);
-  }, [email]);
-
-  useEffect(() => {
     setEmail(value);
+    validate(value);
   }, [value]);
 
   const handleChange = (e) => {
     const value = e.target.value;
+    validate(value);
     onChange(value);
   };
 
+  const validate = (value) => {
+    const isValid = isEmailValid(value);
+    onValidate(isValid);
+  }
+
   return (
-    <input
-      value={email}
-      className={customClasses}
-      type='email'
-      id='emailField'
-      placeholder='email'
-      autoComplete='email'
-      onChange={handleChange}
-      disabled={disabled}
-    />
+    <div className={`${customClasses}`}>
+      <label className='input-label'>Email</label>
+      <input
+        value={email}
+        className='text-center w-100'
+        type='email'
+        id='emailField'
+        placeholder='email'
+        autoComplete='email'
+        onChange={handleChange}
+        disabled={disabled}
+      />
+    </div>
   );
 }
