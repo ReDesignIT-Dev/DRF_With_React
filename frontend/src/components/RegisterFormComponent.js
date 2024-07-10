@@ -11,10 +11,14 @@ import { GeneralApiError, MultipleFieldErrors } from "services/CustomErrors";
 const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
   const [isValid, setIsValid] = useState(false);
   const [username, setUsername] = useState(localStorage.getItem("username") || "");
-  const [usernameFieldError, setUsernameFieldError] = useState(localStorage.getItem("usernameFieldError") || "");
+  const [usernameFieldError, setUsernameFieldError] = useState(
+    localStorage.getItem("usernameFieldError") || ""
+  );
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [email, setEmail] = useState(localStorage.getItem("email") || "");
-  const [emailFieldError, setEmailFieldError] = useState(localStorage.getItem("emailFieldError") || "");
+  const [emailFieldError, setEmailFieldError] = useState(
+    localStorage.getItem("emailFieldError") || ""
+  );
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [reCaptchaToken, setReCaptchaToken] = useState("");
   const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState(false);
@@ -24,6 +28,14 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
     useState(false);
   const [errorMessage, setErrorMessage] = useState(localStorage.getItem("detailError") || "");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      clearUsedLocalStorage();
+      setEmail("");
+      setUsername("");
+    }
+  });
 
   useEffect(() => {
     localStorage.removeItem("usernameFieldError");
@@ -39,26 +51,22 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
 
   const validateEmail = () => {
     const emailFieldErrorFromPost = localStorage.getItem("emailFieldError");
-    if (emailFieldErrorFromPost){
+    if (emailFieldErrorFromPost) {
       setEmailFieldError(emailFieldErrorFromPost);
-    }
-    else if (!isEmailValid) {
+    } else if (!isEmailValid) {
       setEmailFieldError("Invalid email");
-    }
-    else {
+    } else {
       setEmailFieldError("");
     }
   };
 
   const validateUsername = () => {
     const usernameFieldErrorFromPost = localStorage.getItem("usernameFieldError");
-    if (usernameFieldErrorFromPost){
+    if (usernameFieldErrorFromPost) {
       setUsernameFieldError(usernameFieldErrorFromPost);
-    }
-    else if (!isUsernameValid) {
+    } else if (!isUsernameValid) {
       setUsernameFieldError("Username must be between 3 and 30 chars");
-    }
-    else {
+    } else {
       setUsernameFieldError("");
     }
   };
@@ -72,9 +80,14 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
     setIsValid(valid);
     validateUsername();
     validateEmail();
-
   }, [isEmailValid, isValidReCaptchaToken, isPasswordWithPasswordConfirmValid, isUsernameValid]);
 
+  const clearUsedLocalStorage = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("usernameFieldError");
+    localStorage.removeItem("email");
+    localStorage.removeItem("emailFieldError");
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -91,7 +104,7 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
         );
         const returnMessage = response.data.message;
         if (response.status === 200) {
-          localStorage.clear();
+          clearUsedLocalStorage();
           onRegisterSuccess();
           setErrorMessage("");
         } else {
@@ -134,12 +147,11 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
 
   return (
     <div>
-      { isLoggedIn ? (
+      {isLoggedIn ? (
         <label className='alert alert-success'>
           {"You are logged in, you cannot register. Log Out to register"}
         </label>
-      ) :
-      loading ? (
+      ) : loading ? (
         <Loading />
       ) : (
         <form
@@ -153,9 +165,7 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
               onChange={setUsername}
               onValidate={setIsUsernameValid}
             />
-            {usernameFieldError && (
-              <label className='text-danger'>{usernameFieldError}</label>
-            )}
+            {usernameFieldError && <label className='text-danger'>{usernameFieldError}</label>}
           </div>
           <div className='input-group-register'>
             <EmailField
