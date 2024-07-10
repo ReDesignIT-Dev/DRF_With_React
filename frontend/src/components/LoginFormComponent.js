@@ -31,7 +31,7 @@ const LoginFormComponent = ({ isLoggedIn, onLoginSuccess }) => {
         const response = await postLogin(email, password, reCaptchaToken);
         const returnMessage = response.data.message;
         if (response.status === 200) {
-          onLoginSuccess();
+          onLoginSuccess(true);
           setErrorMessage("");
         } else {
           setErrorMessage(returnMessage);
