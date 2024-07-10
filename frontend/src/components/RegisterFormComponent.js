@@ -134,12 +134,13 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
 
   return (
     <div>
-      {loading ? (
-        <Loading />
-      ) : isLoggedIn ? (
+      { isLoggedIn ? (
         <label className='alert alert-success'>
           {"You are logged in, you cannot register. Log Out to register"}
         </label>
+      ) :
+      loading ? (
+        <Loading />
       ) : (
         <form
           onSubmit={handleSubmit}

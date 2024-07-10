@@ -1,11 +1,11 @@
 import RegisterFormComponent from "components/RegisterFormComponent";
 
-const Register = () => {
+const Register = ({isLoggedIn}) => {
 
     
 return (
     <div>
-        <RegisterFormComponent />
+        <RegisterFormComponent isLoggedIn={isLoggedIn}/>
     </div>
 )
 }
