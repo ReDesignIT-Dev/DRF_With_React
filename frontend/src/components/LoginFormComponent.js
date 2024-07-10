@@ -60,18 +60,16 @@ const LoginFormComponent = ({ isLoggedIn, onLoginSuccess }) => {
           className="login-form-custom d-flex flex-column justify-content-center align-items-center mx-auto"
         >
           <div className="input-group-login">
-            <label className="input-label-login">Email</label>
             <EmailField
               value={email}
-              customClasses="text-center mx-auto"
+              customClasses="w-100"
               onChange={setEmail}
               onValidate={setIsEmailValid}
             />
           </div>
           <div className="input-group-login">
-            <label className="input-label-login">Password</label>
             <PasswordField
-            customClasses="mx-auto"
+            customClasses="w-100"
               value={password}
               onChange={setPassword}
               onValidate={setIsPasswordValid}
