@@ -38,19 +38,15 @@ function App() {
     }
   };
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
-
   const routes = [
     { path: "", element: <Home /> },
     { path: "about", element: <About /> },
     { path: "contact", element: <Contact /> },
     {
       path: FRONTEND_LOGIN_URL,
-      element: <Login isLoggedIn={isLoggedIn} onLoginSuccess={handleLoginSuccess} />,
+      element: <Login isLoggedIn={isLoggedIn} onLoginSuccess={setIsLoggedIn} />,
     },
-    { path: FRONTEND_REGISTER_URL, element: <Register /> },
+    { path: FRONTEND_REGISTER_URL, element: <Register isLoggedIn={isLoggedIn} /> },
     { path: FRONTEND_PASSWORD_RECOVERY_URL, element: <PasswordRecovery /> },
     { path: FRONTEND_PASSWORD_RESET_URL, element: <PasswordReset /> },
     { path: FRONTEND_ACTIVATE_USER_URL, element: <UserActivation /> },
