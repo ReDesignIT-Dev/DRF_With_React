@@ -163,10 +163,10 @@ export async function postPasswordRecovery(email, recaptcha) {
 }
 
 export async function logoutUser() {
+  const token = getToken();
   try {
-    const token = getToken();
     if (token) {
-      const response = await apiClient.post(
+       await apiClient.post(
         API_LOGOUT_USER_URL,
         {},
         {
@@ -176,12 +176,18 @@ export async function logoutUser() {
           },
         }
       );
-      removeToken();
+      
       console.log("Bye");
-      return response;
     }
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.log("Unauthorized: Already logged out or token invalid.");
+      return;
+    }
     handleApiError(error);
+  }
+  finally {
+    removeToken();
   }
 }
 
