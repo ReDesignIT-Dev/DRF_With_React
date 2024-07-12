@@ -26,7 +26,7 @@ const UserActivation = () => {
           setMessage("Failed to activate.");
         }
       } catch (error) {
-        setMessage("An error occurred. Please try again.");
+        setMessage("An error occurred. Contact administrator.");
       }
       finally {
         setLoading(false);
