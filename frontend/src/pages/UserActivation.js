@@ -21,7 +21,7 @@ const UserActivation = () => {
         if (response.status === 200) {
           setSuccess(true);
           
-          navigate(`../../${FRONTEND_LOGIN_URL}`, {replace: true});
+          navigate(FRONTEND_LOGIN_URL, {replace: true});
         } else {
           setMessage("Failed to activate.");
         }
