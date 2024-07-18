@@ -19,5 +19,5 @@ export const API_REGISTER_USER_URL = "/register";
 export const API_PASSWORD_RESET_URL = "/password-reset";
 
 // API shop based
-export const API_PRODUCT_URL = "product/:productId";
-export const API_CATEGORY_URL = "category/:categoryId";
+export const API_PRODUCT_URL = "/product";
+export const API_CATEGORY_URL = "/category";
