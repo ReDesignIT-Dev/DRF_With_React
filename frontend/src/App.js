@@ -16,7 +16,7 @@ import Login from "pages/Login";
 import Register from "pages/Register";
 
 import { isUserLoggedIn } from "utils/validation";
-import { logoutUser } from "services/apiRequests";
+import { logoutUser } from "services/apiRequestsUser";
 
 import {
   FRONTEND_PASSWORD_RESET_URL,

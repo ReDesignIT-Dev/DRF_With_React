@@ -7,8 +7,7 @@ import {
   API_LOGOUT_USER_URL,
 } from "config";
 import { getToken, removeToken, setToken } from "utils/cookies";
-import { GeneralApiError, MultipleFieldErrors } from "./CustomErrors";
-
+import { apiErrorHandler } from "./apiErrorHandler";
 
 export async function postData(endpoint, data) {
   try {
@@ -19,7 +18,7 @@ export async function postData(endpoint, data) {
     });
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -45,7 +44,7 @@ export async function postLogin(username, password, recaptcha) {
     }
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -68,7 +67,7 @@ export async function registerUser(username, email, password, password_confirm, 
     );
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -77,7 +76,7 @@ export async function getData(endpoint) {
     const response = await apiClient.get(endpoint);
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -91,7 +90,7 @@ export async function getDataUsingUserToken(endpoint, token) {
     });
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -104,7 +103,7 @@ export async function activateUser(token) {
     });
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -117,7 +116,7 @@ export async function validatePasswordResetToken(token) {
     });
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -138,7 +137,7 @@ export async function postPasswordReset(token, password, password_confirm, recap
     );
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -158,7 +157,7 @@ export async function postPasswordRecovery(email, recaptcha) {
     );
     return response;
   } catch (error) {
-    handleApiError(error);
+    apiErrorHandler(error);
   }
 }
 
@@ -184,37 +183,11 @@ export async function logoutUser() {
       console.log("Unauthorized: Already logged out or token invalid.");
       return;
     }
-    handleApiError(error);
+    apiErrorHandler(error);
   }
   finally {
     removeToken();
   }
 }
 
-function handleApiError(error) {
-  if (error.response) {
-    const errors = [];
 
-    if (error.response.data.username) {
-      errors.push({ field: "username", message: error.response.data.username.join(", ") });
-    }
-    if (error.response.data.email) {
-      errors.push({ field: "email", message: error.response.data.email.join(", ") });
-    }
-    if (error.response.data.detail) {
-      errors.push({ field: "detail", message: error.response.data.detail });
-    }
-
-    if (errors.length > 0) {
-      throw new MultipleFieldErrors(errors);
-    }
-
-    throw new GeneralApiError(`API Error: ${error.response.statusText}`);
-  } else if (error.request) {
-    console.error("Network Error:", error.request);
-    throw new GeneralApiError("Network Error: Please check your internet connection.");
-  } else {
-    console.error("Error:", error.message);
-    throw new GeneralApiError(`Error: ${error.message}`);
-  }
-}

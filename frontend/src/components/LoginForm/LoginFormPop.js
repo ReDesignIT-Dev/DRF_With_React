@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap";
-import { registerUser, postLogin } from "services/apiRequests";
+import { registerUser, postLogin } from "services/apiRequestsUser";
 import { Icon } from "react-icons-kit";
 import { eye, eyeOff } from "react-icons-kit/feather";
 import Input from "./Input";

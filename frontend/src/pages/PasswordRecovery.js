@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import RecaptchaField from "components/Fields/RecaptchaField";
 import EmailField from "components/Fields/EmailField";
-import { postPasswordRecovery } from "services/apiRequests";
+import { postPasswordRecovery } from "services/apiRequestsUser";
 import Loading from "components/Loading";
 
 const PasswordRecovery = () => {

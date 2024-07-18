@@ -1,7 +1,7 @@
 import { FRONTEND_LOGIN_URL } from 'config';
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { activateUser } from 'services/apiRequests';
+import { activateUser } from 'services/apiRequestsUser';
 import Loading from "components/Loading";
 
 const UserActivation = () => {

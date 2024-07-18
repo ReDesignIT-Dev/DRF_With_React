@@ -4,7 +4,7 @@ import NewPasswordWithPasswordRepeatField from "./Fields/NewPasswordWithPassword
 import RecaptchaField from "components/Fields/RecaptchaField";
 import { useEffect, useState } from "react";
 import Loading from "components/Loading";
-import { registerUser } from "services/apiRequests";
+import { registerUser } from "services/apiRequestsUser";
 import "./RegisterFormComponent.css"; // Import the CSS file
 import { GeneralApiError, MultipleFieldErrors } from "services/CustomErrors";
 

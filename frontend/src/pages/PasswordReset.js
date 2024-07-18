@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { validatePasswordResetToken, postPasswordReset } from "services/apiRequests";
+import { validatePasswordResetToken, postPasswordReset } from "services/apiRequestsUser";
 import Loading from "components/Loading";
 import NewPasswordWithPasswordRepeatField from "components/Fields/NewPasswordWithPasswordRepeatField";
 import RecaptchaField from "components/Fields/RecaptchaField";

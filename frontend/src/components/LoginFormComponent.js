@@ -3,7 +3,7 @@ import PasswordField from "components/Fields/PasswordField";
 import RecaptchaField from "components/Fields/RecaptchaField";
 import { useEffect, useState } from "react";
 import Loading from "components/Loading";
-import { postLogin } from "services/apiRequests";
+import { postLogin } from "services/apiRequestsUser";
 import "./LoginFormComponent.css"; // Import the CSS file
 
 const LoginFormComponent = ({ isLoggedIn, onLoginSuccess }) => {

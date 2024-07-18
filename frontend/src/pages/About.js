@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { getDataUsingUserToken } from "services/apiRequests";
+import { getDataUsingUserToken } from "services/apiRequestsUser";
 import Cookies from 'js-cookie';
 
 export default function About() {
