@@ -21,3 +21,4 @@ export const API_PASSWORD_RESET_URL = "/password-reset";
 // API shop based
 export const API_PRODUCT_URL = "/product";
 export const API_CATEGORY_URL = "/category";
+export const API_ALL_CATEGORIES = "/categories";
