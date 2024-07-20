@@ -41,6 +41,9 @@ class Category(CommonFields, MPTTModel):
         self.children.update(parent=self.parent)
         super().delete(*args, **kwargs)
 
+    def get_parent_name(self):
+        return self.parent.name if self.parent else None
+
 
 class Product(CommonFields):
     categories = models.ManyToManyField(Category)

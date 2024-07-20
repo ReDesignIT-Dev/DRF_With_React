@@ -13,9 +13,14 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    parent_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ('name', 'description', 'parent', 'level')
+        fields = ('name', 'description', 'level', 'slug', 'parent_name')
+
+    def get_parent_name(self, obj):
+        return obj.get_parent_name()
 
     def validate(self, data):
         name = data.get('name')
