@@ -26,7 +26,7 @@ export async function getAllProductsInCategory(category) {
           ...apiClient.defaults.headers,
         },
       });
-      return response.data;
+      return response;
     } catch (error) {
       apiErrorHandler(error);
     }
