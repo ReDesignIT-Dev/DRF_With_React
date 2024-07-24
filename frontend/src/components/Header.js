@@ -5,6 +5,7 @@ import SearchBox from "./SearchBox";
 import { Link } from "react-router-dom";
 import "./Header.scss";
 import LogoRacoon from "./LogoRacoon";
+import CategoryDropdown from "./CategoryDropdown";
 
 function Header({ isLoggedIn, handleLogout }) {
   const [isShowLogin, setIsShowLogin] = useState(true);
@@ -35,6 +36,9 @@ function Header({ isLoggedIn, handleLogout }) {
         </div>
 
         <div className='header-nav d-flex flex-row gap-2'>
+        <div className='nav-element'>
+          <CategoryDropdown />
+        </div>
           <div className='nav-element'>
             <Link to='/'> Home </Link>
           </div>
