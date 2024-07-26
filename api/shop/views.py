@@ -93,7 +93,7 @@ class CategoryView(APIView):
 
 
 class CategoriesView(ListAPIView):
-    queryset = Category.objects.all()
+    queryset = Category.objects.filter(parent__isnull=True)
     serializer_class = CategorySerializer
 
 
