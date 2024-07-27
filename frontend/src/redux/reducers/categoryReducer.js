@@ -7,9 +7,7 @@ export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
 },
 {
   condition: (_, {getState}) => {
-    console.log('checking condition');
     const state = getState();
-    console.log('state:', typeof(state.fulfilled));
     if (state.fulfilled || state.isLoading){
       return false;
     }
