@@ -11,15 +11,16 @@ import {
   MDBDropdownItem,
   MDBContainer,
 } from "mdb-react-ui-kit";
+import { API_CATEGORY_URL } from "config";
 
 const CategoryDropdown = () => {
   const { categories, isLoading, error } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const handleItemClick = (slug, event) => {
     event.stopPropagation();
-    navigate(`category/${slug}`);
+    navigate(`${API_CATEGORY_URL}/${slug}`);
   };
 
   useEffect(() => {
@@ -46,33 +47,38 @@ const CategoryDropdown = () => {
   const renderCategoryTree = (categories) => {
     return (
       <>
-         {categories.map((category) => (
-        <MDBDropdownItem 
-          key={category.slug} 
-          className='dropdown-item' 
-          onClick={(event) => handleItemClick(category.slug, event)}
-        >
-          {category.name}
-          {category.children && category.children.length > 0 && (
-            <ul className='dropdown-menu dropdown-submenu'>
-              {category.children.map((child) => (
-                <MDBDropdownItem 
-                  key={child.slug} 
-                  className='dropdown-item' 
-                  onClick={(event) => handleItemClick(child.slug, event)}
-                >
-                  {child.name}
-                  {child.children && child.children.length > 0 && (
-                    <ul className='dropdown-menu dropdown-submenu'>
-                      {renderCategoryTree(child.children)}
-                    </ul>
-                  )}
-                </MDBDropdownItem>
-              ))}
-            </ul>
-          )}
-        </MDBDropdownItem>
-      ))}
+        {categories.map((category) => (
+          <MDBDropdownItem
+            key={category.slug}
+            className='dropdown-item'
+            onClick={(event) => handleItemClick(category.slug, event)}
+          >
+            <span style={{ display: "flex", justifyContent: "space-between" }}>
+              {category.name}
+              {category.children && category.children.length > 0 && <span>&raquo;</span>}
+            </span>
+            {category.children && category.children.length > 0 && (
+              <ul className='dropdown-menu dropdown-submenu'>
+                {category.children.map((child) => (
+                  <MDBDropdownItem
+                    key={child.slug}
+                    className='dropdown-item'
+                    onClick={(event) => handleItemClick(child.slug, event)}
+                  >
+                    <span style={{ display: "flex", justifyContent: "space-between" }}>
+                    {child.name} {child.children && child.children.length > 0 && <span>&raquo;</span>}
+                    </span>
+                    {child.children && child.children.length > 0 && (
+                      <ul className='dropdown-menu dropdown-submenu'>
+                        {renderCategoryTree(child.children)}
+                      </ul>
+                    )}
+                  </MDBDropdownItem>
+                ))}
+              </ul>
+            )}
+          </MDBDropdownItem>
+        ))}
       </>
     );
   };
