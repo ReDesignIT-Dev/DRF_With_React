@@ -73,7 +73,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = (
             'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
-            'image', 'category_names',)
+            'image', 'category_names', 'slug')
 
     def get_category_names(self, instance):
         return [category.name for category in instance.categories.all()]
