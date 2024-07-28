@@ -13,6 +13,12 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('name', 'description', 'parent')
+
+
+class CategoryTreeSerializer(serializers.ModelSerializer):
     parent_name = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
 
@@ -22,7 +28,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_children(self, obj):
         children = Category.objects.filter(parent=obj)
-        return CategorySerializer(children, many=True).data
+        return CategoryTreeSerializer(children, many=True).data
 
     def get_parent_name(self, obj):
         return obj.get_parent_name()
