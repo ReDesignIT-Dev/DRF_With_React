@@ -1,85 +1,83 @@
+import React from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../redux/reducers/categoryReducer";
+import "./CategoryDropdown.css";
+import {
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem,
+  MDBContainer,
+} from "mdb-react-ui-kit";
 
 const CategoryDropdown = () => {
-  const {categories, isLoading, error} = useSelector((state) => state.categories);
+  const { categories, isLoading, error } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const handleItemClick = (slug, event) => {
+    event.stopPropagation();
+    navigate(`category/${slug}`);
+  };
 
   useEffect(() => {
     dispatch(fetchCategories());
-  }, []);
+  }, [dispatch]);
 
-  useEffect(() => {
-    console.log("Current categories", categories);
-  }, [categories]);
-
-  const organizeCategories = (categories) => {
-    const map = {};
-    const roots = [];
-  
-    // Create a map of categories and initialize children arrays
-    categories.forEach(category => {
-      map[category.slug] = { ...category, children: [] };
-    });
-  
-    // Populate the children arrays
-    categories.forEach(category => {
-      if (category.level === 0) {
-        roots.push(map[category.slug]);
-      } else {
-        const parentSlug = findParentSlug(category, categories, map);
-        if (parentSlug) {
-          map[parentSlug].children.push(map[category.slug]);
-        }
-      }
-    });
-  
-    return roots;
-  };
-  
-  const findParentSlug = (category, categories, map) => {
-    const parentLevel = category.level - 1;
-    const potentialParents = categories.filter(cat => cat.level === parentLevel);
-    for (let parent of potentialParents) {
-      if (map[parent.slug].children.includes(map[category.slug]) === false) {
-        return parent.slug;
-      }
-    }
-    return null;
-  };
-  
-
-
-
-    if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading categories.</p>;
 
-  const organizedCategories = organizeCategories(categories);
-
-  const renderCategories = (categories) => {
-    return categories.map(category => {
-      if (category.children.length > 0) {
-        return (
-          <optgroup label={category.name} key={category.slug}>
-            {renderCategories(category.children)}
-          </optgroup>
-        );
-      } else {
-        return (
-          <option key={category.slug} value={category.slug}>{category.name}</option>
-        );
-      }
-    });
+  const renderCategories = () => {
+    if (!categories || categories.length === 0 || !categories[0].children) {
+      return null;
+    }
+    return (
+      <MDBContainer className='d-flex justify-content-center basic'>
+        <MDBDropdown animation={false}>
+          <MDBDropdownToggle>Categories</MDBDropdownToggle>
+          <MDBDropdownMenu>{renderCategoryTree(categories[0].children)}</MDBDropdownMenu>
+        </MDBDropdown>
+      </MDBContainer>
+    );
   };
 
-  return (
-    
-    <select>
-      {renderCategories(organizedCategories)}
-    </select>
-  );
-};
+  const renderCategoryTree = (categories) => {
+    return (
+      <>
+         {categories.map((category) => (
+        <MDBDropdownItem 
+          key={category.slug} 
+          className='dropdown-item' 
+          onClick={(event) => handleItemClick(category.slug, event)}
+        >
+          {category.name}
+          {category.children && category.children.length > 0 && (
+            <ul className='dropdown-menu dropdown-submenu'>
+              {category.children.map((child) => (
+                <MDBDropdownItem 
+                  key={child.slug} 
+                  className='dropdown-item' 
+                  onClick={(event) => handleItemClick(child.slug, event)}
+                >
+                  {child.name}
+                  {child.children && child.children.length > 0 && (
+                    <ul className='dropdown-menu dropdown-submenu'>
+                      {renderCategoryTree(child.children)}
+                    </ul>
+                  )}
+                </MDBDropdownItem>
+              ))}
+            </ul>
+          )}
+        </MDBDropdownItem>
+      ))}
+      </>
+    );
+  };
 
+  return <>{renderCategories()}</>;
+};
 
 export default CategoryDropdown;
