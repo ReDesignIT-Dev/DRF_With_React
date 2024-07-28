@@ -14,6 +14,7 @@ import UserActivation from "pages/UserActivation";
 import PasswordRecovery from "pages/PasswordRecovery";
 import Login from "pages/Login";
 import Register from "pages/Register";
+import Category from "pages/Category";
 
 import { isUserLoggedIn } from "utils/validation";
 import { logoutUser } from "services/apiRequestsUser";
@@ -24,6 +25,7 @@ import {
   FRONTEND_ACTIVATE_USER_URL,
   FRONTEND_LOGIN_URL,
   FRONTEND_REGISTER_URL,
+  FRONTEND_CATEGORY_URL,
 } from "config";
 
 function App() {
@@ -50,6 +52,7 @@ function App() {
     { path: FRONTEND_PASSWORD_RECOVERY_URL, element: <PasswordRecovery /> },
     { path: FRONTEND_PASSWORD_RESET_URL, element: <PasswordReset /> },
     { path: FRONTEND_ACTIVATE_USER_URL, element: <UserActivation /> },
+    { path: FRONTEND_CATEGORY_URL, element: <Category />},
     { path: "*", element: <NotFound /> },
   ];
 
