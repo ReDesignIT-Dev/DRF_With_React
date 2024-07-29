@@ -13,7 +13,7 @@ export default function ProductList() {
     const fetchProducts = async () => {
       try {
         const response = await getAllProductsInCategory(params.slug);
-        setProducts(response.data.products); // Assuming products are in response.data.products
+        setProducts(response.data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -23,26 +23,19 @@ export default function ProductList() {
 
   const listProducts = () => {
     return (
-      <div>
-        <div>
-          {products.map((product) => (
-            <div key={product.slug}>
+      <>
+        {products.map((product) => (
+          <div key={product.slug} className='single-product-on-list d-flex flex-row w-100'>
+            <img src={product.image} alt={product.name}></img>
+            <div className='product-details d-flex justify-content-between w-100'>
               <h2>{product.name}</h2>
-              <p>{product.description}</p>
+              <p className="product-price">{product.price} PLN</p>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        ))}
+      </>
     );
   };
 
-  return (
-    <div className='product-list-container'>
-      <h1>Path Parameters</h1>
-      <pre>{JSON.stringify(params, null, 2)}</pre>
-      {listProducts()}
-      <h1>Query Parameters</h1>
-      <pre>{JSON.stringify(queryParams, null, 2)}</pre>
-    </div>
-  );
+  return <div className='product-list-container d-flex flex-column gap-3 w-100 p-3'>{listProducts()}</div>;
 }
