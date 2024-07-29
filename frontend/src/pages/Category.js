@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getAllProductsInCategory } from "services/apiRequestsShop";
+import useQueryParams from "hooks/useQueryParams";
 
 export default function Category() {
   const params = useParams();
-  const [searchParams] = useSearchParams();
+  const queryParams = useQueryParams();
   const [products, setProducts] = useState([]);
-
-  const queryEntries = {};
-  for (let [key, value] of searchParams.entries()) {
-    queryEntries[key] = value;
-  }
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -21,9 +17,8 @@ export default function Category() {
         console.error("Error fetching products:", error);
       }
     };
-
     fetchProducts();
-  }, [params, searchParams]);
+  }, [params, queryParams]);
 
   const listProducts = () => {
     return (
@@ -44,7 +39,7 @@ export default function Category() {
       <pre>{JSON.stringify(params, null, 2)}</pre>
       {listProducts()}
       <h1>Query Parameters</h1>
-      <pre>{JSON.stringify(queryEntries, null, 2)}</pre>
+      <pre>{JSON.stringify(queryParams, null, 2)}</pre>
     </div>
   );
 }
