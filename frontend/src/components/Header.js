@@ -35,10 +35,10 @@ function Header({ isLoggedIn, handleLogout }) {
           </div>
         </div>
 
-        <div className='header-nav d-flex flex-row gap-2'>
-        <div className='nav-element'>
-          <CategoryDropdown />
-        </div>
+        <div className='header-nav d-flex flex-row gap-2 my-2'>
+          <div className='nav-element'>
+            <CategoryDropdown />
+          </div>
           <div className='nav-element'>
             <Link to='/'> Home </Link>
           </div>
