@@ -1,8 +1,8 @@
-export default function CategoryTree() {
+export default function CategoryTree({className}) {
 
 
   return (
-  <div>
+  <div className={`${className}`}>
     Category Tree TODO
   </div>
 );
