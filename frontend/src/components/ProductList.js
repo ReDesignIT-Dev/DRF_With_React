@@ -4,7 +4,7 @@ import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
 import { useParams } from "react-router-dom";
 
-export default function ProductList() {
+export default function ProductList({className}) {
   const params = useParams();
   const queryParams = useQueryParams();
   const [products, setProducts] = useState([]);
@@ -37,5 +37,5 @@ export default function ProductList() {
     );
   };
 
-  return <div className='product-list-container d-flex flex-column gap-3 w-100 p-3'>{listProducts()}</div>;
+  return <div className={`product-list-container d-flex flex-column gap-3 w-100 p-3 ${className}`}>{listProducts()}</div>;
 }
