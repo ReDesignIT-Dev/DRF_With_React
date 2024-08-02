@@ -8,15 +8,20 @@ export default function CategoryTree({ className }) {
   const params = useParams();
   const [categoryChildren, setCategoryChildren] = useState([]);
   const [parent, setParent] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategoryChildren = async () => {
       try {
         const response = await getAllChildrenOfCategory(params.slug);
-        console.log(response.children);
-        setCategoryChildren(response.data.children);
-        setParent(response.data.parent);
+        if (response.data.children && response.data.children.length > 0) {
+          setCategoryChildren(response.data.children);
+          setParent(response.data.parent);
+          setSelectedCategory(null);
+        } else {
+          setSelectedCategory(params.slug);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -33,7 +38,11 @@ export default function CategoryTree({ className }) {
     return (
       <>
         {categoryChildren.map((child) => (
-          <p key={child.slug} onClick={(event) => handleNavigationClick(child.slug, event)} className="category-child">
+          <p
+            key={child.slug}
+            onClick={(event) => handleNavigationClick(child.slug, event)}
+            className={`category-child ${selectedCategory === child.slug ? "selected" : ""}`}
+          >
             {child.name}
           </p>
         ))}
@@ -46,9 +55,9 @@ export default function CategoryTree({ className }) {
       {parent && parent.slug ? (
         <p>
           <span>Go back to </span>
-          <span 
-            onClick={(event) => handleNavigationClick(parent.slug, event)} 
-            className="parent-link"
+          <span
+            onClick={(event) => handleNavigationClick(parent.slug, event)}
+            className='parent-link'
           >
             {parent.name}
           </span>

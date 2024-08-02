@@ -7,3 +7,6 @@
     color:deepskyblue;
   }
   
+.category-child.selected {
+    color: deepskyblue;
+  }
