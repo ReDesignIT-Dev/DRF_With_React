@@ -77,7 +77,7 @@ class ProductView(RetrieveAPIView):
 class CategoryView(APIView):
     def get(self, request, slug, format=None):
         category = get_object_or_404(Category, slug=slug)
-        products = Product.objects.filter(categories=category)
+        products = Product.objects.filter(category=category)
         child_categories = category.children.all()
         category_serializer = CategoryTreeSerializer(category)
         product_serializer = ProductSerializer(products, many=True)
