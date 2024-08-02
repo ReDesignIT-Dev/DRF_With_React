@@ -69,7 +69,6 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category_names = serializers.SerializerMethodField()
     description = serializers.CharField(min_length=2, max_length=500)
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
     price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
@@ -97,8 +96,5 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = (
-            'name', 'categories', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
-            'image', 'category_names', 'slug')
-
-    def get_category_names(self, instance):
-        return [category.name for category in instance.category.all()]
+            'name', 'category', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
+            'image', 'slug')
