@@ -36,8 +36,8 @@ class Category(CommonFields, MPTTModel):
     def delete(self, *args, **kwargs):
         parent_category = self.parent
         for product in Product.objects.filter(categories=self):
-            product.categories.remove(self)
-            product.categories.add(parent_category)
+            product.category.remove(self)
+            product.category.add(parent_category)
         self.children.update(parent=self.parent)
         super().delete(*args, **kwargs)
 
@@ -45,8 +45,16 @@ class Category(CommonFields, MPTTModel):
         return self.parent.name if self.parent else None
 
 
+def get_default_category():
+    default_category = Category.objects.filter(level=0).first()
+    if not default_category:
+        default_category = Category.objects.create(name="Shop", parent=None)
+    return default_category.id
+
+
 class Product(CommonFields):
-    categories = models.ManyToManyField(Category)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE,
+                                 default=get_default_category)
     image = models.ImageField(blank=True, default='shop_default_image.jpg', upload_to="products")
     description = models.CharField(max_length=500, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)

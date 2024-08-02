@@ -17,7 +17,14 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('name', 'description', 'parent')
 
+
 class CategoryChildSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['name', 'slug']
+
+
+class CategoryParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['name', 'slug']
@@ -25,10 +32,11 @@ class CategoryChildSerializer(serializers.ModelSerializer):
 
 class CategoryChildrenListSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
+    parent = CategoryParentSerializer()
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'children']
+        fields = ['id', 'name', 'slug', 'children', 'parent']
 
     def get_children(self, obj):
         children = obj.children.all()
@@ -93,4 +101,4 @@ class ProductSerializer(serializers.ModelSerializer):
             'image', 'category_names', 'slug')
 
     def get_category_names(self, instance):
-        return [category.name for category in instance.categories.all()]
+        return [category.name for category in instance.category.all()]
