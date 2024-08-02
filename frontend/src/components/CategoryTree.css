@@ -1,0 +1,9 @@
+.category-child, .parent-link {
+    color: black; 
+    cursor: pointer;
+  }
+  
+.category-child:hover, .parent-link:hover {
+    color:deepskyblue;
+  }
+  
