@@ -17,11 +17,11 @@ export default function CategoryTree({ className }) {
         const response = await getAllChildrenOfCategory(params.slug);
         if (response.data.children && response.data.children.length > 0) {
           setCategoryChildren(response.data.children);
-          setParent(response.data.parent);
           setSelectedCategory(null);
         } else {
           setSelectedCategory(params.slug);
         }
+        setParent(response.data.parent);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
