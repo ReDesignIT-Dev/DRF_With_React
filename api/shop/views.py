@@ -8,7 +8,8 @@ from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
-from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer
+from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
+    CategoryProductListSerializer
 from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework import status
@@ -100,6 +101,23 @@ class CategoryChildrenView(RetrieveAPIView):
     def get_object(self):
         slug = self.kwargs.get("slug")
         return get_object_or_404(Category, slug=slug)
+
+
+class CategoryProductsView(RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryProductListSerializer
+    lookup_field = 'slug'
+
+    def get_object(self):
+        slug = self.kwargs.get("slug")
+        return get_object_or_404(Category, slug=slug)
+
+    def retrieve(self, request, *args, **kwargs):
+        category = self.get_object()
+        descendants = category.get_descendants(include_self=True)
+        products = Product.objects.filter(category__in=descendants).distinct()
+        serializer = self.get_serializer(products, many=True)
+        return Response({'products': serializer.data})
 
 
 class CategoriesView(ListAPIView):
