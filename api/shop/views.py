@@ -9,7 +9,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
-    CategoryProductListSerializer
+    CategoryProductListSerializer, CategoryParentsListSerializer
 from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework import status
@@ -118,6 +118,22 @@ class CategoryProductsView(RetrieveAPIView):
         products = Product.objects.filter(category__in=descendants).distinct()
         serializer = self.get_serializer(products, many=True)
         return Response({'products': serializer.data})
+
+
+class CategoryParentsView(RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryParentsListSerializer
+    lookup_field = 'slug'
+
+    def get_object(self):
+        slug = self.kwargs.get("slug")
+        return get_object_or_404(Category, slug=slug)
+
+    def retrieve(self, request, *args, **kwargs):
+        category = self.get_object()
+        ancestors = category.get_ancestors(include_self=True)
+        ancestors_serializer = self.get_serializer(ancestors, many=True)
+        return Response({'ancestors': ancestors_serializer.data})
 
 
 class CategoriesView(ListAPIView):

@@ -49,6 +49,12 @@ class CategoryProductListSerializer(serializers.ModelSerializer):
         fields = ['name', 'slug', 'price', 'image']
 
 
+class CategoryParentsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['name', 'slug']
+
+
 class CategoryTreeSerializer(serializers.ModelSerializer):
     parent_name = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
