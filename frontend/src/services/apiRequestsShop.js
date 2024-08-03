@@ -8,7 +8,7 @@ import { apiErrorHandler } from "./apiErrorHandler";
 // TODO optimize later to query one by one
 export async function getAllProductsInCategory(categorySlug) {
     try {
-      const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}`, {
+      const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/products`, {
         headers: {
           ...apiClient.defaults.headers,
         },
