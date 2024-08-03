@@ -11,22 +11,32 @@ export default function CategoryTree({ className }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const navigate = useNavigate();
 
+  const fetchCategoryChildren = async (slug) => {
+    try {
+      const response = await getAllChildrenOfCategory(slug);
+      return response.data
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return []
+    }
+  };
+
   useEffect(() => {
-    const fetchCategoryChildren = async () => {
-      try {
-        const response = await getAllChildrenOfCategory(params.slug);
-        if (response.data.children && response.data.children.length > 0) {
-          setCategoryChildren(response.data.children);
+    const fetchData = async () => {
+      const result = await fetchCategoryChildren(params.slug);
+      if (result.children && result.children.length > 0) {
+          setCategoryChildren(result.children);
           setSelectedCategory(null);
-        } else {
+      } else {
           setSelectedCategory(params.slug);
-        }
-        setParent(response.data.parent);
-      } catch (error) {
-        console.error("Error fetching products:", error);
+          const newResult = await fetchCategoryChildren(result.parent.slug)
+          setCategoryChildren(newResult.children);
       }
-    };
-    fetchCategoryChildren();
+      setParent(result.parent);
+  };
+
+  fetchData(); // Call the async function
+
   }, [params]);
 
   const handleNavigationClick = (slug, event) => {
