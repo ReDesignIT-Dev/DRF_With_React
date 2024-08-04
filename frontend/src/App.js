@@ -15,6 +15,7 @@ import PasswordRecovery from "pages/PasswordRecovery";
 import Login from "pages/Login";
 import Register from "pages/Register";
 import Category from "pages/Category";
+import Product from "pages/Product";
 
 import { isUserLoggedIn } from "utils/validation";
 import { logoutUser } from "services/apiRequestsUser";
@@ -27,6 +28,7 @@ import {
   FRONTEND_REGISTER_URL,
   FRONTEND_CATEGORY_URL,
 } from "config";
+import { FRONTEND_PRODUCT_URL } from "config";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(isUserLoggedIn());
@@ -52,7 +54,8 @@ function App() {
     { path: FRONTEND_PASSWORD_RECOVERY_URL, element: <PasswordRecovery /> },
     { path: FRONTEND_PASSWORD_RESET_URL, element: <PasswordReset /> },
     { path: FRONTEND_ACTIVATE_USER_URL, element: <UserActivation /> },
-    { path: FRONTEND_CATEGORY_URL, element: <Category />},
+    { path: FRONTEND_CATEGORY_URL, element: <Category /> },
+    { path: FRONTEND_PRODUCT_URL, element: <Product /> },
     { path: "*", element: <NotFound /> },
   ];
 
