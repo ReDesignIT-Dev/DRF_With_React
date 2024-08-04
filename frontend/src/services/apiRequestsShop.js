@@ -4,6 +4,7 @@ import {
   API_ALL_CATEGORIES,
 } from "config";
 import { apiErrorHandler } from "./apiErrorHandler";
+import { API_PRODUCT_URL } from "config";
 
 // TODO optimize later to query one by one
 export async function getAllProductsInCategory(categorySlug) {
@@ -48,6 +49,19 @@ export async function getAllProductsInCategory(categorySlug) {
   export async function getAllParentsOfCategory(categorySlug) {
     try {
       const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/parents`, {
+        headers: {
+          ...apiClient.defaults.headers,
+        },
+      });
+      return response;
+    } catch (error) {
+      apiErrorHandler(error);
+    }
+  }
+  
+  export async function getProduct(productSlug) {
+    try {
+      const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}`, {
         headers: {
           ...apiClient.defaults.headers,
         },
