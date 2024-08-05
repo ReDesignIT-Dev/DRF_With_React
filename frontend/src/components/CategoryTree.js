@@ -61,7 +61,8 @@ export default function CategoryTree({ className }) {
   };
 
   return (
-    <div className={`${className}`}>
+    <div className={`${className} d-flex flex-column gap-2`}>
+      <h3>Subcategories:</h3>
       {parent && parent.slug ? (
         <p>
           <span>Go back to </span>
