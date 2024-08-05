@@ -14,6 +14,10 @@
     flex-direction: row;
     align-items: center;
   }
+
+  .single-product-on-list:hover {
+    background-color: grey;
+  }
   
   .product-details {
     display: flex;
