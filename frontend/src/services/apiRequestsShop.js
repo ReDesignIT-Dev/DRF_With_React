@@ -71,3 +71,16 @@ export async function getAllProductsInCategory(categorySlug) {
       apiErrorHandler(error);
     }
   }
+
+  export async function getProductParentCategory(productSlug) {
+    try {
+      const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}/parent-category`, {
+        headers: {
+          ...apiClient.defaults.headers,
+        },
+      });
+      return response;
+    } catch (error) {
+      apiErrorHandler(error);
+    }
+  }
