@@ -110,3 +110,20 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = (
             'name', 'category', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
             'image', 'slug')
+
+
+class ProductParentCategorySerializer(serializers.ModelSerializer):
+    parent_category = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = ('parent_category',)
+
+    def get_parent_category(self, obj):
+        parent_category = obj.category.parent
+        if parent_category:
+            return {
+                'name': parent_category.name,
+                'slug': parent_category.slug,
+            }
+        return None

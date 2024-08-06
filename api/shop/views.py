@@ -9,7 +9,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
-    CategoryProductListSerializer, CategoryParentsListSerializer
+    CategoryProductListSerializer, CategoryParentsListSerializer, ProductParentCategorySerializer
 from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework import status
@@ -72,6 +72,12 @@ class ProductEditView(RetrieveUpdateDestroyAPIView):
 class ProductView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    lookup_field = 'slug'
+
+
+class ProductParentCategoryView(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductParentCategorySerializer
     lookup_field = 'slug'
 
 
