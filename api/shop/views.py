@@ -86,8 +86,6 @@ class ProductParentCategoryView(RetrieveAPIView):
 class ProductSearchView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = CategoryProductListSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ['name']
 
     def get_queryset(self):
         query_param = self.request.query_params.get('string', '')
