@@ -85,7 +85,7 @@ class ProductSearchView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = CategoryProductListSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['name']  # Add fields you want to search in
+    search_fields = ['name']
 
     def get_queryset(self):
         queryset = super().get_queryset()
