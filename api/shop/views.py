@@ -4,7 +4,6 @@ from rest_framework.generics import (
     CreateAPIView,
     RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404,
 )
-from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
@@ -13,6 +12,7 @@ from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySeri
 from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.filters import SearchFilter
 
 
 class HomeView(APIView):
@@ -79,6 +79,20 @@ class ProductParentCategoryView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductParentCategorySerializer
     lookup_field = 'slug'
+
+
+class ProductSearchView(ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = CategoryProductListSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['name']  # Add fields you want to search in
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get('string', None)
+        if search_query:
+            queryset = queryset.filter(name__icontains=search_query)
+        return queryset
 
 
 class CategoryView(APIView):
@@ -185,5 +199,5 @@ class ShopAdminPanelProducts(ListAPIView):
     permission_classes = [IsAdminUser]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [SearchFilter]
     search_fields = ['name']
