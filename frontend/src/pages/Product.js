@@ -2,6 +2,7 @@ import { getProduct } from "services/apiRequestsShop";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Product.css";
+import CategoryParentTree from "components/CategoryParentTree";
 
 export default function Product() {
   const params = useParams();
@@ -31,6 +32,7 @@ export default function Product() {
 
   return (
     <div className='product-view-container d-flex flex-column mx-auto'>
+      <CategoryParentTree />
       <div className='product-top-info d-flex flex-row'>
         <div className='product-images'>
           <img src={product.image} alt={product.name} />
