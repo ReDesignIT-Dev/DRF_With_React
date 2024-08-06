@@ -13,6 +13,8 @@ from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.filters import SearchFilter
+from django.db.models import Q
+from urllib.parse import unquote
 
 
 class HomeView(APIView):
@@ -88,11 +90,22 @@ class ProductSearchView(ListAPIView):
     search_fields = ['name']
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        search_query = self.request.query_params.get('string', None)
-        if search_query:
-            queryset = queryset.filter(name__icontains=search_query)
-        return queryset
+        query_param = self.request.query_params.get('string', '')
+        search_terms = unquote(query_param).split()
+
+        if not search_terms:
+            return Product.objects.none()
+
+        query = Q()
+        for term in search_terms:
+            query |= Q(name__icontains=term) | Q(description__icontains=term)
+
+        return Product.objects.filter(query)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CategoryView(APIView):
