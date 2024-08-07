@@ -5,6 +5,7 @@ import {
 } from "config";
 import { apiErrorHandler } from "./apiErrorHandler";
 import { API_PRODUCT_URL } from "config";
+import { API_SEARCH_URL } from "config";
 
 // TODO optimize later to query one by one
 export async function getAllProductsInCategory(categorySlug) {
@@ -75,6 +76,32 @@ export async function getAllProductsInCategory(categorySlug) {
   export async function getProductParentCategory(productSlug) {
     try {
       const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}/parent-category`, {
+        headers: {
+          ...apiClient.defaults.headers,
+        },
+      });
+      return response;
+    } catch (error) {
+      apiErrorHandler(error);
+    }
+  }
+
+  export async function getAllSearchAssosiatedCategories(searchString) {
+    try {
+      const response = await apiClient.get(`${API_SEARCH_URL}?${searchString}`, {
+        headers: {
+          ...apiClient.defaults.headers,
+        },
+      });
+      return response;
+    } catch (error) {
+      apiErrorHandler(error);
+    }
+  }
+
+  export async function getAllSearchProducts(searchString) {
+    try {
+      const response = await apiClient.get(`${API_SEARCH_URL}?string=${searchString}`, {
         headers: {
           ...apiClient.defaults.headers,
         },
