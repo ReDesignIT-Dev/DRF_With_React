@@ -10,6 +10,7 @@ export const FRONTEND_PASSWORD_RESET_URL = "/password-reset/:token";
 // shop based
 export const FRONTEND_PRODUCT_URL = "/product/:slug";
 export const FRONTEND_CATEGORY_URL = "/category/:slug";
+export const FRONTEND_SEARCH_URL = "/search";
 
 // API urls should match the django urls
 export const API_LOGOUT_USER_URL = "/logout";
@@ -22,3 +23,4 @@ export const API_PASSWORD_RESET_URL = "/password-reset";
 export const API_PRODUCT_URL = "/product";
 export const API_CATEGORY_URL = "/category";
 export const API_ALL_CATEGORIES = "/categories";
+export const API_SEARCH_URL = "/search";

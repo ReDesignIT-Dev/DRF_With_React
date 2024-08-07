@@ -26,9 +26,11 @@ import {
   FRONTEND_ACTIVATE_USER_URL,
   FRONTEND_LOGIN_URL,
   FRONTEND_REGISTER_URL,
+  FRONTEND_PRODUCT_URL,
   FRONTEND_CATEGORY_URL,
+  FRONTEND_SEARCH_URL,
 } from "config";
-import { FRONTEND_PRODUCT_URL } from "config";
+import SearchPage from "pages/SearchPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(isUserLoggedIn());
@@ -56,6 +58,7 @@ function App() {
     { path: FRONTEND_ACTIVATE_USER_URL, element: <UserActivation /> },
     { path: FRONTEND_CATEGORY_URL, element: <Category /> },
     { path: FRONTEND_PRODUCT_URL, element: <Product /> },
+    { path: FRONTEND_SEARCH_URL, element: <SearchPage />},
     { path: "*", element: <NotFound /> },
   ];
 
