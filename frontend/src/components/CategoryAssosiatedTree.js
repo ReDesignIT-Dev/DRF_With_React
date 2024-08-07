@@ -13,7 +13,7 @@ export default function CategoryTree({ className }) {
   useEffect(() => {
     const fetchAssosiatedCategoriesTree = async () => {
       try {
-        const response = await getAllSearchAssosiatedCategories(queryParams);
+        const response = await getAllSearchAssosiatedCategories(queryParams.string);
         setCategories([]);
         return response.data
       } catch (error) {
