@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { API_CATEGORY_URL } from "config";
 import useQueryParams from "hooks/useQueryParams";
 import "./CategoryTree.css";
-import { getAllSearchAssosiatedCategories } from "services/apiRequestsShop";
+import { getAllSearchAssociatedCategories } from "services/apiRequestsShop";
 
 export default function CategoryTree({ className }) {
   const [categories, setCategories] = useState([]);
@@ -11,9 +11,9 @@ export default function CategoryTree({ className }) {
   const queryParams = useQueryParams();
 
   useEffect(() => {
-    const fetchAssosiatedCategoriesTree = async () => {
+    const fetchAssociatedCategoriesTree = async () => {
       try {
-        const response = await getAllSearchAssosiatedCategories(queryParams.string);
+        const response = await getAllSearchAssociatedCategories(queryParams.string);
         setCategories([]);
         return response.data
       } catch (error) {
@@ -22,7 +22,7 @@ export default function CategoryTree({ className }) {
       }
   };
 
-  fetchAssosiatedCategoriesTree();
+  fetchAssociatedCategoriesTree();
 
   }, [queryParams]);
 

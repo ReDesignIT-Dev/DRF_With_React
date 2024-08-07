@@ -86,9 +86,9 @@ export async function getAllProductsInCategory(categorySlug) {
     }
   }
 
-  export async function getAllSearchAssosiatedCategories(searchString) {
+  export async function getAllSearchAssociatedCategories(searchString) {
     try {
-      const response = await apiClient.get(`${API_SEARCH_URL}?${searchString}`, {
+      const response = await apiClient.get(`${API_SEARCH_URL}?string=${searchString}`, {
         headers: {
           ...apiClient.defaults.headers,
         },
