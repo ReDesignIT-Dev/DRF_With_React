@@ -19,6 +19,12 @@ export default function SearchBox() {
         navigate(`${FRONTEND_SEARCH_URL}?string=${encodedSearchTerm}`);
       };
 
+      const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            handleSearchClick(event);
+        }
+    };
+
     return (
         <div className="search-box d-flex flex-row align-items-center gap-2">
             <input
@@ -27,6 +33,7 @@ export default function SearchBox() {
                 placeholder="Search"
                 value={searchTerm}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
             />
             <button  className="search-btn btn btn-primary d-flex justify-content-center align-items-center" onClick={(event) => handleSearchClick(event)}><SearchIcon /></button>
         </div>
