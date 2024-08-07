@@ -1,18 +1,23 @@
 import { useState } from "react";
 import "./SearchBox.scss";
 import { ReactComponent as SearchIcon } from "images/search.svg";
+import { FRONTEND_SEARCH_URL } from "config";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchBox() {
     const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
+
 
     const handleChange = event => {
         setSearchTerm(event.target.value);
     };
 
-    const handleSearch = () => {
-        // TODO API QUERY
-        console.log("Search term:", searchTerm);
-    };
+    const handleSearchClick = (event) => {
+        event.stopPropagation();
+        const encodedSearchTerm = encodeURIComponent(searchTerm.trim());
+        navigate(`${FRONTEND_SEARCH_URL}?string=${encodedSearchTerm}`);
+      };
 
     return (
         <div className="search-box d-flex flex-row align-items-center gap-2">
@@ -23,7 +28,7 @@ export default function SearchBox() {
                 value={searchTerm}
                 onChange={handleChange}
             />
-            <button  className="search-btn btn btn-primary d-flex justify-content-center align-items-center" onClick={handleSearch}><SearchIcon /></button>
+            <button  className="search-btn btn btn-primary d-flex justify-content-center align-items-center" onClick={(event) => handleSearchClick(event)}><SearchIcon /></button>
         </div>
     );
 }
