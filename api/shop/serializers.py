@@ -19,9 +19,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class SearchAssociatedCategorySerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ('name', 'slug')
+        fields = ['name', 'slug', 'children']
+
+    def get_children(self, obj):
+        return obj.get('children', [])
 
 
 class CategoryChildSerializer(serializers.ModelSerializer):
