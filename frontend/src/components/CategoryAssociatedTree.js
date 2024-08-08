@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { API_CATEGORY_URL } from "config";
 import useQueryParams from "hooks/useQueryParams";
-import "./CategoryTree.css";
+import "./CategoryAssociatedTree.css";
 import { getAllSearchAssociatedCategories } from "services/apiRequestsShop";
 
-export default function CategoryTree({ className }) {
+export default function CategoryAssociatedTree({ className }) {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   const queryParams = useQueryParams();
@@ -31,17 +31,32 @@ export default function CategoryTree({ className }) {
     navigate(`${API_CATEGORY_URL}/${slug}`);
   };
 
+  const CategoryTree = ({ category }) => {
+    return (
+      <div className="category-tree">
+        <div
+          onClick={(event) => handleNavigationClick(category.slug, event)}
+          className="associated-category"
+        >
+          <span className="category-name">{category.name}</span>
+          <span className="category-count">{category.product_count}</span>
+        </div>
+        {category.children && category.children.length > 0 && (
+          <div className="category-children">
+            {category.children.map((childCategory) => (
+              <CategoryTree key={childCategory.slug} category={childCategory} />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const listAssociatedCategories = () => {
     return (
       <>
         {categories.map((category) => (
-          <p
-            key={category.slug}
-            onClick={(event) => handleNavigationClick(category.slug, event)}
-            className={`associated-category`}
-          >
-            {category.name}
-          </p>
+          <CategoryTree key={category.slug} category={category} />
         ))}
       </>
     );
