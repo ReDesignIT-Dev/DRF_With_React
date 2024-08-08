@@ -18,6 +18,12 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('name', 'description', 'parent')
 
 
+class SearchAssociatedCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('name', 'slug')
+
+
 class CategoryChildSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
