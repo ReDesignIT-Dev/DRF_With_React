@@ -176,8 +176,8 @@ def build_category_tree(category, product_categories, product_counts, processed_
 
     if category in product_categories or children_trees:
         return {
-            'id': category.id,
             'name': category.name,
+            'slug': category.slug,
             'product_count': product_count,
             'children': children_trees
         }
