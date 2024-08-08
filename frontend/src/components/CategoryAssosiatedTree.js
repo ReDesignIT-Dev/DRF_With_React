@@ -14,7 +14,7 @@ export default function CategoryTree({ className }) {
     const fetchAssociatedCategoriesTree = async () => {
       try {
         const response = await getAllSearchAssociatedCategories(queryParams.string);
-        setCategories([]);
+        setCategories(response.data.categories);
         return response.data
       } catch (error) {
         console.error("Error fetching assosiated categories:", error);
@@ -31,16 +31,16 @@ export default function CategoryTree({ className }) {
     navigate(`${API_CATEGORY_URL}/${slug}`);
   };
 
-  const listAssosiatedCategories = () => {
+  const listAssociatedCategories = () => {
     return (
       <>
-        {categories.map((child) => (
+        {categories.map((category) => (
           <p
-            key={child.slug}
-            onClick={(event) => handleNavigationClick(child.slug, event)}
-            className={`category-child`}
+            key={category.slug}
+            onClick={(event) => handleNavigationClick(category.slug, event)}
+            className={`associated-category`}
           >
-            {child.name}
+            {category.name}
           </p>
         ))}
       </>
@@ -50,7 +50,7 @@ export default function CategoryTree({ className }) {
   return (
     <div className={`${className} d-flex flex-column gap-2`}>
       <h3>Subcategories:</h3>
-      {listAssosiatedCategories()}
+      {listAssociatedCategories()}
     </div>
   );
 }
