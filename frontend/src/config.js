@@ -24,3 +24,4 @@ export const API_PRODUCT_URL = "/product";
 export const API_CATEGORY_URL = "/category";
 export const API_ALL_CATEGORIES = "/categories";
 export const API_SEARCH_URL = "/search";
+export const API_SEARCH_ASSOCIATED_CATEGORIES_URL = "/search-associated-categories";
