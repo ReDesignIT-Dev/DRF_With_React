@@ -8,7 +8,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
-    CategoryProductListSerializer, CategoryParentsListSerializer, ProductParentCategorySerializer
+    CategoryProductListSerializer, CategoryParentsListSerializer, ProductParentCategorySerializer, \
+    SearchAssociatedCategorySerializer
 from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework import status
@@ -104,6 +105,31 @@ class ProductSearchView(ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response({'products': serializer.data}, status=status.HTTP_200_OK)
+
+
+class CategoriesSearchAssociatedView(ListAPIView):
+    serializer_class = SearchAssociatedCategorySerializer
+
+    def get_queryset(self):
+        query_param = self.request.query_params.get('string', '')
+        search_terms = unquote(query_param).split()
+
+        if not search_terms:
+            return Category.objects.none()
+
+        query = Q()
+        for term in search_terms:
+            query |= Q(name__icontains=term) | Q(description__icontains=term)
+
+        products = Product.objects.filter(query)
+        categories = Category.objects.filter(products__in=products).distinct()
+
+        return categories
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({'categories': serializer.data}, status=status.HTTP_200_OK)
 
 
 class CategoryView(APIView):
