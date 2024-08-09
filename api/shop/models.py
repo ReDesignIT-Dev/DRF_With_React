@@ -12,14 +12,21 @@ class CommonFields(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.slug = slugify(self.name)
+        if not self.slug:
+            temp_slug = slugify(self.name)
+            counter = 1
+            while Product.objects.filter(slug=temp_slug).exists():
+                temp_slug = f'{slugify(self.name)}-{counter}'
+                counter += 1
+            self.slug = temp_slug
+
         super().save(*args, **kwargs)
 
-        new_slug = f'{slugify(self.name)}-{self.pk}'
-        if self.slug != new_slug:
-            self.slug = new_slug
-            self.save()
+        final_slug = f'{slugify(self.name)}-{self.pk}'
+
+        if self.slug != final_slug:
+            self.slug = final_slug
+            self.save(update_fields=['slug'])
 
     class Meta:
         abstract = True
