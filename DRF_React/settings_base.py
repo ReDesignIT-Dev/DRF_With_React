@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'api.users',
     'drf_recaptcha',
     'rest_framework.authtoken',
-    'knox',  # improved token with django-rest-knox
+    'knox',
 ]
 
 MIDDLEWARE = [
