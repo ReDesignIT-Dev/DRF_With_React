@@ -29,13 +29,7 @@ class SearchAssociatedCategorySerializer(serializers.ModelSerializer):
         return obj.get('children', [])
 
 
-class CategoryChildSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['name', 'slug']
-
-
-class CategoryParentSerializer(serializers.ModelSerializer):
+class CategoryNameSlugSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['name', 'slug']
@@ -43,7 +37,7 @@ class CategoryParentSerializer(serializers.ModelSerializer):
 
 class CategoryChildrenListSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
-    parent = CategoryParentSerializer()
+    parent = CategoryNameSlugSerializer()
 
     class Meta:
         model = Category
@@ -51,7 +45,7 @@ class CategoryChildrenListSerializer(serializers.ModelSerializer):
 
     def get_children(self, obj):
         children = obj.children.all()
-        return CategoryChildSerializer(children, many=True).data
+        return CategoryNameSlugSerializer(children, many=True).data
 
 
 class CategoryProductListSerializer(serializers.ModelSerializer):
