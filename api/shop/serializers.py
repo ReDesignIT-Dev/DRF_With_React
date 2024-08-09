@@ -96,6 +96,7 @@ class ProductSerializer(serializers.ModelSerializer):
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
     price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
                                      max_digits=None)
+    slug = serializers.SlugField(read_only=True)
 
     sale_start = serializers.DateTimeField(
         required=False,
