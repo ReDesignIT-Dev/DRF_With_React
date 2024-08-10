@@ -1,0 +1,11 @@
+.searchpage-view-container {
+    max-width: 1264px;
+}
+
+.category-tree-basis {
+    flex-basis: 25%;
+  }
+  
+.product-list-basis {
+    flex-basis: 75%;
+  }
