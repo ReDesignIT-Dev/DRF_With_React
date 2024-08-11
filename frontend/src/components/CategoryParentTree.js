@@ -17,7 +17,7 @@ export default function CategoryParentTree({ className, currentCategory }) {
         const response = await getAllParentsOfCategory(slug);
         const ancestors = response.data.ancestors;
         setAncestors(ancestors);
-        if (typeof currentCategory === 'function') {
+        if (typeof currentCategory === "function") {
           const currentCategoryName = ancestors.at(-1).name;
           currentCategory(currentCategoryName);
         }
@@ -35,10 +35,11 @@ export default function CategoryParentTree({ className, currentCategory }) {
         console.error("Error fetching product category:", error);
       }
     };
+    const slug = params.slug;
     if (location.pathname.startsWith(API_CATEGORY_URL)) {
-      fetchCategoryParents(params.slug);
+      fetchCategoryParents(slug);
     } else if (location.pathname.startsWith(API_PRODUCT_URL)) {
-      fetchProductCategoryParents(params.slug);
+      fetchProductCategoryParents(slug);
     }
   }, [params, location.pathname]);
 

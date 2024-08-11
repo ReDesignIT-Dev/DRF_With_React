@@ -120,7 +120,7 @@ class ProductParentCategorySerializer(serializers.ModelSerializer):
         fields = ('parent_category',)
 
     def get_parent_category(self, obj):
-        parent_category = obj.category.parent
+        parent_category = obj.category
         if parent_category:
             return {
                 'name': parent_category.name,
