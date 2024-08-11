@@ -169,4 +169,3 @@ cython_debug/
 api/shop/migrations/*
 api/users/migrations/*
 /media/
-/node_modules/
