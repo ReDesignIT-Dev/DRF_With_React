@@ -1,24 +1,20 @@
-/* styles.css */
 .category-tree {
     margin-left: 10px;
   }
   
   .associated-category {
+    color: black;
     display: flex;
     justify-content: space-between;
     cursor: pointer;
   }
-  
-  .category-name {
-    /* Align the category name to the left */
-  }
-  
-  .category-count {
-    /* Align the product count to the right */
-  }
-  
-  /* Optional: Styling for child categories */
+
   .category-children {
     margin-left: 0px;
   }
+  
+.associated-category:hover {
+    color:rgb(0, 255, 34);
+  }
+
   
