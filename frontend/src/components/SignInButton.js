@@ -1,8 +1,7 @@
 import React from "react";
 import "./SignInButton.css";
 import "react-bootstrap";
-import Icon from "react-icons-kit";
-import {user} from 'react-icons-kit/fa/user'
+import { FaRegUserCircle } from "react-icons/fa";
 
 export default function SignInButton({ isLoggedIn, handleLogout, handleLoginClick }) {
   const handleClick = () => {
@@ -15,7 +14,7 @@ export default function SignInButton({ isLoggedIn, handleLogout, handleLoginClic
 
   return (
     <div onClick={handleClick} className='loginicon'>
-      <p>{isLoggedIn ? "Log Out" : <Icon icon={user} />}</p>
+      <p>{isLoggedIn ? "Log Out" : <FaRegUserCircle />}</p>
     </div>
   );
 }

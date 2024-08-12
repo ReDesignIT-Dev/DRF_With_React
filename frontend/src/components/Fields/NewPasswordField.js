@@ -7,8 +7,8 @@ import {
   isSpecialCharValid,
   isUppercaseValid,
 } from "utils/validation";
-import { Icon } from "react-icons-kit";
-import { eye, eyeOff } from "react-icons-kit/feather";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import "./CommonStyles.css";
 
 export default function NewPasswordField({ value, customClasses, onChange, onValidate }) {
@@ -47,7 +47,7 @@ export default function NewPasswordField({ value, customClasses, onChange, onVal
         onClick={() => setShowPassword(!showPassword)}
       >
         <span>Show password</span>
-        <Icon className='absolute mx-1' icon={showPassword ? eyeOff : eye} size={25} />
+        {showPassword ? <FaEyeSlash /> : <FaEye />}
       </span>
       <div className='password-validation d-flex flex-column align-items-center'>
         <div className={isLengthValid(newPassword) ? "valid" : "invalid"}>

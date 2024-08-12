@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import "./LoginFormPop.scss";
 import "react-bootstrap";
 import { registerUser, postLogin } from "services/apiRequestsUser";
-import { Icon } from "react-icons-kit";
-import { eye, eyeOff } from "react-icons-kit/feather";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import Input from "./Input";
 import ErrorLabel from "./ErrorLabel";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -186,7 +186,7 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
         onClick={() => setShowPassword(!showPassword)}
       >
         <span>Show password</span>
-        <Icon className="absolute mx-1" icon={showPassword ? eyeOff : eye} size={25} />
+        {showPassword ? <FaEyeSlash /> : <FaEye />}
       </span>
       <ErrorLabel error={passwordError} state={state} groupState="login" />
       <ReCAPTCHA className="my-1" ref={recaptchaRef} sitekey={devRecaptchaToken} onChange={(token) => setRecaptchaToken(token)} />

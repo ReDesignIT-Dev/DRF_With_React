@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Icon } from "react-icons-kit";
-import { eye, eyeOff } from "react-icons-kit/feather";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import "./CommonStyles.css";
 
 export default function PasswordField({ value, customClasses, onChange, onValidate }) {
@@ -40,7 +40,7 @@ export default function PasswordField({ value, customClasses, onChange, onValida
         onClick={() => setShowPassword(!showPassword)}
       >
         <span>Show password</span>
-        <Icon className='absolute mx-1' icon={showPassword ? eyeOff : eye} size={25} />
+        {showPassword ? <FaEyeSlash /> : <FaEye />}
       </span>
     </div>
   );
