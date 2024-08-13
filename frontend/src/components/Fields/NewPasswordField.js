@@ -40,15 +40,17 @@ export default function NewPasswordField({ value, customClasses, onChange, onVal
         value={newPassword}
         onChange={handleChange}
         className='text-center w-100'
-        placeholder="password"
+        placeholder='password'
       />
-      <span
-        className='d-flex justify-content-center btn btn-link p-0 m-0 text-black text-decoration-none'
-        onClick={() => setShowPassword(!showPassword)}
-      >
-        <span>Show password</span>
-        {showPassword ? <FaEyeSlash /> : <FaEye />}
-      </span>
+      <div className='text-center'>
+        <div
+          className='d-inline-flex justify-content-center align-items-center p-1 mt-1 btn btn-link text-black text-decoration-none'
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          <span>Show password</span>
+          <span className='mx-2'>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+        </div>
+      </div>
       <div className='password-validation d-flex flex-column align-items-center'>
         <div className={isLengthValid(newPassword) ? "valid" : "invalid"}>
           Minimum length - 8 characters
