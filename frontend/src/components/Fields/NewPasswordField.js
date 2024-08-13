@@ -47,7 +47,7 @@ export default function NewPasswordField({ value, customClasses, onChange, onVal
           className='d-inline-flex justify-content-center align-items-center p-1 mt-1 btn btn-link text-black text-decoration-none'
           onClick={() => setShowPassword(!showPassword)}
         >
-          <span>Show password</span>
+          <span>{showPassword ? "Hide password" : "Show password"}</span>
           <span className='mx-2'>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
         </div>
       </div>
