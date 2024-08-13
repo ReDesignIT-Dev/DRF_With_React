@@ -7,7 +7,6 @@ export default function PasswordField({ value, customClasses, onChange, onValida
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  
   useEffect(() => {
     const isValid = password !== "";
     onValidate(isValid);
@@ -35,13 +34,15 @@ export default function PasswordField({ value, customClasses, onChange, onValida
         className='text-center w-100'
         placeholder='password'
       />
-      <span
-        className='d-flex justify-content-center btn btn-link p-0 m-0 text-black text-decoration-none'
-        onClick={() => setShowPassword(!showPassword)}
-      >
-        <span>Show password</span>
-        {showPassword ? <FaEyeSlash /> : <FaEye />}
-      </span>
+      <div className='text-center'>
+        <div
+          className='d-inline-flex justify-content-center align-items-center p-1 mt-1 btn btn-link text-black text-decoration-none'
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          <span>Show password</span>
+          <span className='mx-2'>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+        </div>
+      </div>
     </div>
   );
 }
