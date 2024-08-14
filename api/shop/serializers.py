@@ -1,15 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Product, ShoppingCartItem, Category
+from .models import Product, ShoppingCartItem, Category, ShoppingCart
 from decimal import Decimal
-
-
-class CartItemSerializer(serializers.ModelSerializer):
-    quantity = serializers.IntegerField(min_value=1, max_value=100)
-
-    class Meta:
-        model = ShoppingCartItem
-        fields = ('product', 'quantity')
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -127,3 +119,22 @@ class ProductParentCategorySerializer(serializers.ModelSerializer):
                 'slug': parent_category.slug,
             }
         return None
+
+
+class ShoppingCartItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    product_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(), write_only=True, source='product'
+    )
+
+    class Meta:
+        model = ShoppingCartItem
+        fields = ['id', 'shopping_cart', 'product', 'product_id', 'quantity', 'price']
+
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    items = ShoppingCartItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ShoppingCart
+        fields = ['id', 'owner', 'items', 'status']
