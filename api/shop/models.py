@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from api.users.models import CustomUser
@@ -71,6 +72,9 @@ class Product(CommonFields):
 
 class ShoppingCart(CommonFields):
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20,
+                              choices=[('active', 'Active'), ('completed', 'Completed'), ('abandoned', 'Abandoned')],
+                              default='active')
 
 
 class ShoppingCartItem(models.Model):
@@ -80,5 +84,46 @@ class ShoppingCartItem(models.Model):
         related_query_name="item",
         on_delete=models.CASCADE,
     )
-    product = models.ForeignKey(Product, related_name="+", on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    product = models.ForeignKey(Product, related_name="cart_items", on_delete=models.CASCADE)
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Store the price at the time of adding to the cart
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['shopping_cart', 'product'], name='unique_cart_item')
+        ]
+
+    def subtotal(self):
+        return self.quantity * self.price
+
+
+from django.db import models
+from django.conf import settings
+
+
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=[
+        ('processing', 'Processing'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
+    ], default='processing')
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_address = models.TextField()
+    billing_address = models.TextField()
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.user}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='+', on_delete=models.SET_NULL, null=True)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Price at the time of order
+
+    def subtotal(self):
+        return self.quantity * self.price
