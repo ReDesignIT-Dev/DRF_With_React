@@ -2,7 +2,7 @@ from django.urls import path
 from .views import ProductList, ProductCreate, ProductEditView, HomeView, ProductView, CategoriesView, \
     CategoryView, CategoryCreateView, CategoryEditView, ShopAdminPanel, ShopAdminPanelProducts, CategoryChildrenView, \
     CategoryProductsView, CategoryParentsView, ProductParentCategoryView, ProductSearchView, \
-    CategoriesSearchAssociatedView
+    CategoriesSearchAssociatedView, ShoppingCartDetailView, ShoppingCartItemCreateView, ShoppingCartItemUpdateDeleteView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -22,4 +22,7 @@ urlpatterns = [
     path('category/<slug:slug>/parents', CategoryParentsView.as_view(), name='category_parents'),
     path('shopping-admin-panel', ShopAdminPanel.as_view(), name='shop_admin_panel'),
     path('shopping-admin-panel/products', ShopAdminPanelProducts.as_view(), name='shop_admin_panel_products'),
+    path('cart', ShoppingCartDetailView.as_view(), name='shopping-cart'),
+    path('cart/item', ShoppingCartItemCreateView.as_view(), name='add-cart-item'),
+    path('cart/item/<slug:slug>', ShoppingCartItemUpdateDeleteView.as_view(), name='update-delete-cart-item'),
 ]
