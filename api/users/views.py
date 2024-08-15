@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from rest_framework import generics, permissions, status
+from rest_framework import generics, status
 from rest_framework.exceptions import ValidationError, MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -17,7 +17,7 @@ from django.contrib.auth.signals import user_logged_out
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = CustomUserRegisterSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -46,6 +46,7 @@ class UserActivationView(APIView):
 
 
 class LoginView(KnoxLoginView):
+    permission_classes = [AllowAny]
     authentication_classes = [BasicAuthentication]
     serializer_class = CustomUserLoginSerializer
 
@@ -138,8 +139,8 @@ class LogoutAllView(KnoxLogoutAllView):
 
 
 class ValidateToken(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)  # TODO CHECK IF DELETED WONT THROW ERRORS
+    permission_classes = (IsAuthenticated,)  # TODO CHECK IF DELETED WONT THROW ERRORS
 
     def get(self, request):
         return Response(status.HTTP_200_OK)
