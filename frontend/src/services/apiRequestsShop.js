@@ -6,6 +6,8 @@ import {
   API_SEARCH_URL,
   API_CATEGORY_URL,
   API_ALL_CATEGORIES,
+  API_CART_URL,
+  API_CART_ITEM,
 } from "config";
 
 // TODO optimize later to query one by one
@@ -106,6 +108,33 @@ export async function getAllSearchAssociatedCategories(searchString) {
 export async function getAllSearchProducts(searchString) {
   try {
     const response = await apiClient.get(`${API_SEARCH_URL}?string=${searchString}`, {
+      headers: {
+        ...apiClient.defaults.headers,
+      },
+    });
+    return response;
+  } catch (error) {
+    apiErrorHandler(error);
+  }
+}
+
+export async function getCart() {
+  try {
+    const response = await apiClient.get(API_CART_URL, {
+      headers: {
+        ...apiClient.defaults.headers,
+      },
+    });
+    return response;
+  } catch (error) {
+    apiErrorHandler(error);
+  }
+}
+
+export async function updateCartQuantity(itemId, quantity) {
+  try {
+    const response = await apiClient.put(`${API_CART_ITEM}/${itemId}`, {
+      quantity,
       headers: {
         ...apiClient.defaults.headers,
       },
