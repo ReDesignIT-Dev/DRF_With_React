@@ -16,6 +16,7 @@ import Login from "pages/Login";
 import Register from "pages/Register";
 import Category from "pages/Category";
 import Product from "pages/Product";
+import Cart from "pages/Cart";
 
 import { isUserLoggedIn } from "utils/validation";
 import { logoutUser } from "services/apiRequestsUser";
@@ -29,6 +30,7 @@ import {
   FRONTEND_PRODUCT_URL,
   FRONTEND_CATEGORY_URL,
   FRONTEND_SEARCH_URL,
+  FRONTEND_CART_URL,
 } from "config";
 import SearchPage from "pages/SearchPage";
 
@@ -59,6 +61,7 @@ function App() {
     { path: FRONTEND_CATEGORY_URL, element: <Category /> },
     { path: FRONTEND_PRODUCT_URL, element: <Product /> },
     { path: FRONTEND_SEARCH_URL, element: <SearchPage />},
+    { path: FRONTEND_CART_URL, element: <Cart />},
     { path: "*", element: <NotFound /> },
   ];
 
