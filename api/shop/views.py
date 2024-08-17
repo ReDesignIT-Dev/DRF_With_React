@@ -1,3 +1,4 @@
+from knox.auth import TokenAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     ListAPIView,
@@ -5,12 +6,12 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404,
 )
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
     CategoryProductListSerializer, CategoryNameSlugSerializer, ProductParentCategorySerializer, \
-    SearchAssociatedCategorySerializer
-from .models import Product, Category
+    SearchAssociatedCategorySerializer, ShoppingCartItemSerializer, ShoppingCartSerializer
+from .models import Product, Category, ShoppingCartItem, ShoppingCart
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.filters import SearchFilter
@@ -291,3 +292,44 @@ class ShopAdminPanelProducts(ListAPIView):
     serializer_class = ProductSerializer
     filter_backends = [SearchFilter]
     search_fields = ['name']
+
+
+class ShoppingCartDetailView(RetrieveAPIView):
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ShoppingCartSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        cart, created = ShoppingCart.objects.get_or_create(owner=self.request.user, status='active')
+        return cart
+
+
+class ShoppingCartItemCreateView(CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ShoppingCartItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        cart, created = ShoppingCart.objects.get_or_create(owner=self.request.user, status='active')
+        product = serializer.validated_data['product']
+
+        try:
+            cart_item = ShoppingCartItem.objects.get(shopping_cart=cart, product=product)
+            cart_item.quantity += serializer.validated_data['quantity']
+            cart_item.save()
+        except ShoppingCartItem.DoesNotExist:
+            serializer.save(shopping_cart=cart, price=product.price)
+
+
+class ShoppingCartItemUpdateDeleteView(RetrieveUpdateDestroyAPIView):
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ShoppingCartItemSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'product__slug'
+    lookup_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        return ShoppingCartItem.objects.filter(
+            shopping_cart__owner=self.request.user,
+            shopping_cart__status='active'
+        )
