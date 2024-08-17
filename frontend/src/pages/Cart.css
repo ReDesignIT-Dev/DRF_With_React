@@ -1,0 +1,32 @@
+.basket-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.basket-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.basket-item div {
+    flex-grow: 1;
+}
+
+.basket-total {
+    margin-top: 20px;
+}
+
+.checkout-button {
+    background-color: #ff5a5f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.checkout-button:hover {
+    background-color: #e04848;
+}
