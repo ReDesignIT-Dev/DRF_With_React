@@ -96,7 +96,7 @@ export async function getDataUsingUserToken(endpoint, token) {
 
 export async function activateUser(token) {
   try {
-    const response = await apiClient.post(`${API_ACTIVATE_USER_URL}${token}/`, {
+    const response = await apiClient.post(`${API_ACTIVATE_USER_URL}/${token}/`, {
       headers: {
         ...apiClient.defaults.headers,
       },
@@ -109,7 +109,7 @@ export async function activateUser(token) {
 
 export async function validatePasswordResetToken(token) {
   try {
-    const response = await apiClient.get(`${API_PASSWORD_RESET_URL}${token}/`, {
+    const response = await apiClient.get(`${API_PASSWORD_RESET_URL}/${token}/`, {
       headers: {
         ...apiClient.defaults.headers,
       },
@@ -123,7 +123,7 @@ export async function validatePasswordResetToken(token) {
 export async function postPasswordReset(token, password, password_confirm, recaptcha) {
   try {
     const response = await apiClient.post(
-      `${API_PASSWORD_RESET_URL}${token}/`,
+      `${API_PASSWORD_RESET_URL}/${token}/`,
       {
         password,
         password_confirm,
