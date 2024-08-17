@@ -122,14 +122,18 @@ class ProductParentCategorySerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
-    product_id = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all(), write_only=True, source='product'
+    product_slug = serializers.SlugRelatedField(
+        queryset=Product.objects.all(),
+        slug_field='slug',
+        source='product',
+        write_only=True
     )
+    product = ProductSerializer(read_only=True)
 
     class Meta:
         model = ShoppingCartItem
-        fields = ['id', 'shopping_cart', 'product', 'product_id', 'quantity', 'price']
+        fields = ['product_slug', 'product', 'quantity', 'price']
+        read_only_fields = ['price', 'product_slug', 'product']
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
@@ -137,4 +141,4 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingCart
-        fields = ['id', 'owner', 'items', 'status']
+        fields = ['items', 'status']
