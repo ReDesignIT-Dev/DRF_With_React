@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
-    RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404,
+    RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404, UpdateAPIView, DestroyAPIView
 )
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
@@ -321,15 +321,35 @@ class ShoppingCartItemCreateView(CreateAPIView):
             serializer.save(shopping_cart=cart, price=product.price)
 
 
-class ShoppingCartItemUpdateDeleteView(RetrieveUpdateDestroyAPIView):
+class ShoppingCartItemBaseView:
     authentication_classes = (TokenAuthentication,)
-    serializer_class = ShoppingCartItemSerializer
     permission_classes = [IsAuthenticated]
-    lookup_field = 'product__slug'
-    lookup_url_kwarg = 'slug'
+
+    def get_product_slug(self):
+        product_slug = self.request.data.get('product_slug')
+        if not product_slug:
+            raise ValidationError({"product_slug": "This field is required."})
+        return product_slug
 
     def get_queryset(self):
+        product_slug = self.get_product_slug()
         return ShoppingCartItem.objects.filter(
             shopping_cart__owner=self.request.user,
-            shopping_cart__status='active'
+            shopping_cart__status='active',
+            product__slug=product_slug
         )
+
+
+class ShoppingCartItemUpdateView(ShoppingCartItemBaseView, UpdateAPIView):
+    serializer_class = ShoppingCartItemSerializer
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        return get_object_or_404(queryset)
+
+
+class ShoppingCartItemDestroyView(ShoppingCartItemBaseView, DestroyAPIView):
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        return get_object_or_404(queryset)
