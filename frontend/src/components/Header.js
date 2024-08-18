@@ -28,13 +28,14 @@ function Header({ isLoggedIn, handleLogout }) {
           <div className='header-searchbar'>
             <SearchBox />
           </div>
+
+          <div className='header-signin d-flex flex-row gap-2 justify-content-center align-items-center'>
           <div
-            className='shopping-cart-icon d-flex p-2 justify-content-center align-items-center'
+            className='shopping-cart-icon d-flex justify-content-center align-items-center'
             onClick={() => navigate("/cart")}
           >
             <FaShoppingCart size={'1x'}/>
           </div>
-          <div className='header-signin'>
             <SignInButton
               isLoggedIn={isLoggedIn}
               handleLogout={handleLogout}

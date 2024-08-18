@@ -16,11 +16,23 @@ $small-width-collapse: 600px;
   }
 }
 .shopping-cart-icon {
+  padding: 3px;
+  border: solid;
   background-color: white;
-  width: 40px;
-  height: 40px;
+  width: 45px; 
+  height: 45px; 
   border-radius: 5px;
+  margin-left: auto; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //transition: transform 0.2s ease; /* Smooth transition for scaling */
+
+  &:hover {
+    border: 3px solid green;
+  }
 }
+
 .header-logo {
   width: 60px;
   height: 60px;
