@@ -9,6 +9,7 @@ import {
   API_CART_URL,
   API_CART_ITEM,
 } from "config";
+import { getToken } from "utils/cookies";
 
 // TODO optimize later to query one by one
 export async function getAllProductsInCategory(categorySlug) {
@@ -118,29 +119,42 @@ export async function getAllSearchProducts(searchString) {
   }
 }
 
-export async function getCart() {
-  try {
-    const response = await apiClient.get(API_CART_URL, {
-      headers: {
-        ...apiClient.defaults.headers,
-      },
-    });
-    return response;
-  } catch (error) {
-    apiErrorHandler(error);
-  }
-}
+// CART LOGIC BELOW
 
-export async function updateCartQuantity(itemId, quantity) {
+const getAuthHeaders = () => {
+  const token = getToken();
+  return {
+    ...apiClient.defaults.headers,
+    Authorization: `Token ${token}`,
+  };
+};
+
+const apiRequest = async (method, url, data = null) => {
   try {
-    const response = await apiClient.put(`${API_CART_ITEM}/${itemId}`, {
-      quantity,
-      headers: {
-        ...apiClient.defaults.headers,
-      },
-    });
+    const config = {
+      method,
+      url,
+      headers: getAuthHeaders(),
+    };
+
+    if (data) {
+      config.data = data;
+    }
+
+    const response = await apiClient(config);
     return response;
   } catch (error) {
     apiErrorHandler(error);
   }
-}
+};
+
+export const getCart = () => apiRequest('get', API_CART_URL);
+
+export const addToCart = (itemSlug, quantity) => 
+  apiRequest('post', `${API_CART_ITEM}/add`, { product_slug: itemSlug, quantity });
+
+export const updateCartItemQuantity = (itemSlug, quantity) => 
+  apiRequest('put', `${API_CART_ITEM}/update`, { product_slug: itemSlug, quantity });
+
+export const deleteCartItem = (itemSlug) => 
+  apiRequest('delete', `${API_CART_ITEM}/delete`, { product_slug: itemSlug });
