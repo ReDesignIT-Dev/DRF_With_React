@@ -4,7 +4,7 @@ import Loading from "components/Loading";
 import "./Cart.css";
 
 export default function Cart() {
-  const [cartData, setCartData] = useState({});
+  const [cartData, setCartData] = useState({items:[]});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
@@ -17,7 +17,8 @@ export default function Cart() {
         const response = await getCart();
         setCartData(response.data);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        setCartData({items:[]});
+        //console.error("Error fetching products:", error);
       } finally {
         setLoading(false);
       }
