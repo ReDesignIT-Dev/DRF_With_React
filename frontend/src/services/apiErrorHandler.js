@@ -20,10 +20,10 @@ export function apiErrorHandler(error) {
   
       throw new GeneralApiError(`API Error: ${error.response.statusText}`);
     } else if (error.request) {
-      console.error("Network Error:", error.request);
+      console.error("My hanlder Network Error:", error.request);
       throw new GeneralApiError("Network Error: Please check your internet connection.");
     } else {
-      console.error("Error:", error.message);
+      console.error("My hanlder Error:", error.message);
       throw new GeneralApiError(`Error: ${error.message}`);
     }
   }
