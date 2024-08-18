@@ -1,3 +1,7 @@
+.cart-container {
+    max-width: 1264px;
+}
+
 .basket-item {
     display: flex;
     align-items: center;
