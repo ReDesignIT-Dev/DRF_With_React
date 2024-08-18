@@ -294,14 +294,15 @@ class ShopAdminPanelProducts(ListAPIView):
     search_fields = ['name']
 
 
-class ShoppingCartDetailView(RetrieveAPIView):
+class ShoppingCartItemListView(ListAPIView):
     authentication_classes = (TokenAuthentication,)
-    serializer_class = ShoppingCartSerializer
+    serializer_class = ShoppingCartItemSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self):
+    def get_queryset(self):
+        # Ensure you only return items for the logged-in user
         cart, created = ShoppingCart.objects.get_or_create(owner=self.request.user, status='active')
-        return cart
+        return cart.items.all()
 
 
 class ShoppingCartItemCreateView(CreateAPIView):
