@@ -141,4 +141,4 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingCart
-        fields = ['items', 'status']
+        fields = ['items']
