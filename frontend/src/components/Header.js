@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import LoginFormPop from "./LoginForm/LoginFormPop";
 import SignInButton from "./SignInButton";
 import SearchBox from "./SearchBox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import LogoRacoon from "./LogoRacoon";
 import CategoryDropdown from "./CategoryDropdown";
+import { FaShoppingCart } from "react-icons/fa";
 
 function Header({ isLoggedIn, handleLogout }) {
   const [isShowLogin, setIsShowLogin] = useState(true);
+  const navigate = useNavigate();
 
   const handleLoginClick = () => {
     setIsShowLogin((isShowLogin) => !isShowLogin);
@@ -25,6 +27,12 @@ function Header({ isLoggedIn, handleLogout }) {
           </div>
           <div className='header-searchbar'>
             <SearchBox />
+          </div>
+          <div
+            className='shopping-cart-icon d-flex p-2 justify-content-center align-items-center'
+            onClick={() => navigate("/cart")}
+          >
+            <FaShoppingCart size={'1x'}/>
           </div>
           <div className='header-signin'>
             <SignInButton
@@ -52,6 +60,7 @@ function Header({ isLoggedIn, handleLogout }) {
             <Link to='/about/history'> History </Link>
           </div>
         </div>
+
         <LoginFormPop isShowLogin={isShowLogin} handleXClick={handleLoginClick} />
       </div>
     </div>
