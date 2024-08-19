@@ -14,7 +14,7 @@ export default function SignInButton({ isLoggedIn, handleLogout, handleLoginClic
 
   return (
     <div onClick={handleClick} className='loginicon'>
-      <p>{isLoggedIn ? "Log Out" : <FaRegUserCircle />}</p>
+      {isLoggedIn ? (<p className="my-auto px-3">Log Out</p>) : <FaRegUserCircle size={'1x'} />}
     </div>
   );
 }
