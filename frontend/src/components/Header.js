@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LoginFormPop from "./LoginForm/LoginFormPop";
+import LoginFormPop from "./LoginFormPop";
 import SignInButton from "./SignInButton";
 import SearchBox from "./SearchBox";
 import { Link, useNavigate } from "react-router-dom";
