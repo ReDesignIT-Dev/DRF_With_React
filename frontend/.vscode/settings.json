@@ -1,6 +1,6 @@
 {
     "python.analysis.exclude": [
-        "**/backend/**",  // Adjust this path as per your backend folder structure
+        "**/backend/**", 
         "**/venv/**",
         "**/__pycache__/**",
         "**/node_modules/**"
@@ -9,12 +9,12 @@
     "files.exclude": {
         "**/__pycache__": true,
         "**/venv": true,
-        "**/backend": true  // Adjust this path as per your backend folder structure
+        "**/backend": true 
     },
     "search.exclude": {
         "**/venv": true,
         "**/__pycache__": true,
-        "**/backend": true  // Adjust this path as per your backend folder structure
+        "**/backend": true
     },
     "typescript.tsdk": "frontend/node_modules/typescript/lib"
 }
