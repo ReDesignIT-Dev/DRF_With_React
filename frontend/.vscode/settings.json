@@ -1,0 +1,20 @@
+{
+    "python.analysis.exclude": [
+        "**/backend/**",  // Adjust this path as per your backend folder structure
+        "**/venv/**",
+        "**/__pycache__/**",
+        "**/node_modules/**"
+    ],
+    "python.autoComplete.extraPaths": [],
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/venv": true,
+        "**/backend": true  // Adjust this path as per your backend folder structure
+    },
+    "search.exclude": {
+        "**/venv": true,
+        "**/__pycache__": true,
+        "**/backend": true  // Adjust this path as per your backend folder structure
+    },
+    "typescript.tsdk": "frontend/node_modules/typescript/lib"
+}
