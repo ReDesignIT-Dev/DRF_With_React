@@ -204,6 +204,12 @@ class CategoryView(APIView):
         return Response(response_data)
 
 
+class CategoryValidateView(APIView):
+    def get(self, request, slug, format=None):
+        category = get_object_or_404(Category, slug=slug)
+        return Response({"exists": True}, status=status.HTTP_200_OK)
+
+
 class CategoryChildrenView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryChildrenListSerializer

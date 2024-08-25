@@ -3,7 +3,7 @@ from .views import ProductList, ProductCreate, ProductEditView, HomeView, Produc
     CategoryView, CategoryCreateView, CategoryEditView, ShopAdminPanel, ShopAdminPanelProducts, CategoryChildrenView, \
     CategoryProductsView, CategoryParentsView, ProductParentCategoryView, ProductSearchView, \
     CategoriesSearchAssociatedView, ShoppingCartItemCreateView, \
-    ShoppingCartItemUpdateView, ShoppingCartItemDestroyView, ShoppingCartItemListView
+    ShoppingCartItemUpdateView, ShoppingCartItemDestroyView, ShoppingCartItemListView, CategoryValidateView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -16,6 +16,7 @@ urlpatterns = [
     path('product/<slug:slug>/parent-category', ProductParentCategoryView.as_view(), name='parent-category-detail'),
     path('categories', CategoriesView.as_view(), name='categories'),
     path('category/create', CategoryCreateView.as_view(), name='category_create'),
+    path('category/validate', CategoryValidateView.as_view(), name='category_validate'),
     path('category/<slug:slug>', CategoryView.as_view(), name='category'),
     path('category/<slug:slug>/edit', CategoryEditView.as_view(), name='category_edit'),
     path('category/<slug:slug>/children', CategoryChildrenView.as_view(), name='category_children'),
