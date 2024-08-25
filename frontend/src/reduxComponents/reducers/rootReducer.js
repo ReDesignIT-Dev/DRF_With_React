@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
 import categoryReducer from './categoryReducer'; // Import your slice reducer
+import authReducer from "./authReducer";
 
 const rootReducer = combineReducers({
   categories: categoryReducer,
-  // Add other reducers here
+  auth: authReducer,
 });
 
 export default rootReducer;
