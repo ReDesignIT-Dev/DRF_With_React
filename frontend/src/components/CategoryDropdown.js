@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../redux/reducers/categoryReducer";
+import { fetchCategories } from "../reduxComponents/reducers/categoryReducer";
 import "./CategoryDropdown.css";
 import {
   MDBDropdown,
@@ -66,7 +66,8 @@ const CategoryDropdown = () => {
                     onClick={(event) => handleItemClick(child.slug, event)}
                   >
                     <span style={{ display: "flex", justifyContent: "space-between" }}>
-                    {child.name} {child.children && child.children.length > 0 && <span>&raquo;</span>}
+                      {child.name}{" "}
+                      {child.children && child.children.length > 0 && <span>&raquo;</span>}
                     </span>
                     {child.children && child.children.length > 0 && (
                       <ul className='dropdown-menu dropdown-submenu'>
