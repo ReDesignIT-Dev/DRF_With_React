@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -18,9 +18,6 @@ import Category from "pages/Category";
 import Product from "pages/Product";
 import Cart from "pages/Cart";
 
-import { isUserLoggedIn } from "utils/validation";
-import { logoutUser } from "services/apiRequestsUser";
-
 import {
   FRONTEND_PASSWORD_RESET_URL,
   FRONTEND_PASSWORD_RECOVERY_URL,
@@ -35,39 +32,25 @@ import {
 import SearchPage from "pages/SearchPage";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(isUserLoggedIn());
-
-  const handleLogout = () => {
-    try {
-      logoutUser();
-      setIsLoggedIn(false);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const routes = [
     { path: "", element: <Home /> },
     { path: "about", element: <About /> },
     { path: "contact", element: <Contact /> },
-    {
-      path: FRONTEND_LOGIN_URL,
-      element: <Login isLoggedIn={isLoggedIn} onLoginSuccess={setIsLoggedIn} />,
-    },
-    { path: FRONTEND_REGISTER_URL, element: <Register isLoggedIn={isLoggedIn} /> },
+    { path: FRONTEND_LOGIN_URL, element: <Login /> },
+    { path: FRONTEND_REGISTER_URL, element: <Register /> },
     { path: FRONTEND_PASSWORD_RECOVERY_URL, element: <PasswordRecovery /> },
     { path: FRONTEND_PASSWORD_RESET_URL, element: <PasswordReset /> },
     { path: FRONTEND_ACTIVATE_USER_URL, element: <UserActivation /> },
     { path: FRONTEND_CATEGORY_URL, element: <Category /> },
     { path: FRONTEND_PRODUCT_URL, element: <Product /> },
-    { path: FRONTEND_SEARCH_URL, element: <SearchPage />},
-    { path: FRONTEND_CART_URL, element: <Cart />},
+    { path: FRONTEND_SEARCH_URL, element: <SearchPage /> },
+    { path: FRONTEND_CART_URL, element: <Cart /> },
     { path: "*", element: <NotFound /> },
   ];
 
   return (
     <BrowserRouter>
-      <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+      <Header />
       <Routes>
         {routes.map(({ path, element }, index) => (
           <Route key={index} exact path={path} element={element} />
