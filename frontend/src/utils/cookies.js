@@ -21,7 +21,12 @@ export const removeToken = () => {
   Cookies.remove("token");
 };
 
-export const setToken = (token, expire) => {
+export const setToken = (token, expiry) => {
+  const expiryDate = new Date(expiry);
+  if (isNaN(expiryDate.getTime())) {
+    console.error("Invalid expiry date:", expiry);
+    throw new Error("Invalid expiry date format");
+  }
   
-  Cookies.set("token", token, { secure: true, sameSite: "Strict", expires: expire });
+  Cookies.set('token', token, { expires: expiryDate });
 };

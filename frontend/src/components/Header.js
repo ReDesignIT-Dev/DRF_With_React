@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LoginFormPop from "./LoginFormPop";
 import SignInButton from "./SignInButton";
 import SearchBox from "./SearchBox";
@@ -7,13 +7,21 @@ import "./Header.scss";
 import LogoRacoon from "./LogoRacoon";
 import CategoryDropdown from "./CategoryDropdown";
 import { FaShoppingCart } from "react-icons/fa";
+import { useAuth } from "hooks/useAuth";
 
-function Header({ isLoggedIn, handleLogout }) {
-  const [isShowLogin, setIsShowLogin] = useState(true);
+function Header() {
+  const [shopPopupLoginRegister, setShowPopupLoginRegister] = useState(true);
   const navigate = useNavigate();
+  const isLoggedIn = useAuth();
+
+  useEffect(() => {
+    if (isLoggedIn){
+      setShowPopupLoginRegister(true);
+    }
+  }, [isLoggedIn])
 
   const handleLoginClick = () => {
-    setIsShowLogin((isShowLogin) => !isShowLogin);
+    setShowPopupLoginRegister((isShowLogin) => !isShowLogin);
   };
 
   return (
@@ -37,9 +45,7 @@ function Header({ isLoggedIn, handleLogout }) {
             <FaShoppingCart size={'1x'}/>
           </div>
             <SignInButton
-              isLoggedIn={isLoggedIn}
-              handleLogout={handleLogout}
-              handleLoginClick={handleLoginClick}
+              handleIconClick={handleLoginClick}
             />
           </div>
         </div>
@@ -62,7 +68,7 @@ function Header({ isLoggedIn, handleLogout }) {
           </div>
         </div>
 
-        <LoginFormPop isShowLogin={isShowLogin} handleXClick={handleLoginClick} />
+        <LoginFormPop isShowLogin={shopPopupLoginRegister} handleXClick={handleLoginClick} />
       </div>
     </div>
   );
