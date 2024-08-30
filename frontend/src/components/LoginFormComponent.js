@@ -3,10 +3,11 @@ import PasswordField from "components/Fields/PasswordField";
 import RecaptchaField from "components/Fields/RecaptchaField";
 import { useEffect, useState } from "react";
 import Loading from "components/Loading";
-import { postLogin } from "services/apiRequestsUser";
-import "./LoginFormComponent.css"; // Import the CSS file
+import "./LoginFormComponent.css"; 
+import { loginUser } from "reduxComponents/reducers/authReducer";
+import { useSelector, useDispatch } from "react-redux";
 
-const LoginFormComponent = ({ isLoggedIn, onLoginSuccess }) => {
+const LoginFormComponent = () => {
   const [isValid, setIsValid] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -14,8 +15,9 @@ const LoginFormComponent = ({ isLoggedIn, onLoginSuccess }) => {
   const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState(false);
   const [password, setPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const { isLoggedIn, isLoading, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const valid = isEmailValid && isValidReCaptchaToken && isPasswordValid;
@@ -25,32 +27,14 @@ const LoginFormComponent = ({ isLoggedIn, onLoginSuccess }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (isValid) {
-      setLoading(true);
-      setErrorMessage("");
-      try {
-        const response = await postLogin(email, password, reCaptchaToken);
-        const returnMessage = response.data.message;
-        if (response.status === 200) {
-          onLoginSuccess(true);
-          setErrorMessage("");
-        } else {
-          setErrorMessage(returnMessage);
-          console.log(returnMessage);
-        }
-      } catch (error) {
-        setErrorMessage(error.message);
-        console.log(error.message);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      setErrorMessage("FORM IS NOT VALID");
+      dispatch(loginUser({ username: email, password, recaptcha: reCaptchaToken }));
     }
   };
 
+
   return (
     <div>
-      {loading ? (
+      {isLoading  ? (
         <Loading />
       ) : isLoggedIn ? (
         <label className="alert alert-success">{"You are logged in"}</label>
@@ -82,7 +66,7 @@ const LoginFormComponent = ({ isLoggedIn, onLoginSuccess }) => {
           <button type="submit" className="btn btn-primary mt-3" disabled={!isValid}>
             Submit
           </button>
-          {errorMessage && <label className="alert alert-warning">{errorMessage}</label>}
+          {error && <label className="alert alert-warning">{error}</label>}
         </form>
       )}
     </div>
