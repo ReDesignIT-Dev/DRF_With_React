@@ -5,7 +5,7 @@ import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
 import { addToCart } from "services/apiRequestsShop";
-
+import { useAuth } from "hooks/useAuth";
 export default function ProductList({ className }) {
   const params = useParams();
   const queryParams = useQueryParams();
@@ -13,6 +13,7 @@ export default function ProductList({ className }) {
   const navigate = useNavigate();
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const isLoggedIn = useAuth();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,6 +34,8 @@ export default function ProductList({ className }) {
 
   const handleAddToCartClick = async (product, event) => {
     event.stopPropagation();
+
+    if (isLoggedIn){
     try {
       await addToCart(product.slug, 1);
       setConfirmationMessage(`${product.name} was added to the cart!`);
@@ -41,6 +44,10 @@ export default function ProductList({ className }) {
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
+  }
+  else {
+    console.log("not logged in, add to local storage")
+  }
   };
 
   const listProducts = () => {
