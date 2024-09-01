@@ -12,13 +12,9 @@ import {
 import { getToken } from "utils/cookies";
 import { AxiosResponse, AxiosHeaders, AxiosRequestConfig } from "axios";
 
-// Define types for function parameters and return values
-interface CategoryResponse {
-  categories: any[]; // Replace 'any' with the actual category type if available
-}
 
-interface ProductResponse {
-  product: any; // Replace 'any' with the actual product type if available
+interface CategoryResponse {
+  categories: any[]; 
 }
 
 export async function validateIfCategoryExists(categorySlug: string): Promise<AxiosResponse | undefined> {
