@@ -39,8 +39,6 @@ interface RouteConfig {
 function App() {
   const routes: RouteConfig[] = [
     { path: "", element: <Home /> },
-    { path: "about", element: <About /> },
-    { path: "contact", element: <Contact /> },
     { path: FRONTEND_LOGIN_URL, element: <Login /> },
     { path: FRONTEND_REGISTER_URL, element: <Register /> },
     { path: FRONTEND_PASSWORD_RECOVERY_URL, element: <PasswordRecovery /> },
