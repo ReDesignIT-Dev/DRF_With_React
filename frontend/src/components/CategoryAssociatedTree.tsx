@@ -1,37 +1,62 @@
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { API_CATEGORY_URL } from "config";
 import useQueryParams from "hooks/useQueryParams";
 import "./CategoryAssociatedTree.css";
 import { getAllSearchAssociatedCategories } from "services/apiRequestsShop";
 
-export default function CategoryAssociatedTree({ className }) {
-  const [categories, setCategories] = useState([]);
+// Define types for the props and state
+interface Category {
+  slug: string;
+  name: string;
+  product_count: number;
+  children?: Category[];
+}
+
+interface CategoryAssociatedTreeProps {
+  className?: string;
+}
+
+interface QueryParams {
+  [key: string]: string;
+}
+
+interface CategoryResponse {
+  categories: Category[];
+}
+
+const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({ className }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
-  const queryParams = useQueryParams();
+  const queryParams: QueryParams = useQueryParams();
 
   useEffect(() => {
     const fetchAssociatedCategoriesTree = async () => {
       try {
         const response = await getAllSearchAssociatedCategories(queryParams.string);
-        setCategories(response.data.categories);
-        return response.data
+        
+        // Check if response is defined before accessing its data
+        if (response && response.data) {
+          setCategories(response.data.categories);
+        } else {
+          console.error("Response is undefined or does not contain data.");
+          setCategories([]);
+        }
       } catch (error) {
-        console.error("Error fetching assosiated categories:", error);
-        return []
+        console.error("Error fetching associated categories:", error);
+        setCategories([]);
       }
-  };
+    };
 
-  fetchAssociatedCategoriesTree();
-
+    fetchAssociatedCategoriesTree();
   }, [queryParams]);
 
-  const handleNavigationClick = (slug, event) => {
+  const handleNavigationClick = (slug: string, event: React.MouseEvent) => {
     event.stopPropagation();
     navigate(`${API_CATEGORY_URL}/${slug}`);
   };
 
-  const CategoryTree = ({ category }) => {
+  const CategoryTree: React.FC<{ category: Category }> = ({ category }) => {
     return (
       <div className="category-tree">
         <div
@@ -68,4 +93,6 @@ export default function CategoryAssociatedTree({ className }) {
       {listAssociatedCategories()}
     </div>
   );
-}
+};
+
+export default CategoryAssociatedTree;

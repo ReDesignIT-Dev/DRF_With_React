@@ -1,10 +1,11 @@
+import React from "react";
 import LoginFormComponent from "components/LoginFormComponent";
 import { useNavigate } from "react-router-dom";
 import { FRONTEND_REGISTER_URL } from "config";
 import { useAuth } from "hooks/useAuth";
 
-const Login = () => {
-  const isLoggedIn = useAuth();
+const Login: React.FC = () => {
+  const isLoggedIn: boolean = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -16,7 +17,9 @@ const Login = () => {
           onClick={() => {
             navigate(FRONTEND_REGISTER_URL, { replace: true });
           }}
-        >{`Don't have an account? Click here to register`}</button>
+        >
+          Don't have an account? Click here to register
+        </button>
       )}
       <LoginFormComponent />
     </div>

@@ -1,11 +1,15 @@
 import { useSearchParams } from 'react-router-dom';
 import { useMemo } from 'react';
 
-export default function useQueryParams() {
+interface QueryParams {
+  [key: string]: string;
+}
+
+export default function useQueryParams(): QueryParams {
   const [searchParams] = useSearchParams();
 
   const params = useMemo(() => {
-    const queryParams = {};
+    const queryParams: QueryParams = {};
     for (let [key, value] of searchParams.entries()) {
       queryParams[key] = value;
     }

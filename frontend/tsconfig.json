@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "target": "es5",
+      "target": "es6",
       "module": "commonjs",
       "jsx": "react-jsx",
       "baseUrl": "./src",
@@ -12,6 +12,8 @@
         "services/*": ["services/*"],
         "hooks/*": ["hooks/*"]
       },
+      "outDir": "./dist", // Specify the output directory for compiled files
+      "rootDir": "./src", // Specify the root directory of your source files
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
