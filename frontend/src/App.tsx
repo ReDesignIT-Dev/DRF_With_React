@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -31,8 +31,13 @@ import {
 } from "config";
 import SearchPage from "pages/SearchPage";
 
+interface RouteConfig {
+  path: string;
+  element: ReactElement;
+}
+
 function App() {
-  const routes = [
+  const routes: RouteConfig[] = [
     { path: "", element: <Home /> },
     { path: "about", element: <About /> },
     { path: "contact", element: <Contact /> },
@@ -53,7 +58,7 @@ function App() {
       <Header />
       <Routes>
         {routes.map(({ path, element }, index) => (
-          <Route key={index} exact path={path} element={element} />
+          <Route key={index} path={path} element={element} />
         ))}
       </Routes>
       <Footer />
