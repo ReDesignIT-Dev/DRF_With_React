@@ -14,13 +14,13 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
 
   const renderLoginFormFields = () => (
     <div className="form-group form-group--login">
-      <LoginFormComponent />
+      <LoginFormComponent onSuccessfulSubmit={handleXClick}/>
     </div>
   );
 
   const renderSignupFormFields = () => (
     <div className="form-group form-group--signup">
-      <RegisterFormComponent />
+      <RegisterFormComponent onSuccessfulSubmit={handleXClick}/>
     </div>
   );
 
