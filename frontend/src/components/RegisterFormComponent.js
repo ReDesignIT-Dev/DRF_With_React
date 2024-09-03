@@ -7,8 +7,9 @@ import Loading from "components/Loading";
 import { registerUser } from "services/apiRequestsUser";
 import "./RegisterFormComponent.css"; // Import the CSS file
 import { GeneralApiError, MultipleFieldErrors } from "services/CustomErrors";
+import { useAuth } from "hooks/useAuth";
 
-const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
+const RegisterFormComponent = () => {
   const [isValid, setIsValid] = useState(false);
   const [username, setUsername] = useState(localStorage.getItem("username") || "");
   const [usernameFieldError, setUsernameFieldError] = useState(
@@ -28,6 +29,8 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
     useState(false);
   const [errorMessage, setErrorMessage] = useState(localStorage.getItem("detailError") || "");
   const [loading, setLoading] = useState(false);
+
+  const isLoggedIn = useAuth();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -105,7 +108,6 @@ const RegisterFormComponent = ({ isLoggedIn, onRegisterSuccess }) => {
         const returnMessage = response.data.message;
         if (response.status === 200) {
           clearUsedLocalStorage();
-          onRegisterSuccess();
           setErrorMessage("");
         } else {
           setErrorMessage(returnMessage);
