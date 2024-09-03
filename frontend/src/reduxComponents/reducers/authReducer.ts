@@ -2,20 +2,33 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { postLogin, logoutUser } from "services/apiRequestsUser"; // Import your API functions
 import { getToken, setToken } from "utils/cookies"; // Import cookie functions
 
+interface AuthState {
+  isLoggedIn: boolean;
+  user: any | null;
+  token: string | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface LoginResponse {
+  token: string;
+  expiry: string;
+  user: any;
+}
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async ({ username, password, recaptcha }, { rejectWithValue }) => {
+  async ({ username, password, recaptcha }: { username: string; password: string; recaptcha: string }, { rejectWithValue }) => {
     try {
-      const response = await postLogin(username, password, recaptcha);
-      if (response.status === 200) {
-        const { token, expiry } = response.data;
+      const response = await postLogin({ username, password, recaptcha });
+      if (response && response.status === 200) {
+        const { token, expiry, user } = response.data as LoginResponse;
         setToken(token, expiry);
-        return { token, expiry, user: response.data.user };
+        return { token, expiry, user };
       } else {
         return rejectWithValue("Unexpected response status");
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.response) {
         // Server responded with a status code out of the 2xx range
         console.error("Error Response:", error.response);
@@ -38,13 +51,13 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logoutUser(); 
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.response ? error.response.data : "Network Error");
     }
   }
 );
 
-const initialState = {
+const initialState: AuthState = {
   isLoggedIn: Boolean(getToken()),
   user: null,
   token: getToken() || null,
@@ -55,9 +68,7 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -73,7 +84,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload as string;
       })
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
@@ -87,7 +98,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload as string;
       });
   },
 });
