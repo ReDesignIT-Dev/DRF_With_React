@@ -18,7 +18,7 @@ const Login: React.FC = () => {
             navigate(FRONTEND_REGISTER_URL, { replace: true });
           }}
         >
-          Don't have an account? Click here to register
+          {"Don't have an account? Click here to register"}
         </button>
       )}
       <LoginFormComponent />

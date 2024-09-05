@@ -5,23 +5,39 @@ import "./Cart.css";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap"; // Import React Bootstrap components
 
+interface Product {
+  slug: string;
+  name: string;
+  image: string;
+}
+
+interface CartItem {
+  product: Product;
+  quantity: number;
+  price: number;
+}
+
 export default function Cart() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [total, setTotal] = useState(0);
-  const [showModal, setShowModal] = useState(false); // State for controlling the modal visibility
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [total, setTotal] = useState<string>("0");
+  const [showModal, setShowModal] = useState<boolean>(false); // State for controlling the modal visibility
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
         setLoading(true);
         const response = await getCart();
-        const responseItems = response.data;
-        setItems(responseItems);
-        calculateTotal(responseItems);
+        if (response && response.data) {
+          const responseItems: CartItem[] = response.data;
+          setItems(responseItems);
+          calculateTotal(responseItems);
+        } else {
+          setError("Failed to fetch cart items.");
+        }
       } catch (error) {
-        //console.error("Error fetching products:", error);
+        setError("Error fetching products.");
       } finally {
         setLoading(false);
       }
@@ -29,7 +45,7 @@ export default function Cart() {
     fetchCart();
   }, []);
 
-  const handleQuantityChange = async (itemSlug, quantity) => {
+  const handleQuantityChange = async (itemSlug: string, quantity: number) => {
     if (isNaN(quantity) || quantity < 1) {
       setError("Quantity must be a number greater than 0.");
       return;
@@ -37,28 +53,32 @@ export default function Cart() {
     setError("");
     try {
       const response = await updateCartItemQuantity(itemSlug, quantity);
-      const updatedItems = items.map((item) =>
-        item.product.slug === itemSlug ? { ...item, quantity: response.data.quantity } : item
-      );
-      setItems(updatedItems);
-      calculateTotal(updatedItems);
-    } catch (error) {
+      if (response && response.data) {
+        const updatedItems = items.map((item) =>
+          item.product.slug === itemSlug ? { ...item, quantity: response.data.quantity } : item
+        );
+        setItems(updatedItems);
+        calculateTotal(updatedItems);
+      } else {
+        setError("Failed to update item quantity.");
+      }
+    } catch (error: any) {
       setError(error.message);
     }
   };
 
-  const handleRemoveItem = async (itemSlug) => {
+  const handleRemoveItem = async (itemSlug: string) => {
     try {
       await deleteCartItem(itemSlug);
       const updatedItems = items.filter((item) => item.product.slug !== itemSlug);
       setItems(updatedItems);
       calculateTotal(updatedItems);
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
     }
   };
 
-  const calculateTotal = (updatedItems) => {
+  const calculateTotal = (updatedItems: CartItem[]) => {
     const totalAmount = updatedItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
     setTotal(totalAmount.toFixed(2));
   };

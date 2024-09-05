@@ -10,7 +10,7 @@ export default function useQueryParams(): QueryParams {
 
   const params = useMemo(() => {
     const queryParams: QueryParams = {};
-    for (let [key, value] of searchParams.entries()) {
+    for (const [key, value] of searchParams.entries()) {
       queryParams[key] = value;
     }
     return queryParams;

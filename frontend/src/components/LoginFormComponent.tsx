@@ -1,22 +1,23 @@
 import EmailField from "components/Fields/EmailField";
 import PasswordField from "components/Fields/PasswordField";
 import RecaptchaField from "components/Fields/RecaptchaField";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import Loading from "components/Loading";
 import "./LoginFormComponent.css"; 
 import { loginUser } from "reduxComponents/reducers/authReducer";
 import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "reduxComponents/store"; // Adjust the import according to your store setup
 
-const LoginFormComponent = () => {
-  const [isValid, setIsValid] = useState(false);
-  const [email, setEmail] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [reCaptchaToken, setReCaptchaToken] = useState("");
-  const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState(false);
-  const [password, setPassword] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
+const LoginFormComponent: React.FC = () => {
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
+  const [reCaptchaToken, setReCaptchaToken] = useState<string>("");
+  const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
 
-  const { isLoggedIn, isLoading, error } = useSelector((state) => state.auth);
+  const { isLoggedIn, isLoading, error } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,17 +25,16 @@ const LoginFormComponent = () => {
     setIsValid(valid);
   }, [isEmailValid, isValidReCaptchaToken, isPasswordValid]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (isValid) {
       dispatch(loginUser({ username: email, password, recaptcha: reCaptchaToken }));
     }
   };
 
-
   return (
     <div>
-      {isLoading  ? (
+      {isLoading ? (
         <Loading />
       ) : isLoggedIn ? (
         <label className="alert alert-success">{"You are logged in"}</label>
@@ -53,7 +53,7 @@ const LoginFormComponent = () => {
           </div>
           <div className="input-group-login">
             <PasswordField
-            customClasses="w-100"
+              customClasses="w-100"
               value={password}
               onChange={setPassword}
               onValidate={setIsPasswordValid}

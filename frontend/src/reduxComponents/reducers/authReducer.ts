@@ -4,7 +4,7 @@ import { getToken, setToken } from "utils/cookies"; // Import cookie functions
 
 interface AuthState {
   isLoggedIn: boolean;
-  user: any | null;
+  user: string | null;
   token: string | null;
   isLoading: boolean;
   error: string | null;
@@ -13,7 +13,7 @@ interface AuthState {
 interface LoginResponse {
   token: string;
   expiry: string;
-  user: any;
+  user: string;
 }
 
 export const loginUser = createAsyncThunk(
@@ -23,14 +23,13 @@ export const loginUser = createAsyncThunk(
       const response = await postLogin({ username, password, recaptcha });
       if (response && response.status === 200) {
         const { token, expiry, user } = response.data as LoginResponse;
-        setToken(token, expiry);
+        setToken(token, expiry); 
         return { token, expiry, user };
       } else {
         return rejectWithValue("Unexpected response status");
       }
     } catch (error: any) {
       if (error.response) {
-        // Server responded with a status code out of the 2xx range
         console.error("Error Response:", error.response);
         return rejectWithValue(error.response.data || "Server Error");
       } else if (error.request) {

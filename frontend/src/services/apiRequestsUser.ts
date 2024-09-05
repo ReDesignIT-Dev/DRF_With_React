@@ -16,7 +16,7 @@ interface LoginData {
   recaptcha: string;
 }
 
-interface RegisterData {
+interface RegisterData { 
   username: string;
   email: string;
   password: string;

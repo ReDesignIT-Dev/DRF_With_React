@@ -3,24 +3,27 @@ import { useState } from "react";
 import LoginFormComponent from "./LoginFormComponent";
 import RegisterFormComponent from "./RegisterFormComponent";
 
-const LoginFormPop = ({ isShowLogin, handleXClick }) => {
+interface LoginFormPopProps {
+  isShowLogin: boolean;
+  handleXClick: () => void;
+}
 
-  const [state, setState] = useState("login");
+const LoginFormPop: React.FC<LoginFormPopProps> = ({ isShowLogin, handleXClick }) => {
+  const [state, setState] = useState<"login" | "signup">("login");
 
   const toggleState = () => {
-    state === "login" ? setState("signup") : setState("login");
+    setState((prevState) => (prevState === "login" ? "signup" : "login"));
   };
-
 
   const renderLoginFormFields = () => (
     <div className="form-group form-group--login">
-      <LoginFormComponent onSuccessfulSubmit={handleXClick}/>
+      <LoginFormComponent />
     </div>
   );
 
   const renderSignupFormFields = () => (
     <div className="form-group form-group--signup">
-      <RegisterFormComponent onSuccessfulSubmit={handleXClick}/>
+      <RegisterFormComponent />
     </div>
   );
 
@@ -57,16 +60,13 @@ const LoginFormPop = ({ isShowLogin, handleXClick }) => {
                 <input
                   id="form-toggler"
                   type="checkbox"
-                  onClick={() => {
-                    toggleState();
-                  }}
+                  onClick={toggleState}
                 />
                 <label className="flex-shrink-1" htmlFor="form-toggler"></label>
               </div>
             </div>
           </header>
-
-            <div className="form-block__input-wrapper">{renderFormFields()}</div>
+          <div className="form-block__input-wrapper">{renderFormFields()}</div>
         </section>
       </div>
     </div>
