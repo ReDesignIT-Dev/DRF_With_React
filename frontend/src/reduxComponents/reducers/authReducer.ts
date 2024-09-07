@@ -16,9 +16,9 @@ interface LoginResponse {
   user: string;
 }
 
-export const loginUser = createAsyncThunk(
+export const loginUser = createAsyncThunk<LoginResponse, { username: string; password: string; recaptcha: string }>(
   "auth/loginUser",
-  async ({ username, password, recaptcha }: { username: string; password: string; recaptcha: string }, { rejectWithValue }) => {
+  async ({ username, password, recaptcha }, { rejectWithValue }) => {
     try {
       const response = await postLogin({ username, password, recaptcha });
       if (response && response.status === 200) {

@@ -6,7 +6,7 @@ import Loading from "components/Loading";
 import "./LoginFormComponent.css"; 
 import { loginUser } from "reduxComponents/reducers/authReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "reduxComponents/store"; // Adjust the import according to your store setup
+import { RootState, AppDispatch } from "reduxComponents/store"; // Adjust the import according to your store setup
 
 const LoginFormComponent: React.FC = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -18,7 +18,7 @@ const LoginFormComponent: React.FC = () => {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
 
   const { isLoggedIn, isLoading, error } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const valid = isEmailValid && isValidReCaptchaToken && isPasswordValid;
@@ -49,6 +49,7 @@ const LoginFormComponent: React.FC = () => {
               customClasses="w-100"
               onChange={setEmail}
               onValidate={setIsEmailValid}
+              disabled={false} // Add the missing disabled prop
             />
           </div>
           <div className="input-group-login">
@@ -62,6 +63,7 @@ const LoginFormComponent: React.FC = () => {
           <RecaptchaField
             onValidate={setIsValidRecaptchaToken}
             setReturnToken={setReCaptchaToken}
+            customClasses="w-100" // Add the missing customClasses prop
           />
           <button type="submit" className="btn btn-primary mt-3" disabled={!isValid}>
             Submit

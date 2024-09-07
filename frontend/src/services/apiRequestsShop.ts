@@ -19,11 +19,7 @@ interface CategoryResponse {
 
 export async function validateIfCategoryExists(categorySlug: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/validate`, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/validate`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -32,11 +28,7 @@ export async function validateIfCategoryExists(categorySlug: string): Promise<Ax
 
 export async function getAllProductsInCategory(categorySlug: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/products`, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/products`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -45,11 +37,7 @@ export async function getAllProductsInCategory(categorySlug: string): Promise<Ax
 
 export async function getAllCategoryNamesAndSlugs(): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(API_ALL_CATEGORIES, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(API_ALL_CATEGORIES);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -58,11 +46,7 @@ export async function getAllCategoryNamesAndSlugs(): Promise<AxiosResponse | und
 
 export async function getAllChildrenOfCategory(categorySlug: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/children`, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/children`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -71,11 +55,7 @@ export async function getAllChildrenOfCategory(categorySlug: string): Promise<Ax
 
 export async function getAllParentsOfCategory(categorySlug: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/parents`, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/parents`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -84,11 +64,7 @@ export async function getAllParentsOfCategory(categorySlug: string): Promise<Axi
 
 export async function getProduct(productSlug: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}`, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -97,11 +73,7 @@ export async function getProduct(productSlug: string): Promise<AxiosResponse | u
 
 export async function getProductParentCategory(productSlug: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}/parent-category`, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}/parent-category`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -111,12 +83,7 @@ export async function getProductParentCategory(productSlug: string): Promise<Axi
 export async function getAllSearchAssociatedCategories(searchString: string): Promise<AxiosResponse<CategoryResponse> | undefined> {
   try {
     const response = await apiClient.get(
-      `${API_SEARCH_ASSOCIATED_CATEGORIES_URL}?string=${searchString}`,
-      {
-        headers: new AxiosHeaders({
-          ...apiClient.defaults.headers,
-        }) as AxiosHeaders,
-      }
+      `${API_SEARCH_ASSOCIATED_CATEGORIES_URL}?string=${searchString}`
     );
     return response;
   } catch (error) {
@@ -126,11 +93,7 @@ export async function getAllSearchAssociatedCategories(searchString: string): Pr
 
 export async function getAllSearchProducts(searchString: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_SEARCH_URL}?string=${searchString}`, {
-      headers: new AxiosHeaders({
-        ...apiClient.defaults.headers,
-      }) as AxiosHeaders,
-    });
+    const response = await apiClient.get(`${API_SEARCH_URL}?string=${searchString}`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
