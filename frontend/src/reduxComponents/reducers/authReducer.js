@@ -1,21 +1,34 @@
-// src/redux/authReducer.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { postLogin, logoutUser } from "services/apiRequestsUser"; // Import your API functions
 import { getToken, setToken } from "utils/cookies"; // Import cookie functions
 
-// Thunk for handling user login
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ username, password, recaptcha }, { rejectWithValue }) => {
     try {
       const response = await postLogin(username, password, recaptcha);
       if (response.status === 200) {
-        const { token, expiry } = response.data; // Assuming response has token and expiry
-        setToken(token, expiry); // Set token in cookies
-        return { token, expiry, user: response.data.user }; // Return user info
+        const { token, expiry } = response.data;
+        setToken(token, expiry);
+        return { token, expiry, user: response.data.user };
+      } else {
+        return rejectWithValue("Unexpected response status");
       }
     } catch (error) {
-      return rejectWithValue(error.response ? error.response.data : "Network Error");
+      if (error.response) {
+        // Server responded with a status code out of the 2xx range
+        console.error("Error Response:", error.response);
+        return rejectWithValue(error.response.data || "Server Error");
+      } else if (error.request) {
+        // Request was made but no response was received
+        console.error("No Response Received:", error.request);
+        return rejectWithValue("No response from server");
+      } else {
+        // Other errors (setting up request, etc.)
+        console.error("Error during request setup:", error.message);
+        return rejectWithValue("Request setup error");
+      }
     }
   }
 );
@@ -56,6 +69,7 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
         state.token = action.payload.token;
         state.user = action.payload.user; 
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

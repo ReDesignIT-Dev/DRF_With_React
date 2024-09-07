@@ -11,6 +11,19 @@ import {
 } from "config";
 import { getToken } from "utils/cookies";
 
+export async function validateIfCategoryExists(categorySlug) {
+  try {
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/validate`, {
+      headers: {
+        ...apiClient.defaults.headers,
+      },
+    });
+    return response;
+  } catch (error) {
+    apiErrorHandler(error);
+  }
+}
+
 // TODO optimize later to query one by one
 export async function getAllProductsInCategory(categorySlug) {
   try {
