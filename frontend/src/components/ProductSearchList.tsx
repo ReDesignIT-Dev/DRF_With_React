@@ -1,21 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
 import { getAllSearchProducts } from "services/apiRequestsShop";
 
-export default function ProductList({ className }) {
+interface Product {
+  slug: string;
+  image: string;
+  name: string;
+  price: number;
+}
+
+interface ProductListProps {
+  className?: string;
+}
+
+export default function ProductList({ className }: ProductListProps) {
   const params = useParams();
   const queryParams = useQueryParams();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await getAllSearchProducts(queryParams.string);
-        setProducts(response.data.products);
+        if (response && response.data && response.data.products) {
+          setProducts(response.data.products);
+        } else {
+          console.error("No products found in response");
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -23,13 +38,12 @@ export default function ProductList({ className }) {
     fetchProducts();
   }, [params, queryParams]);
 
-  const handleNavigationClick = (slug, event) => {
+  const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     navigate(`${API_PRODUCT_URL}/${slug}`);
   };
 
   const listProducts = () => {
-
     if (products.length === 0) {
       return <p>No products found</p>;
     }

@@ -4,6 +4,7 @@ import { getAllCategoryNamesAndSlugs } from "services/apiRequestsShop";
 interface Category {
   name: string;
   slug: string;
+  children?: Category[];
 }
 
 interface CategoryState {
@@ -47,6 +48,7 @@ const categorySlice = createSlice({
       state.categories = action.payload;
     });
     builder.addCase(fetchCategories.rejected, (state) => {
+      state.isLoading = false;
       state.error = true;
     });
   },

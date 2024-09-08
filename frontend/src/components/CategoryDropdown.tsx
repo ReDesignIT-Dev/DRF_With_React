@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../reduxComponents/reducers/categoryReducer";
@@ -12,13 +11,20 @@ import {
   MDBContainer,
 } from "mdb-react-ui-kit";
 import { API_CATEGORY_URL } from "config";
+import { RootState, AppDispatch } from "../reduxComponents/store"; // Adjust the import according to your store setup
 
-const CategoryDropdown = () => {
-  const { categories, isLoading, error } = useSelector((state) => state.categories);
-  const dispatch = useDispatch();
+interface Category {
+  name: string;
+  slug: string;
+  children?: Category[];
+}
+
+const CategoryDropdown: React.FC = () => {
+  const { categories, isLoading, error } = useSelector((state: RootState) => state.categories);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const handleItemClick = (slug, event) => {
+  const handleItemClick = (slug: string, event: MouseEvent<HTMLLIElement>) => {
     event.stopPropagation();
     navigate(`${API_CATEGORY_URL}/${slug}`);
   };
@@ -38,20 +44,20 @@ const CategoryDropdown = () => {
       <MDBContainer className='d-flex justify-content-center basic'>
         <MDBDropdown animation={false}>
           <MDBDropdownToggle>Categories</MDBDropdownToggle>
-          <MDBDropdownMenu>{renderCategoryTree(categories[0].children)}</MDBDropdownMenu>
+          <MDBDropdownMenu>{renderCategoryTree(categories[0].children!)}</MDBDropdownMenu>
         </MDBDropdown>
       </MDBContainer>
     );
   };
 
-  const renderCategoryTree = (categories) => {
+  const renderCategoryTree = (categories: Category[]): JSX.Element => {
     return (
       <>
         {categories.map((category) => (
           <MDBDropdownItem
             key={category.slug}
             className='dropdown-item'
-            onClick={(event) => handleItemClick(category.slug, event)}
+            onClick={(event) => handleItemClick(category.slug, event as MouseEvent<HTMLLIElement>)}
           >
             <span style={{ display: "flex", justifyContent: "space-between" }}>
               {category.name}
@@ -63,7 +69,7 @@ const CategoryDropdown = () => {
                   <MDBDropdownItem
                     key={child.slug}
                     className='dropdown-item'
-                    onClick={(event) => handleItemClick(child.slug, event)}
+                    onClick={(event) => handleItemClick(child.slug, event as MouseEvent<HTMLLIElement>)}
                   >
                     <span style={{ display: "flex", justifyContent: "space-between" }}>
                       {child.name}{" "}

@@ -1,56 +1,85 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { getAllCategoryNamesAndSlugs } from "services/apiRequestsShop";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState, MouseEvent } from "react";
+import { API_CATEGORY_URL } from "config";
+import useQueryParams from "hooks/useQueryParams";
+import "./CategoryAssociatedTree.css";
+import { getAllSearchAssociatedCategories } from "services/apiRequestsShop";
 
 interface Category {
   name: string;
   slug: string;
+  product_count: number;
+  children?: Category[];
 }
 
-interface CategoryState {
-  categories: Category[];
-  isLoading: boolean;
-  error: boolean;
+interface CategoryAssociatedTreeProps {
+  className?: string;
 }
 
-const initialState: CategoryState = { categories: [], isLoading: false, error: false };
+const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({ className }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const navigate = useNavigate();
+  const queryParams = useQueryParams();
 
-export const fetchCategories = createAsyncThunk(
-  "fetchCategories",
-  async () => {
-    const response = await getAllCategoryNamesAndSlugs();
-    if (response && response.data) {
-      console.log(response.data);
-      return response.data as Category[];
-    } else {
-      throw new Error("Failed to fetch categories");
-    }
-  },
-  {
-    condition: (_, { getState }) => {
-      const state = getState() as CategoryState;
-      if (state.isLoading) {
-        return false;
+  useEffect(() => {
+    const fetchAssociatedCategoriesTree = async () => {
+      try {
+        const response = await getAllSearchAssociatedCategories(queryParams.string);
+        if (response && response.data && response.data.categories) {
+          setCategories(response.data.categories);
+        } else {
+          console.error("No categories found in response");
+        }
+      } catch (error) {
+        console.error("Error fetching associated categories:", error);
       }
-    }
-  }
-);
+    };
 
-const categorySlice = createSlice({
-  name: "categories",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(fetchCategories.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(fetchCategories.fulfilled, (state, action: PayloadAction<Category[]>) => {
-      state.isLoading = false;
-      state.categories = action.payload;
-    });
-    builder.addCase(fetchCategories.rejected, (state) => {
-      state.error = true;
-    });
-  },
-});
+    fetchAssociatedCategoriesTree();
+  }, [queryParams]);
 
-export default categorySlice.reducer;
+  const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    navigate(`${API_CATEGORY_URL}/${slug}`);
+  };
+
+  const CategoryTree: React.FC<{ category: Category }> = ({ category }) => {
+    return (
+      <div className="category-tree">
+        <div
+          onClick={(event) => handleNavigationClick(category.slug, event)}
+          className="associated-category"
+        >
+          <span className="category-name">{category.name}</span>
+          <span className="category-count">{category.product_count}</span>
+        </div>
+        {category.children && category.children.length > 0 && (
+          <div className="category-children">
+            {category.children.map((childCategory) => (
+              <CategoryTree key={childCategory.slug} category={childCategory} />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const listAssociatedCategories = () => {
+    return (
+      <>
+        {categories.map((category) => (
+          <CategoryTree key={category.slug} category={category} />
+        ))}
+      </>
+    );
+  };
+
+  return (
+    <div className={`${className} d-flex flex-column gap-2`}>
+      <h3>Subcategories:</h3>
+      {listAssociatedCategories()}
+    </div>
+  );
+};
+
+export default CategoryAssociatedTree;
