@@ -3,7 +3,10 @@ from .settings_base import *
 PROJECT_NAME_FOR_DEV_DB = "DRF_React"  # my custom name for creating the dev db and user
 DEV_DB = getenv('DEV_DB')  # changing the value in .env gives possibility to use sqlite or postgres
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'http://localhost:3000', "http://172.16.0.26:3000"]
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',]
 
 # Default database configuration for SQLite
 DATABASES = {
@@ -26,7 +29,8 @@ if DEV_DB == 'postgres':
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React app
     "http://127.0.0.1:3000",  # React app
-    "http://172.16.0.233:3000"  # React app
+    "http://172.16.0.233:3000",  # React app
+    "http://172.16.0.26:3000"
 ]
 SILENCED_SYSTEM_CHECKS = ['drf_recaptcha.recaptcha_test_key_error']
 DRF_RECAPTCHA_SECRET_KEY = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"  # JUST FOR DEV UNIVERSAL GOOGLE KEY
