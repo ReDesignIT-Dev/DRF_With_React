@@ -11,7 +11,7 @@ import {
   MDBContainer,
 } from "mdb-react-ui-kit";
 import { API_CATEGORY_URL } from "config";
-import { RootState, AppDispatch } from "../reduxComponents/store"; // Adjust the import according to your store setup
+import { RootState, AppDispatch } from "../reduxComponents/store"; 
 
 interface Category {
   name: string;
