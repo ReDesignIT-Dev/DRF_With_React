@@ -1,36 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FormEvent } from "react";
 import { useParams } from "react-router-dom";
 import { validatePasswordResetToken, postPasswordReset } from "services/apiRequestsUser";
 import Loading from "components/Loading";
 import NewPasswordWithPasswordRepeatField from "components/Fields/NewPasswordWithPasswordRepeatField";
 import RecaptchaField from "components/Fields/RecaptchaField";
 
-const PasswordReset = () => {
-  const [newPassword, setNewPassword] = useState("");
-  const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
-  const [reCaptchaToken, setReCaptchaToken] = useState("");
-  const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState(false);
-  const { token } = useParams();
-  const [isValidToken, setIsValidToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isValid, setIsValid] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [passwordChangePostSuccess, setPasswordChangePostSuccess] = useState(false);
+const PasswordReset: React.FC = () => {
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [newPasswordRepeat, setNewPasswordRepeat] = useState<string>("");
+  const [reCaptchaToken, setReCaptchaToken] = useState<string>("");
+  const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState<boolean>(false);
+  const { token } = useParams<{ token: string }>();
+  const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [passwordChangePostSuccess, setPasswordChangePostSuccess] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsValid(isValidReCaptchaToken && isValidToken);
-  }, [isValidReCaptchaToken]);
-
+    setIsValid(isValidReCaptchaToken && isValidToken === true);
+  }, [isValidReCaptchaToken, isValidToken]);
 
   useEffect(() => {
     const checkTokenValidity = async () => {
       try {
-        const response = await validatePasswordResetToken(token);
-        if (response.status === 200) {
+        const response = await validatePasswordResetToken(token!);
+        if (response && response.status === 200) {
           setIsValidToken(true);
         }
-      } catch (error) {
+      } catch (error: any) {
         if (error.message.includes("Network Error")) {
           setErrorMessage("Network Error: Please check your internet connection.");
         } else if (error.message.includes("API Error")) {
@@ -50,29 +49,27 @@ const PasswordReset = () => {
     return <Loading />;
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (isValid) {
       try {
         const response = await postPasswordReset(
-          token,
-          newPassword,
-          newPasswordRepeat,
-          reCaptchaToken
+          token!,
+          { password: newPassword, password_confirm: newPasswordRepeat, recaptcha: reCaptchaToken }
         );
 
-        if (response.status === 200) {
+        if (response && response.status === 200) {
           const returnMessage = response.data.message;
           setSuccessMessage(returnMessage);
           setPasswordChangePostSuccess(true);
           setErrorMessage("");
           console.log(returnMessage);
-        } else {
+        } else if (response) {
           const errorData = response.data;
           setErrorMessage(errorData.message || "Failed to reset password.");
           setSuccessMessage("");
         }
-      } catch (error) {
+      } catch (error: any) {
         setErrorMessage("An error occurred. Please try again.");
         setSuccessMessage("");
       }
@@ -92,11 +89,19 @@ const PasswordReset = () => {
           className='d-flex flex-column justify-content-center align-items-center'
         >
           <NewPasswordWithPasswordRepeatField
-            passwordValue={setNewPassword}
-            passwordRepeatValue={setNewPasswordRepeat}
+            customClassesForNewPassword="w-100"
+            customClassesForPasswordRepeat="w-100"
+            passwordValue={newPassword}
+            passwordRepeatValue={newPasswordRepeat}
+            onChangePassword={setNewPassword}
+            onChangePasswordConfirm={setNewPasswordRepeat}
             onValidate={setIsValid}
           />
-          <RecaptchaField onValidate={setIsValidRecaptchaToken} setReturnToken={setReCaptchaToken}/>
+          <RecaptchaField
+            customClasses=""
+            onValidate={setIsValidRecaptchaToken}
+            setReturnToken={setReCaptchaToken}
+          />
           <button type='submit' className='btn btn-primary mt-3' disabled={!isValid}>
             Submit
           </button>

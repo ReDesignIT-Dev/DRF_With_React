@@ -4,7 +4,7 @@ import { FRONTEND_LOGIN_URL } from "config";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "hooks/useAuth";
 
-const Register = () => {
+const Register: React.FC = () => {
   const isLoggedIn = useAuth();
   const navigate = useNavigate();
 

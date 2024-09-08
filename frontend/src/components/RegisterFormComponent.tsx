@@ -2,33 +2,33 @@ import UsernameField from "./Fields/UsernameField";
 import EmailField from "components/Fields/EmailField";
 import NewPasswordWithPasswordRepeatField from "./Fields/NewPasswordWithPasswordRepeatField";
 import RecaptchaField from "components/Fields/RecaptchaField";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import Loading from "components/Loading";
 import { registerUser } from "services/apiRequestsUser";
 import "./RegisterFormComponent.css"; // Import the CSS file
 import { GeneralApiError, MultipleFieldErrors } from "services/CustomErrors";
 import { useAuth } from "hooks/useAuth";
 
-const RegisterFormComponent = () => {
-  const [isValid, setIsValid] = useState(false);
-  const [username, setUsername] = useState(localStorage.getItem("username") || "");
-  const [usernameFieldError, setUsernameFieldError] = useState(
+const RegisterFormComponent: React.FC = () => {
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>(localStorage.getItem("username") || "");
+  const [usernameFieldError, setUsernameFieldError] = useState<string>(
     localStorage.getItem("usernameFieldError") || ""
   );
-  const [isUsernameValid, setIsUsernameValid] = useState(false);
-  const [email, setEmail] = useState(localStorage.getItem("email") || "");
-  const [emailFieldError, setEmailFieldError] = useState(
+  const [isUsernameValid, setIsUsernameValid] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>(localStorage.getItem("email") || "");
+  const [emailFieldError, setEmailFieldError] = useState<string>(
     localStorage.getItem("emailFieldError") || ""
   );
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [reCaptchaToken, setReCaptchaToken] = useState("");
-  const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState(false);
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
+  const [reCaptchaToken, setReCaptchaToken] = useState<string>("");
+  const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
+  const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [isPasswordWithPasswordConfirmValid, setIsPasswordWithPasswordConfirmValid] =
-    useState(false);
-  const [errorMessage, setErrorMessage] = useState(localStorage.getItem("detailError") || "");
-  const [loading, setLoading] = useState(false);
+    useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>(localStorage.getItem("detailError") || "");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const isLoggedIn = useAuth();
 
@@ -38,7 +38,7 @@ const RegisterFormComponent = () => {
       setEmail("");
       setUsername("");
     }
-  });
+  }, [isLoggedIn]);
 
   useEffect(() => {
     localStorage.removeItem("usernameFieldError");
@@ -92,26 +92,30 @@ const RegisterFormComponent = () => {
     localStorage.removeItem("emailFieldError");
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (isValid) {
       setLoading(true);
       setErrorMessage("");
       try {
-        const response = await registerUser(
+        const response = await registerUser({
           username,
           email,
           password,
-          passwordConfirm,
-          reCaptchaToken
-        );
-        const returnMessage = response.data.message;
-        if (response.status === 200) {
-          clearUsedLocalStorage();
-          setErrorMessage("");
+          password_confirm: passwordConfirm,
+          recaptcha: reCaptchaToken
+        });
+        if (response && response.data) {
+          const returnMessage = response.data.message;
+          if (response.status === 200) {
+            clearUsedLocalStorage();
+            setErrorMessage("");
+          } else {
+            setErrorMessage(returnMessage);
+            console.log(returnMessage);
+          }
         } else {
-          setErrorMessage(returnMessage);
-          console.log(returnMessage);
+          setErrorMessage("Registration failed. Please try again.");
         }
       } catch (error) {
         if (error instanceof MultipleFieldErrors) {
@@ -166,6 +170,7 @@ const RegisterFormComponent = () => {
               customClasses='text-center w-100'
               onChange={setUsername}
               onValidate={setIsUsernameValid}
+              disabled={false}
             />
             {usernameFieldError && <label className='text-danger'>{usernameFieldError}</label>}
           </div>
@@ -175,12 +180,14 @@ const RegisterFormComponent = () => {
               customClasses='text-center w-100'
               onChange={setEmail}
               onValidate={setIsEmailValid}
+              disabled={false}
             />
             {emailFieldError && <label className='text-danger'>{emailFieldError}</label>}
           </div>
           <div className='input-group-register'>
             <NewPasswordWithPasswordRepeatField
               customClassesForNewPassword={"w-100"}
+              customClassesForPasswordRepeat={"w-100"}
               passwordValue={password}
               passwordRepeatValue={passwordConfirm}
               onChangePassword={setPassword}
@@ -189,6 +196,7 @@ const RegisterFormComponent = () => {
             />
           </div>
           <RecaptchaField
+            customClasses=''
             onValidate={setIsValidRecaptchaToken}
             setReturnToken={setReCaptchaToken}
           />

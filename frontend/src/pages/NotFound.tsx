@@ -1,6 +1,6 @@
 import React from 'react';
 
-const NotFound = () => {
+const NotFound: React.FC = () => {
   return (
     <div className="container">
       <h1>404 - Page Not Found</h1>

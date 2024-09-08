@@ -1,17 +1,33 @@
-import { getProduct } from "services/apiRequestsShop";
+import React, { useEffect, useState, ChangeEvent, MouseEvent } from "react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { getProduct, addToCart } from "services/apiRequestsShop";
 import "./Product.css";
 import CategoryParentTree from "components/CategoryParentTree";
-import { addToCart } from "services/apiRequestsShop";
-export default function Product() {
-  const params = useParams();
-  const [quantity, setQuantity] = useState(1);
-  const [error, setError] = useState(null);
-  const [confirmationMessage, setConfirmationMessage] = useState("");
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const [product, setProduct] = useState({
+interface Product {
+  name: string;
+  category: string | null;
+  description: string;
+  price: string;
+  sale_start: string | null;
+  sale_end: string | null;
+  is_on_sale: boolean;
+  image: string;
+  slug: string;
+}
+
+interface Params {
+  slug: string;
+}
+
+export default function Product() {
+  const params = useParams<Record<string, string>>();
+  const [quantity, setQuantity] = useState<number>(1);
+  const [error, setError] = useState<string | null>(null);
+  const [confirmationMessage, setConfirmationMessage] = useState<string>("");
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+
+  const [product, setProduct] = useState<Product>({
     name: "",
     category: null,
     description: "",
@@ -26,8 +42,12 @@ export default function Product() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await getProduct(params.slug);
-        setProduct(response.data);
+        if (params.slug) {
+          const response = await getProduct(params.slug);
+          if (response && response.data) {
+            setProduct(response.data);
+          }
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -35,16 +55,16 @@ export default function Product() {
     fetchProduct();
   }, [params]);
 
-  const handleQuantityChange = async (quantity) => {
+  const handleQuantityChange = (quantity: number) => {
     if (isNaN(quantity) || quantity < 1) {
       setError("Quantity must be a number greater than 0.");
       return;
     }
     setQuantity(quantity);
-    setError("");
+    setError(null);
   };
 
-  const handleAddToCartClick = async (product, event) => {
+  const handleAddToCartClick = async (product: Product, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     try {
       await addToCart(product.slug, quantity);
@@ -59,7 +79,7 @@ export default function Product() {
   return (
     <div className='product-view-container d-flex flex-column mx-auto'>
       {showConfirmation && <div className='confirmation-message'>{confirmationMessage}</div>}
-      <CategoryParentTree />
+      <CategoryParentTree className="category-tree" currentCategory={product.category} />
       <div className='product-top-info d-flex flex-row'>
         <div className='product-images'>
           <img src={product.image} alt={product.name} />
@@ -67,18 +87,17 @@ export default function Product() {
         <div className='product-cart-info d-flex flex-column mx-auto'>
           <p>{product.name}</p>
           <p>{product.price} PLN</p>
-          <div className=' d-flex flex-row me-2 justify-content-center align-items-center'>
+          <div className='d-flex flex-row me-2 justify-content-center align-items-center'>
             Quantity:
             <input
               type='number'
               value={quantity}
-              onChange={(e) =>
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleQuantityChange(Math.max(1, parseInt(e.target.value, 10)))
               }
               min='1'
               className='quantity-input form-control d-inline-block w-auto mx-2'
             />
-            
             <button
               className='product-add-to-cart-btn'
               onClick={(event) => handleAddToCartClick(product, event)}
@@ -87,10 +106,10 @@ export default function Product() {
             </button>
           </div>
           {error && (
-              <div className='error-message' style={{ color: "red", marginBottom: "10px" }}>
-                {error}
-              </div>
-            )}
+            <div className='error-message' style={{ color: "red", marginBottom: "10px" }}>
+              {error}
+            </div>
+          )}
         </div>
       </div>
       <div className='product-description'>{product.description}</div>
