@@ -9,9 +9,9 @@ class LogRequestMiddleware:
 
     def __call__(self, request):
         # Log the request details
-        logger.info(f"Request from: {request.META.get('HTTP_ORIGIN')}")
-        logger.info(f"Request URL: {request.build_absolute_uri()}")
-        logger.info(f"Request Method: {request.method}")
-        logger.info(f"Request Headers: {request.headers}")
+        logger.info(f"Request from: {request.META.get('HTTP_ORIGIN')}\n")
+        logger.info(f"Request URL: {request.build_absolute_uri()}\n")
+        logger.info(f"Request Method: {request.method}\n")
+        logger.info(f"Request Headers: {request.headers}\n")
         response = self.get_response(request)
         return response
