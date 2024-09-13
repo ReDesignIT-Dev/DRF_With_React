@@ -5,7 +5,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "reduxComponents/reducers/authReducer";
 import { useAuth } from "hooks/useAuth";
-import { AppDispatch } from "reduxComponents/store" // Adjust the import path as necessary
+import { AppDispatch } from "reduxComponents/store" 
 
 interface SignInButtonProps {
   handleIconClick: () => void;
