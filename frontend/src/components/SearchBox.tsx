@@ -1,27 +1,26 @@
-import { useState } from "react";
+import { useState, ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import "./SearchBox.scss";
 import { ReactComponent as SearchIcon } from "images/search.svg";
 import { FRONTEND_SEARCH_URL } from "config";
 import { useNavigate } from "react-router-dom";
 
 export default function SearchBox() {
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const navigate = useNavigate();
 
-
-    const handleChange = event => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
-    const handleSearchClick = (event) => {
+    const handleSearchClick = (event: MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         const encodedSearchTerm = encodeURIComponent(searchTerm.trim());
         navigate(`${FRONTEND_SEARCH_URL}?string=${encodedSearchTerm}`);
-      };
+    };
 
-      const handleKeyDown = (event) => {
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
-            handleSearchClick(event);
+            handleSearchClick(event as unknown as MouseEvent<HTMLButtonElement>);
         }
     };
 
@@ -35,7 +34,9 @@ export default function SearchBox() {
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
             />
-            <button  className="search-btn btn btn-primary d-flex justify-content-center align-items-center" onClick={(event) => handleSearchClick(event)}><SearchIcon /></button>
+            <button className="search-btn btn btn-primary d-flex justify-content-center align-items-center" onClick={handleSearchClick}>
+                <SearchIcon />
+            </button>
         </div>
     );
 }

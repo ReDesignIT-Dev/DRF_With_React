@@ -18,10 +18,11 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      //"allowJs": true,
+      "allowJs": true,
       "checkJs": true,
+      "typeRoots": ["./node_modules/@types", "./types"]
     },
-    "include": ["src"],
+    "include": ["src", "types"],
     "exclude": ["node_modules", "dist"]
   }
   

@@ -1,32 +1,32 @@
 import { getToken } from "./cookies";
 
-export function isEmailValid(emailToTest) {
+export function isEmailValid(emailToTest: string): boolean {
   const emailRegex = 
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return emailRegex.test(emailToTest);
 }
 
-export function isLengthValid(password, minLength = 8) {
+export function isLengthValid(password: string, minLength: number = 8): boolean {
   return password.length >= minLength;
 }
 
-export function isUppercaseValid(password) {
+export function isUppercaseValid(password: string): boolean {
   return /[A-Z]/.test(password);
 }
 
-export function isLowercaseValid(password) {
+export function isLowercaseValid(password: string): boolean {
   return /[a-z]/.test(password);
 }
 
-export function isDigitValid(password) {
+export function isDigitValid(password: string): boolean {
   return /\d/.test(password);
 }
 
-export function isSpecialCharValid(password) {
+export function isSpecialCharValid(password: string): boolean {
   return /[@$!%*?&#^()]/.test(password);
 }
 
-export function isPasswordValid(password) {
+export function isPasswordValid(password: string): boolean {
   const validations = [
     isLengthValid,
     isUppercaseValid,
@@ -46,7 +46,7 @@ export function isPasswordValid(password) {
   return true;
 }
 
-export function isUserLoggedIn(){
+export function isUserLoggedIn(): boolean {
   const token = getToken();
   return token ? true : false;
 }
