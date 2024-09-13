@@ -7,9 +7,8 @@ import CategoryTopBar from "components/CategoryTopBar";
 import "./Category.css";
 import NotFound from "./NotFound";
 
-
 export default function Category() {
-  const params = useParams<Record<string, string | undefined>>(); // Use the correct type for useParams
+  const params = useParams<Record<string, string>>(); 
   const [isValidCategory, setIsValidCategory] = useState<boolean>(false);
   const [categoryNotFound, setCategoryNotFound] = useState<boolean>(false);
 
@@ -41,9 +40,9 @@ export default function Category() {
 
   return (
     <>
-      {isValidCategory && (
+      {isValidCategory && params.slug && (
         <div className='category-view-container d-flex flex-column mx-auto gap-3'>
-          <CategoryTopBar className="bg-secondary mt-3 p-2" />
+          <CategoryTopBar className="bg-secondary mt-3 p-2" currentCategory={params.slug}/>
           <div className='d-flex align-items-start gap-3'>
             <CategoryTree className="bg-secondary category-tree-basis p-2" />
             <ProductList className="bg-secondary product-list-basis p-2 flex-grow-1" />

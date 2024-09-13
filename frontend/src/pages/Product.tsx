@@ -6,7 +6,7 @@ import CategoryParentTree from "components/CategoryParentTree";
 
 interface Product {
   name: string;
-  category: string | null;
+  category: string;
   description: string;
   price: string;
   sale_start: string | null;
@@ -29,7 +29,7 @@ export default function Product() {
 
   const [product, setProduct] = useState<Product>({
     name: "",
-    category: null,
+    category: "",
     description: "",
     price: "",
     sale_start: null,

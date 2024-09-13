@@ -15,7 +15,7 @@ interface APIResponse<T> {
 
 interface CategoryParentTreeProps {
   className?: string;
-  currentCategory?: (categoryName: string) => void;
+  currentCategory?: string;
 }
 
 export default function CategoryParentTree({ className, currentCategory }: CategoryParentTreeProps) {
@@ -33,7 +33,6 @@ export default function CategoryParentTree({ className, currentCategory }: Categ
           setAncestors(ancestors);
           if (typeof currentCategory === "function") {
             const currentCategoryName = ancestors.at(-1)?.name || "";
-            currentCategory(currentCategoryName);
           }
         }
       } catch (error) {
