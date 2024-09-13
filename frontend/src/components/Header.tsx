@@ -9,19 +9,19 @@ import CategoryDropdown from "./CategoryDropdown";
 import { FaShoppingCart } from "react-icons/fa";
 import { useAuth } from "hooks/useAuth";
 
-function Header() {
-  const [shopPopupLoginRegister, setShowPopupLoginRegister] = useState(true);
+const Header: React.FC = () => {
+  const [shopPopupLoginRegister, setShowPopupLoginRegister] = useState<boolean>(true);
   const navigate = useNavigate();
   const isLoggedIn = useAuth();
 
   useEffect(() => {
-    if (isLoggedIn){
+    if (isLoggedIn) {
       setShowPopupLoginRegister(true);
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   const handleLoginClick = () => {
-    setShowPopupLoginRegister((isShowLogin) => !isShowLogin);
+    setShowPopupLoginRegister((isShowLogin: boolean) => !isShowLogin);
   };
 
   return (
@@ -38,15 +38,13 @@ function Header() {
           </div>
 
           <div className='header-signin d-flex flex-row gap-2 justify-content-center align-items-center'>
-          <div
-            className='shopping-cart-icon d-flex justify-content-center align-items-center'
-            onClick={() => navigate("/cart")}
-          >
-            <FaShoppingCart size={'1x'}/>
-          </div>
-            <SignInButton
-              handleIconClick={handleLoginClick}
-            />
+            <div
+              className='shopping-cart-icon d-flex justify-content-center align-items-center'
+              onClick={() => navigate("/cart")}
+            >
+              <FaShoppingCart size={'1x'} />
+            </div>
+            <SignInButton handleIconClick={handleLoginClick} />
           </div>
         </div>
 
@@ -72,6 +70,6 @@ function Header() {
       </div>
     </div>
   );
-}
+};
 
 export default Header;

@@ -2,7 +2,7 @@ import React from "react";
 import ReactLoading from "react-loading";
 import "./Loading.scss";
 
-const Loading = () => {
+const Loading: React.FC = () => {
   return (
     <div className='loading-div'>
       <div className='loading-component mb-5 mt-5'>

@@ -1,7 +1,7 @@
 import "./Footer.css";
+import React from "react";
 
-function Footer() {
-
+const Footer: React.FC = () => {
   return (
     <div className="footer">
       TODO FOOTER
