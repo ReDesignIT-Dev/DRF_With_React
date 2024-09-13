@@ -32,8 +32,6 @@ const RegisterFormComponent: React.FC = () => {
 
   const isLoggedIn = useAuth();
 
-  const isLoggedIn = useAuth();
-
   useEffect(() => {
     if (isLoggedIn) {
       clearUsedLocalStorage();
