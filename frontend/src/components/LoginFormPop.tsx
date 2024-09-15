@@ -17,13 +17,13 @@ const LoginFormPop: React.FC<LoginFormPopProps> = ({ isShowLogin, handleXClick }
 
   const renderLoginFormFields = () => (
     <div className="form-group form-group--login">
-      <LoginFormComponent onSuccessfulSubmit={handleXClick}/>
+      <LoginFormComponent />
     </div>
   );
 
   const renderSignupFormFields = () => (
     <div className="form-group form-group--signup">
-      <RegisterFormComponent onSuccessfulSubmit={handleXClick}/>
+      <RegisterFormComponent />
     </div>
   );
 
