@@ -1,29 +1,37 @@
 import { isEmailValid } from "utils/validation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import "./CommonStyles.css";
 
-export default function EmailField({ value, disabled, customClasses, onChange, onValidate }) {
-  const [email, setEmail] = useState("");
+interface EmailFieldProps {
+  value: string;
+  disabled: boolean;
+  customClasses: string;
+  onChange: (value: string) => void;
+  onValidate: (isValid: boolean) => void;
+}
+
+const EmailField: React.FC<EmailFieldProps> = ({ value, disabled, customClasses, onChange, onValidate }) => {
+  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     setEmail(value);
     validate(value);
   }, [value]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     validate(value);
     onChange(value);
   };
 
-  const validate = (value) => {
+  const validate = (value: string) => {
     const isValid = isEmailValid(value);
     onValidate(isValid);
-  }
+  };
 
   return (
     <div className={`${customClasses}`}>
-      <label className='input-label'>Email</label>
+      <label className='input-label' htmlFor='emailField'>Email</label>
       <input
         value={email}
         className='text-center w-100'
@@ -36,4 +44,6 @@ export default function EmailField({ value, disabled, customClasses, onChange, o
       />
     </div>
   );
-}
+};
+
+export default EmailField;
