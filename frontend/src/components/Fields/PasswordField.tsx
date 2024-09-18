@@ -1,22 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./CommonStyles.css";
 
-export default function PasswordField({ value, customClasses, onChange, onValidate }) {
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+interface PasswordFieldProps {
+  value: string;
+  customClasses: string;
+  onChange: (value: string) => void;
+  onValidate: (isValid: boolean) => void;
+}
+
+const PasswordField: React.FC<PasswordFieldProps> = ({ value, customClasses, onChange, onValidate }) => {
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
     const isValid = password !== "";
     onValidate(isValid);
-  }, [password]);
+  }, [password, onValidate]);
 
   useEffect(() => {
     setPassword(value);
   }, [value]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
     onChange(value);
@@ -28,7 +34,6 @@ export default function PasswordField({ value, customClasses, onChange, onValida
       <input
         type={showPassword ? "text" : "password"}
         id='newPasswordField'
-        label='password'
         value={password}
         onChange={handleChange}
         className='text-center w-100'
@@ -45,4 +50,6 @@ export default function PasswordField({ value, customClasses, onChange, onValida
       </div>
     </div>
   );
-}
+};
+
+export default PasswordField;
