@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import {
   isPasswordValid,
   isLengthValid,
@@ -7,24 +7,30 @@ import {
   isSpecialCharValid,
   isUppercaseValid,
 } from "utils/validation";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./CommonStyles.css";
 
-export default function NewPasswordField({ value, customClasses, onChange, onValidate }) {
-  const [newPassword, setNewPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+interface NewPasswordFieldProps {
+  value: string;
+  customClasses: string;
+  onChange: (value: string) => void;
+  onValidate: (isValid: boolean) => void;
+}
+
+const NewPasswordField: React.FC<NewPasswordFieldProps> = ({ value, customClasses, onChange, onValidate }) => {
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
     const isValid = isPasswordValid(newPassword);
     onValidate(isValid);
-  }, [newPassword]);
+  }, [newPassword, onValidate]);
 
   useEffect(() => {
     setNewPassword(value);
   }, [value]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNewPassword(value);
     onChange(value);
@@ -32,11 +38,10 @@ export default function NewPasswordField({ value, customClasses, onChange, onVal
 
   return (
     <div className={`d-flex flex-column ${customClasses}`}>
-      <label className='input-label'>Password</label>
+      <label className='input-label' htmlFor='newPasswordField'>Password</label>
       <input
         type={showPassword ? "text" : "password"}
         id='newPasswordField'
-        label='password'
         value={newPassword}
         onChange={handleChange}
         className='text-center w-100'
@@ -70,4 +75,6 @@ export default function NewPasswordField({ value, customClasses, onChange, onVal
       </div>
     </div>
   );
-}
+};
+
+export default NewPasswordField;
