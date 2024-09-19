@@ -8,7 +8,7 @@ import RecaptchaField from "components/Fields/RecaptchaField";
 const PasswordReset: React.FC = () => {
   const [newPassword, setNewPassword] = useState<string>("");
   const [newPasswordRepeat, setNewPasswordRepeat] = useState<string>("");
-  const [reCaptchaToken, setReCaptchaToken] = useState<string>("");
+  const [reCaptchaToken, setReCaptchaToken] = useState<string | null>("");
   const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState<boolean>(false);
   const { token } = useParams<{ token: string }>();
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
