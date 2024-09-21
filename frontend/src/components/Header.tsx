@@ -28,7 +28,7 @@ const Header: React.FC = () => {
               className="shopping-cart-icon d-flex justify-content-center align-items-center"
               onClick={() => navigate("/cart")}
             >
-              <FaShoppingCart size={"1x"} />
+              <FaShoppingCart size={"40px"} />
             </div>
             <SignInButton />
           </div>
