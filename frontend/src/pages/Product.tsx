@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getProduct, addToCart } from "services/apiRequestsShop";
 import "./Product.css";
 import CategoryParentTree from "components/CategoryParentTree";
+import { useAuth } from "hooks/useAuth";
 
 interface Product {
   name: string;
@@ -16,12 +17,9 @@ interface Product {
   slug: string;
 }
 
-interface Params {
-  slug: string;
-}
-
 export default function Product() {
   const params = useParams<Record<string, string>>();
+  const isLoggedIn = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
@@ -67,10 +65,26 @@ export default function Product() {
   const handleAddToCartClick = async (product: Product, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     try {
-      await addToCart(product.slug, quantity);
-      setConfirmationMessage(`Product added to the cart!`);
+      if (isLoggedIn) {
+        await addToCart(product.slug, quantity);
+        setConfirmationMessage(`Product added to the cart!`);
+      } else {
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const productSlug = product.slug;
+  
+        const existingProductIndex = cart.findIndex((item: { productSlug: string }) => item.productSlug === productSlug);
+  
+        if (existingProductIndex !== -1) {
+          cart[existingProductIndex].quantity += quantity;
+        } else {
+          cart.push({ productSlug, quantity });
+        }
+  
+        localStorage.setItem("cart", JSON.stringify(cart));
+        setConfirmationMessage(`Product saved to local storage!`);
+      }
       setShowConfirmation(true);
-      setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
+      setTimeout(() => setShowConfirmation(false), 3000); 
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
