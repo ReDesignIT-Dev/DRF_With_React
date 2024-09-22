@@ -5,6 +5,7 @@ import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
 import { useAuth } from "hooks/useAuth";
+import { addItemToCart } from "services/localStorageRequestsShop";
 
 interface Product {
   name: string;
@@ -65,7 +66,10 @@ export default function ProductList({ className }: ProductListProps) {
         console.error("Error adding product to cart:", error);
       }
     } else {
-      console.log("not logged in, add to local storage");
+      addItemToCart(product.slug, 1);
+      setConfirmationMessage(`${product.name} was added to the cart!`);
+      setShowConfirmation(true);
+      setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
     }
   };
 
