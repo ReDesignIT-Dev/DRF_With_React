@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { validateIfCategoryExists } from "services/apiRequestsShop";
+import { validateIfCategoryExists } from "services/shopServices/apiRequestsShop";
 import ProductList from "components/ProductList";
 import CategoryTree from "components/CategoryTree";
 import CategoryTopBar from "components/CategoryTopBar";
