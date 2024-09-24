@@ -3,7 +3,7 @@ import { useEffect, useState, MouseEvent } from "react";
 import { API_CATEGORY_URL } from "config";
 import useQueryParams from "hooks/useQueryParams";
 import "./CategoryAssociatedTree.css";
-import { getAllSearchAssociatedCategories } from "services/apiRequestsShop";
+import { getAllSearchAssociatedCategories } from "services/shopServices/apiRequestsShop";
 
 interface Category {
   name: string;
