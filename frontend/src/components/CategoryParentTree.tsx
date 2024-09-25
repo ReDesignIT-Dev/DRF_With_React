@@ -1,6 +1,6 @@
 import { useEffect, useState, MouseEvent } from "react";
 import { useParams, useNavigate, useLocation, Params } from "react-router-dom";
-import { getAllParentsOfCategory, getProductParentCategory } from "services/apiRequestsShop";
+import { getAllParentsOfCategory, getProductParentCategory } from "services/shopServices/apiRequestsShop";
 import { API_CATEGORY_URL, API_PRODUCT_URL } from "config";
 import "./CategoryParentTree.css";
 
