@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { getAllChildrenOfCategory } from "services/apiRequestsShop";
+import { getAllChildrenOfCategory } from "services/shopServices/apiRequestsShop";
 import { useEffect, useState } from "react";
 import { API_CATEGORY_URL } from "config";
 import "./CategoryTree.css";
