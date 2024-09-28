@@ -1,11 +1,11 @@
 import { useEffect, useState, MouseEvent } from "react";
-import { getAllProductsInCategory, addToCart } from "services/apiRequestsShop";
+import { getAllProductsInCategory } from "services/shopServices/apiRequestsShop";
+import { addToCart } from "services/shopServices/cartLogic";
 import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
 import { useAuth } from "hooks/useAuth";
-import { addItemToCart } from "services/localStorageRequestsShop";
 
 interface Product {
   name: string;
@@ -56,20 +56,13 @@ export default function ProductList({ className }: ProductListProps) {
   const handleAddToCartClick = async (product: Product, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
-    if (isLoggedIn) {
-      try {
-        await addToCart(product.slug, 1);
-        setConfirmationMessage(`${product.name} was added to the cart!`);
-        setShowConfirmation(true);
-        setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
-      } catch (error) {
-        console.error("Error adding product to cart:", error);
-      }
-    } else {
-      addItemToCart(product.slug, 1);
+    try {
+      await addToCart(isLoggedIn, product, 1);
       setConfirmationMessage(`${product.name} was added to the cart!`);
       setShowConfirmation(true);
       setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
     }
   };
 
