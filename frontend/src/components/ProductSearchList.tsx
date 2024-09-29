@@ -3,7 +3,7 @@ import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
-import { getAllSearchProducts } from "services/apiRequestsShop";
+import { getAllSearchProducts } from "services/shopServices/apiRequestsShop";
 
 interface Product {
   slug: string;
