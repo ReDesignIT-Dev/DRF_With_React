@@ -21,7 +21,7 @@ const RegisterFormComponent: React.FC = () => {
     localStorage.getItem("emailFieldError") || ""
   );
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
-  const [reCaptchaToken, setReCaptchaToken] = useState<string>("");
+  const [reCaptchaToken, setReCaptchaToken] = useState<string | null>(null);
   const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
