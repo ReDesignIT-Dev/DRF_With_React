@@ -16,7 +16,7 @@ interface LoginResponse {
   user: string;
 }
 
-export const loginUser = createAsyncThunk<LoginResponse, { username: string; password: string; recaptcha: string }>(
+export const loginUser = createAsyncThunk<LoginResponse, { username: string; password: string; recaptcha: string | null }>(
   "auth/loginUser",
   async ({ username, password, recaptcha }, { rejectWithValue }) => {
     try {
@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk<LoginResponse, { username: string; pas
       } else {
         // Other errors (setting up request, etc.)
         console.error("Error during request setup:", error.message);
-        return rejectWithValue("Request setup error");
+        return rejectWithValue("Invalid username or password");
       }
     }
   }
