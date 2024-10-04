@@ -1,6 +1,7 @@
 import React, { useEffect, useState, ChangeEvent, MouseEvent } from "react";
 import { useParams } from "react-router-dom";
-import { getProduct, addToCart } from "services/apiRequestsShop";
+import { getProduct } from "services/shopServices/apiRequestsShop";
+import { addToCart } from "services/shopServices/cartLogic";
 import "./Product.css";
 import CategoryParentTree from "components/CategoryParentTree";
 import { useAuth } from "hooks/useAuth";
@@ -9,7 +10,7 @@ interface Product {
   name: string;
   category: string;
   description: string;
-  price: string;
+  price: number;
   sale_start: string | null;
   sale_end: string | null;
   is_on_sale: boolean;
@@ -29,7 +30,7 @@ export default function Product() {
     name: "",
     category: "",
     description: "",
-    price: "",
+    price: 0,
     sale_start: null,
     sale_end: null,
     is_on_sale: false,
@@ -65,26 +66,10 @@ export default function Product() {
   const handleAddToCartClick = async (product: Product, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     try {
-      if (isLoggedIn) {
-        await addToCart(product.slug, quantity);
-        setConfirmationMessage(`Product added to the cart!`);
-      } else {
-        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-        const productSlug = product.slug;
-  
-        const existingProductIndex = cart.findIndex((item: { productSlug: string }) => item.productSlug === productSlug);
-  
-        if (existingProductIndex !== -1) {
-          cart[existingProductIndex].quantity += quantity;
-        } else {
-          cart.push({ productSlug, quantity });
-        }
-  
-        localStorage.setItem("cart", JSON.stringify(cart));
-        setConfirmationMessage(`Product saved to local storage!`);
-      }
+      await addToCart(isLoggedIn, product, quantity);
+      setConfirmationMessage(`Product added to the cart!`);
       setShowConfirmation(true);
-      setTimeout(() => setShowConfirmation(false), 3000); 
+      setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
