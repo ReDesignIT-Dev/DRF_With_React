@@ -8,7 +8,7 @@ const PasswordRecovery: React.FC = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
-  const [reCaptchaToken, setReCaptchaToken] = useState<string>("");
+  const [reCaptchaToken, setReCaptchaToken] = useState<string | null>(null);
   const [isValidReCaptchaToken, setIsValidRecaptchaToken] = useState<boolean>(false);
   const [postSuccess, setPostSuccess] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
