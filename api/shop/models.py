@@ -61,13 +61,24 @@ def get_default_category():
 
 
 class Product(CommonFields):
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE,
+    category = models.ForeignKey(Category, related_name='product_images', on_delete=models.CASCADE,
                                  default=get_default_category)
-    image = models.ImageField(blank=True, default='shop_default_image.jpg', upload_to="products")
     description = models.CharField(max_length=500, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_start = models.DateTimeField(null=True, blank=True)
     sale_end = models.DateTimeField(null=True, blank=True)
+
+    def get_main_image(self):
+        # Assuming the first image in the list is the main image
+        return self.images.first() if self.images.exists() else None
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+
+    def __str__(self):
+        return f"Image for {self.product.name}"
 
 
 class ShoppingCart(models.Model):
