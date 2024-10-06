@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { getAllCategoryNamesAndSlugs } from "services/apiRequestsShop";
+import { getAllCategoryNamesAndSlugs } from "services/shopServices/apiRequestsShop";
 
 interface Category {
   name: string;
