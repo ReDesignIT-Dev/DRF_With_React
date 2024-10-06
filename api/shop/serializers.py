@@ -1,7 +1,24 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Product, ShoppingCartItem, Category, ShoppingCart
+from .models import Product, ShoppingCartItem, Category, ShoppingCart, ProductImage
 from decimal import Decimal
+from django.conf import settings
+
+
+class DefaultImageMixin:
+    def get_images(self, obj):
+        images = obj.images.all()
+        request = self.context.get('request')
+        if images.exists():
+            return ProductImageSerializer(images, many=True, context={'request': request}).data
+        default_image_url = request.build_absolute_uri(settings.MEDIA_URL + 'shop_default_image.jpg')
+        return [{'image': default_image_url}]
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -40,10 +57,15 @@ class CategoryChildrenListSerializer(serializers.ModelSerializer):
         return CategoryNameSlugSerializer(children, many=True).data
 
 
-class CategoryProductListSerializer(serializers.ModelSerializer):
+class CategoryProductListSerializer(DefaultImageMixin, serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = ['name', 'slug', 'price', 'image']
+        fields = ['name', 'slug', 'price', 'images']
+
+    def get_images(self, obj):
+        return super().get_images(obj)
 
 
 class CategoryTreeSerializer(serializers.ModelSerializer):
@@ -71,7 +93,8 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
         return data
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(DefaultImageMixin, serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
     description = serializers.CharField(min_length=2, max_length=500)
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
     price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
@@ -100,8 +123,30 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = (
-            'name', 'category', 'description', 'price', 'sale_start', 'sale_end', 'is_on_sale',
-            'image', 'slug')
+            'name', 'category', 'description', 'images', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'slug')
+
+    def get_images(self, obj):
+        return super().get_images(obj)
+
+    def update(self, instance, validated_data):
+        """Handle adding and deleting images when updating a product."""
+        # Pop out the fields for adding/deleting images
+        add_images = validated_data.pop('add_images', [])
+        delete_images = validated_data.pop('delete_images', [])
+
+        # Update other product fields
+        instance = super().update(instance, validated_data)
+
+        # Handle deleting images
+        if delete_images:
+            ProductImage.objects.filter(id__in=delete_images, product=instance).delete()
+
+        # Handle adding new images
+        if add_images:
+            for image_data in add_images:
+                ProductImage.objects.create(product=instance, image=image_data)
+
+        return instance
 
 
 class ProductParentCategorySerializer(serializers.ModelSerializer):
