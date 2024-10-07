@@ -8,32 +8,34 @@ import {
 } from "config";
 import { getToken, removeToken, setToken } from "utils/cookies";
 import { apiErrorHandler } from "./apiErrorHandler";
-import { AxiosResponse, AxiosError, AxiosRequestConfig } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 
-interface LoginData {
-  username: string;
-  password: string;
-  recaptcha: string;
+interface ReCaptchaData {
+  recaptcha: string | null;
 }
 
-interface RegisterData { 
+interface UsernameData {
   username: string;
-  email: string;
+}
+
+interface PasswordData {
   password: string;
   password_confirm: string;
-  recaptcha: string;
 }
 
-interface PasswordResetData {
-  password: string;
-  password_confirm: string;
-  recaptcha: string;
-}
-
-interface PasswordRecoveryData {
+interface EmailData {
   email: string;
-  recaptcha: string;
 }
+
+interface LoginData extends ReCaptchaData, UsernameData {
+  password: string;
+}
+
+interface RegisterData extends ReCaptchaData, UsernameData, PasswordData, EmailData {}
+
+interface PasswordResetData extends ReCaptchaData, PasswordData {}
+
+interface PasswordRecoveryData extends ReCaptchaData, EmailData {}
 
 interface AuthTokenResponse {
   token: string;
@@ -58,10 +60,10 @@ function handleApiError(error: unknown): void {
   }
 }
 
-export async function postData(endpoint: string, data: Record<string, any>): Promise<ApiResponse | undefined> {
+async function makePostRequest<T>(endpoint: string, data: Record<string, any>, additionalHeaders?: Record<string, string>): Promise<ApiResponse<T> | undefined> {
   try {
-    const response = await apiClient.post(endpoint, data, {
-      headers: getHeaders()
+    const response = await apiClient.post<T>(endpoint, data, {
+      headers: getHeaders(additionalHeaders)
     });
     return response;
   } catch (error: unknown) {
@@ -69,51 +71,30 @@ export async function postData(endpoint: string, data: Record<string, any>): Pro
   }
 }
 
-export async function postLogin({ username, password, recaptcha }: LoginData): Promise<ApiResponse<AuthTokenResponse> | undefined> {
-  try {
-    const authString = `${username}:${password}`;
-    const encodedAuthString = btoa(authString);
-
-    const response = await apiClient.post<AuthTokenResponse>(
-      API_LOGIN_USER_URL,
-      { recaptcha },
-      {
-        headers: getHeaders({
-          Authorization: `Basic ${encodedAuthString}`
-        })
-      }
-    );
-
-    if (response.status === 200) {
-      const { token, expiry } = response.data;
-      const expire = new Date(expiry);
-      setToken(token, expire);
-    }
-    return response;
-  } catch (error: unknown) {
-    handleApiError(error);
-  }
+export async function postData(endpoint: string, data: Record<string, any>): Promise<ApiResponse | undefined> {
+  return makePostRequest(endpoint, data);
 }
 
-export async function registerUser({ username, email, password, password_confirm, recaptcha }: RegisterData): Promise<ApiResponse | undefined> {
-  try {
-    const response = await apiClient.post(
-      API_REGISTER_USER_URL,
-      {
-        username,
-        email,
-        password,
-        password_confirm,
-        recaptcha,
-      },
-      {
-        headers: getHeaders()
-      }
-    );
-    return response;
-  } catch (error: unknown) {
-    handleApiError(error);
+export async function postLogin({ username, password, recaptcha }: LoginData): Promise<ApiResponse<AuthTokenResponse> | undefined> {
+  const authString = `${username}:${password}`;
+  const encodedAuthString = btoa(authString);
+
+  const response = await makePostRequest<AuthTokenResponse>(
+    API_LOGIN_USER_URL,
+    { recaptcha },
+    { Authorization: `Basic ${encodedAuthString}` }
+  );
+
+  if (response?.status === 200) {
+    const { token, expiry } = response.data;
+    const expire = new Date(expiry);
+    setToken(token, expire);
   }
+  return response;
+}
+
+export async function registerUser(data: RegisterData): Promise<ApiResponse | undefined> {
+  return makePostRequest(API_REGISTER_USER_URL, data);
 }
 
 export async function getData(endpoint: string): Promise<ApiResponse | undefined> {
@@ -139,14 +120,7 @@ export async function getDataUsingUserToken(endpoint: string, token: string): Pr
 }
 
 export async function activateUser(token: string): Promise<ApiResponse | undefined> {
-  try {
-    const response = await apiClient.post(`${API_ACTIVATE_USER_URL}/${token}/`, {}, {
-      headers: getHeaders()
-    });
-    return response;
-  } catch (error: unknown) {
-    handleApiError(error);
-  }
+  return makePostRequest(`${API_ACTIVATE_USER_URL}/${token}/`, {});
 }
 
 export async function validatePasswordResetToken(token: string): Promise<ApiResponse | undefined> {
@@ -160,57 +134,19 @@ export async function validatePasswordResetToken(token: string): Promise<ApiResp
   }
 }
 
-export async function postPasswordReset(token: string, { password, password_confirm, recaptcha }: PasswordResetData): Promise<ApiResponse | undefined> {
-  try {
-    const response = await apiClient.post(
-      `${API_PASSWORD_RESET_URL}/${token}/`,
-      {
-        password,
-        password_confirm,
-        recaptcha,
-      },
-      {
-        headers: getHeaders()
-      }
-    );
-    return response;
-  } catch (error: unknown) {
-    handleApiError(error);
-  }
+export async function postPasswordReset(token: string, data: PasswordResetData): Promise<ApiResponse | undefined> {
+  return makePostRequest(`${API_PASSWORD_RESET_URL}/${token}/`, data);
 }
 
-export async function postPasswordRecovery({ email, recaptcha }: PasswordRecoveryData): Promise<ApiResponse | undefined> {
-  try {
-    const response = await apiClient.post(
-      API_PASSWORD_RESET_URL,
-      {
-        email,
-        recaptcha,
-      },
-      {
-        headers: getHeaders()
-      }
-    );
-    return response;
-  } catch (error: unknown) {
-    handleApiError(error);
-  }
+export async function postPasswordRecovery(data: PasswordRecoveryData): Promise<ApiResponse | undefined> {
+  return makePostRequest(API_PASSWORD_RESET_URL, data);
 }
 
 export async function logoutUser(): Promise<void> {
   const token = getToken();
   try {
     if (token) {
-      await apiClient.post(
-        API_LOGOUT_USER_URL,
-        {},
-        {
-          headers: getHeaders({
-            Authorization: `Token ${token}`
-          })
-        }
-      );
-      
+      await makePostRequest(API_LOGOUT_USER_URL, {}, { Authorization: `Token ${token}` });
       console.log("Logged out successfully");
     }
   } catch (error: unknown) {
