@@ -6,7 +6,7 @@ import "./Product.css";
 import CategoryParentTree from "components/CategoryParentTree";
 import { useAuth } from "hooks/useAuth";
 
-interface Product {
+interface ProductDetails {
   name: string;
   category: string;
   description: string;
@@ -14,7 +14,7 @@ interface Product {
   sale_start: string | null;
   sale_end: string | null;
   is_on_sale: boolean;
-  image: string;
+  images: Image[];
   slug: string;
 }
 
@@ -26,7 +26,7 @@ export default function Product() {
   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
-  const [product, setProduct] = useState<Product>({
+  const [product, setProduct] = useState<ProductDetails>({
     name: "",
     category: "",
     description: "",
@@ -34,7 +34,7 @@ export default function Product() {
     sale_start: null,
     sale_end: null,
     is_on_sale: false,
-    image: "",
+    images: [{"image":""}],
     slug: "",
   });
 
@@ -81,7 +81,7 @@ export default function Product() {
       <CategoryParentTree className="category-tree" currentCategory={product.category} />
       <div className='product-top-info d-flex flex-row'>
         <div className='product-images'>
-          <img src={product.image} alt={product.name} />
+          <img src={product.images[0].image} alt={product.name} />
         </div>
         <div className='product-cart-info d-flex flex-column mx-auto'>
           <p>{product.name}</p>
