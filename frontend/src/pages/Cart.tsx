@@ -9,17 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
 import { Typography } from "@mui/material";
 
-interface Product {
-  slug: string;
-  name: string;
-  image: string;
-  price: number;
-}
 
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
+
 
 export default function Cart() {
   const isLoggedIn = useAuth();
@@ -118,7 +109,7 @@ export default function Cart() {
             }`}
           >
             <img
-              src={item.product.image}
+              src={item.product.images[0].image}
               alt={item.product.name}
               className="me-3"
             />
