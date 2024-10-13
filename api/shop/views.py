@@ -9,8 +9,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
-    CategoryProductListSerializer, CategoryNameSlugSerializer, ProductParentCategorySerializer, \
-    SearchAssociatedCategorySerializer, ShoppingCartItemSerializer, ShoppingCartSerializer
+    CategoryProductListSerializer, CategoryNameSlugCountSerializer, ProductParentCategorySerializer, \
+    SearchAssociatedCategorySerializer, ShoppingCartItemSerializer, ShoppingCartSerializer, ProductUpdateSerializer
 from .models import Product, Category, ShoppingCartItem, ShoppingCart
 from rest_framework.views import APIView
 from rest_framework import status
@@ -243,7 +243,7 @@ class CategoryProductsView(RetrieveAPIView):
 
 class CategoryParentsView(RetrieveAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategoryNameSlugSerializer
+    serializer_class = CategoryNameSlugCountSerializer
     lookup_field = 'slug'
 
     def get_object(self):
