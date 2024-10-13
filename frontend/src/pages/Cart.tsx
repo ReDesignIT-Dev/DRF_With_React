@@ -1,33 +1,30 @@
 import React, { useEffect, useState, MouseEvent } from "react";
-import { getCart, updateCart, deleteFromCart } from "services/shopServices/cartLogic";
 import Loading from "components/Loading";
-import "./Cart.css";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { Modal, Button } from "react-bootstrap"; // Import React Bootstrap components
-import { useAuth } from "hooks/useAuth";
+import { Modal, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
 import { Typography } from "@mui/material";
-
-
-
+import { useCart } from "services/shopServices/cartLogic"; 
+import "./Cart.css";
 
 export default function Cart() {
-  const isLoggedIn = useAuth();
-  const [items, setItems] = useState<CartItem[]>([]);
+  const { getCart, updateCart, deleteFromCart, calculateTotal } = useCart(); 
+  const [items, setItems] = useState<CartItem[]>([]); 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<string>("0");
-  const [showModal, setShowModal] = useState<boolean>(false); // State for controlling the modal visibility
+  const [showModal, setShowModal] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
         setLoading(true);
-        const responseItems: CartItem[] = await getCart(isLoggedIn);
-        setItems(responseItems);
-        calculateTotal(responseItems);
+        const responseItems = await getCart();
+        setItems(responseItems); 
+        const totalAmount = calculateTotal(responseItems); 
+        setTotal(totalAmount.toFixed(2)); 
       } catch (error) {
         setError("Error fetching products.");
       } finally {
@@ -35,7 +32,7 @@ export default function Cart() {
       }
     };
     fetchCart();
-  }, [isLoggedIn]);
+  }, [getCart, calculateTotal]);
 
   const handleQuantityChange = async (product: Product, quantity: number) => {
     if (isNaN(quantity) || quantity < 1) {
@@ -44,14 +41,15 @@ export default function Cart() {
     }
     setError("");
     try {
-      await updateCart(isLoggedIn, product, quantity);
+      await updateCart(product, quantity); 
       const updatedItems = items.map((item) =>
         item.product && item.product.slug === product.slug
           ? { ...item, quantity }
           : item
       );
-      setItems(updatedItems);
-      calculateTotal(updatedItems);
+      setItems(updatedItems); 
+      const totalAmount = calculateTotal(updatedItems); 
+      setTotal(totalAmount.toFixed(2));
     } catch (error: any) {
       setError(error.message);
     }
@@ -59,39 +57,29 @@ export default function Cart() {
 
   const handleRemoveItem = async (product: Product) => {
     try {
-      await deleteFromCart(isLoggedIn, product);
+      await deleteFromCart(product);
       const updatedItems = items.filter(
         (item) => item.product && item.product.slug !== product.slug
       );
       setItems(updatedItems);
-      calculateTotal(updatedItems);
+      const totalAmount = calculateTotal(updatedItems); 
+      setTotal(totalAmount.toFixed(2)); 
     } catch (error: any) {
       setError(error.message);
     }
   };
 
-  const handleNavigationClick = (
-    slug: string,
-    event: MouseEvent<HTMLDivElement>
-  ) => {
+  const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     navigate(`${API_PRODUCT_URL}/${slug}`);
   };
 
-  const calculateTotal = (updatedItems: CartItem[]) => {
-    const totalAmount = updatedItems.reduce(
-      (sum, item) => sum + item.quantity * item.product.price,
-      0
-    );
-    setTotal(totalAmount.toFixed(2));
-  };
-
   const handleCheckout = () => {
-    setShowModal(true); // Show the modal
+    setShowModal(true); 
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Close the modal
+    setShowModal(false); 
   };
 
   if (loading) {
@@ -111,7 +99,7 @@ export default function Cart() {
             <img
               src={item.product.images[0].image}
               alt={item.product.name}
-              className="me-3"
+              className="cart-item-image me-3"
             />
             <div className="flex-grow-1">
               <Typography
@@ -122,7 +110,7 @@ export default function Cart() {
                 sx={{
                   cursor: 'pointer',
                   '&:hover': {
-                    color: 'blue', // Change this to your desired hover color
+                    color: 'blue', 
                   },
                 }}
               >
