@@ -69,8 +69,12 @@ class ProductCreate(CreateAPIView):
 
 class ProductEditView(RetrieveUpdateDestroyAPIView):
     lookup_field = "slug"
-    serializer_class = ProductSerializer
     queryset = Product.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return ProductUpdateSerializer
+        return ProductSerializer
 
 
 class ProductView(RetrieveAPIView):
