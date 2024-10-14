@@ -4,13 +4,6 @@ import { useEffect, useState } from "react";
 import { API_CATEGORY_URL } from "config";
 import "./CategoryTree.css";
 
-interface Category {
-  slug: string;
-  name: string;
-  children?: Category[];
-  parent?: Category;
-}
-
 interface Params {
   [key: string]: string | undefined; 
   slug?: string;
