@@ -5,13 +5,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
 import { getAllSearchProducts } from "services/shopServices/apiRequestsShop";
 
-interface Product {
-  slug: string;
-  image: string;
-  name: string;
-  price: number;
-}
-
 interface ProductListProps {
   className?: string;
 }
@@ -57,7 +50,7 @@ export default function ProductList({ className }: ProductListProps) {
             role='button'
             onClick={(event) => handleNavigationClick(product.slug, event)}
           >
-            <img src={product.image} alt={product.name}></img>
+            <img src={product.images[0].image} alt={product.name}></img>
             <div className='product-details d-flex justify-content-between w-100'>
               <h2>{product.name}</h2>
               <p className='product-price'>{product.price} PLN</p>
