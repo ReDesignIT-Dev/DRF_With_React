@@ -1,18 +1,10 @@
 import { useEffect, useState, MouseEvent } from "react";
 import { getAllProductsInCategory } from "services/shopServices/apiRequestsShop";
-import { addToCart } from "services/shopServices/cartLogic";
+import { useCart } from "services/shopServices/cartLogic"; 
 import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_PRODUCT_URL } from "config";
-import { useAuth } from "hooks/useAuth";
-
-interface Product {
-  name: string;
-  slug: string;
-  image: string;
-  price: number;
-}
 
 interface ProductListProps {
   className?: string;
@@ -25,7 +17,8 @@ export default function ProductList({ className }: ProductListProps) {
   const navigate = useNavigate();
   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-  const isLoggedIn = useAuth();
+
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -57,10 +50,10 @@ export default function ProductList({ className }: ProductListProps) {
     event.stopPropagation();
 
     try {
-      await addToCart(isLoggedIn, product, 1);
+      await addToCart(product, 1); 
       setConfirmationMessage(`${product.name} was added to the cart!`);
       setShowConfirmation(true);
-      setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
+      setTimeout(() => setShowConfirmation(false), 3000); 
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
@@ -72,17 +65,17 @@ export default function ProductList({ className }: ProductListProps) {
         {products.map((product) => (
           <div
             key={product.slug}
-            className='single-product-on-list d-flex flex-row w-100'
-            role='button'
+            className="single-product-on-list d-flex flex-row w-100"
+            role="button"
             onClick={(event) => handleNavigationClick(product.slug, event)}
           >
-            <img src={product.image} alt={product.name}></img>
-            <div className='product-details d-flex justify-content-between w-100'>
+            <img src={product.images[0].image} alt={product.name}></img>
+            <div className="product-details d-flex justify-content-between w-100">
               <h2>{product.name}</h2>
-              <div className='product-price-and-cart d-flex align-items-center'>
-                <p className='product-price'>{product.price} PLN</p>
+              <div className="product-price-and-cart d-flex align-items-center">
+                <p className="product-price">{product.price} PLN</p>
                 <button
-                  className='product-add-to-cart-btn'
+                  className="product-add-to-cart-btn"
                   onClick={(event) => handleAddToCartClick(product, event)}
                 >
                   Add to cart
@@ -97,7 +90,7 @@ export default function ProductList({ className }: ProductListProps) {
 
   return (
     <div className={`product-list-container d-flex flex-column gap-3 w-100 p-3 ${className}`}>
-      {showConfirmation && <div className='confirmation-message'>{confirmationMessage}</div>}
+      {showConfirmation && <div className="confirmation-message">{confirmationMessage}</div>}
       {listProducts()}
     </div>
   );
