@@ -1,10 +1,23 @@
 import React, { useEffect, useState, ChangeEvent, MouseEvent } from "react";
 import { useParams } from "react-router-dom";
 import { getProduct } from "services/shopServices/apiRequestsShop";
-import { addToCart } from "services/shopServices/cartLogic";
-import "./Product.css";
-import CategoryParentTree from "components/CategoryParentTree";
-import { useAuth } from "hooks/useAuth";
+import { useCart } from "services/shopServices/cartLogic";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import {
+  Box,
+  Grid,
+  Typography,
+  Button,
+  TextField,
+  Card,
+  CardMedia,
+} from "@mui/material";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import CategoryTopBar from "components/CategoryTopBar";
 
 interface ProductDetails {
   name: string;
@@ -20,12 +33,12 @@ interface ProductDetails {
 
 export default function Product() {
   const params = useParams<Record<string, string>>();
-  const isLoggedIn = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-
+  const [selectedImage, setSelectedImage] = useState<string>("");
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<ProductDetails>({
     name: "",
     category: "",
@@ -34,7 +47,7 @@ export default function Product() {
     sale_start: null,
     sale_end: null,
     is_on_sale: false,
-    images: [{"image":""}],
+    images: [{ image: "" }],
     slug: "",
   });
 
@@ -45,6 +58,7 @@ export default function Product() {
           const response = await getProduct(params.slug);
           if (response && response.data) {
             setProduct(response.data);
+            setSelectedImage(response.data.images[0].image);
           }
         }
       } catch (error) {
@@ -63,55 +77,144 @@ export default function Product() {
     setError(null);
   };
 
-  const handleAddToCartClick = async (product: Product, event: MouseEvent<HTMLButtonElement>) => {
+  const handleAddToCartClick = async (
+    product: ProductDetails,
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
     event.stopPropagation();
     try {
-      await addToCart(isLoggedIn, product, quantity);
+      await addToCart(product, quantity);
       setConfirmationMessage(`Product added to the cart!`);
       setShowConfirmation(true);
-      setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
+      setTimeout(() => setShowConfirmation(false), 3000);
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
   };
 
   return (
-    <div className='product-view-container d-flex flex-column mx-auto'>
-      {showConfirmation && <div className='confirmation-message'>{confirmationMessage}</div>}
-      <CategoryParentTree className="category-tree" currentCategory={product.category} />
-      <div className='product-top-info d-flex flex-row'>
-        <div className='product-images'>
-          <img src={product.images[0].image} alt={product.name} />
-        </div>
-        <div className='product-cart-info d-flex flex-column mx-auto'>
-          <p>{product.name}</p>
-          <p>{product.price} PLN</p>
-          <div className='d-flex flex-row me-2 justify-content-center align-items-center'>
-            Quantity:
-            <input
-              type='number'
+    <Box maxWidth="lg" mx="auto" p={3}>
+      {showConfirmation && (
+        <Box mb={2} p={2} bgcolor="success.main" color="white" borderRadius={1}>
+          {confirmationMessage}
+        </Box>
+      )}
+      <CategoryTopBar
+        className="bg-secondary mt-3 p-2 mb-2"
+        currentCategory={product.category}
+      />
+
+      {/* Main product info */}
+      <Grid>
+      <Grid container spacing={4}>
+        {/* Left: Product images */}
+        <Grid item xs={12} md={6}>
+          <Box mb={2}>
+            <Card>
+              <CardMedia
+                component="img"
+                image={selectedImage}
+                alt={product.name}
+                sx={{ width: "100%", height: "auto" }}
+              />
+            </Card>
+          </Box>
+
+          {/* Thumbnails using Swiper */}
+          <Box>
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              spaceBetween={10}
+              slidesPerView={3}
+              navigation
+              pagination={{ clickable: true }}
+              scrollbar={{ draggable: true }}
+            >
+              {product.images.map((img, index) => (
+                <SwiperSlide key={index}>
+                  <Card
+                    onClick={() => setSelectedImage(img.image)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <CardMedia
+                      component="img"
+                      image={img.image}
+                      alt={`Product image ${index + 1}`}
+                      sx={{ width: "100%", height: "auto" }}
+                    />
+                  </Card>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
+        </Grid>
+
+        {/* Right: Product details and cart actions */}
+        <Grid
+          item
+          xs={12}
+          md={6}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <Typography
+            variant="h4"
+            gutterBottom
+          >
+            {product.name}
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            {product.price} PLN
+          </Typography>
+
+          <Box
+            mt={3}
+            display="flex"
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="body1" sx={{ mr: 2 }}>
+              Quantity:
+            </Typography>
+            <TextField
+              type="number"
               value={quantity}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleQuantityChange(Math.max(1, parseInt(e.target.value, 10)))
               }
-              min='1'
-              className='quantity-input form-control d-inline-block w-auto mx-2'
+              inputProps={{ min: 1 }}
+              sx={{ width: 80 }}
             />
-            <button
-              className='product-add-to-cart-btn'
-              onClick={(event) => handleAddToCartClick(product, event)}
-            >
-              Add to cart
-            </button>
-          </div>
+          </Box>
+
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3 }}
+            onClick={(event) => handleAddToCartClick(product, event)}
+          >
+            Add to Cart
+          </Button>
+
           {error && (
-            <div className='error-message' style={{ color: "red", marginBottom: "10px" }}>
+            <Typography color="error" sx={{ mt: 2 }}>
               {error}
-            </div>
+            </Typography>
           )}
-        </div>
-      </div>
-      <div className='product-description'>{product.description}</div>
-    </div>
+
+          
+        </Grid>
+        <Box mt={4}>
+            <Typography variant="body1">{product.description}</Typography>
+          </Box>
+          </Grid>
+      </Grid>
+    </Box>
   );
 }
