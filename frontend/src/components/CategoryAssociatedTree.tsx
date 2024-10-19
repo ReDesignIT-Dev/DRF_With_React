@@ -4,19 +4,13 @@ import { API_CATEGORY_URL } from "config";
 import useQueryParams from "hooks/useQueryParams";
 import "./CategoryAssociatedTree.css";
 import { getAllSearchAssociatedCategories } from "services/shopServices/apiRequestsShop";
-
-interface Category {
-  name: string;
-  slug: string;
-  product_count: number;
-  children?: Category[];
-}
-
 interface CategoryAssociatedTreeProps {
   className?: string;
 }
 
-const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({ className }) => {
+const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({
+  className,
+}) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
   const queryParams = useQueryParams();
@@ -24,7 +18,9 @@ const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({ classNa
   useEffect(() => {
     const fetchAssociatedCategoriesTree = async () => {
       try {
-        const response = await getAllSearchAssociatedCategories(queryParams.string);
+        const response = await getAllSearchAssociatedCategories(
+          queryParams.string
+        );
         if (response && response.data && response.data.categories) {
           setCategories(response.data.categories);
         } else {
@@ -38,7 +34,10 @@ const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({ classNa
     fetchAssociatedCategoriesTree();
   }, [queryParams]);
 
-  const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
+  const handleNavigationClick = (
+    slug: string,
+    event: MouseEvent<HTMLDivElement>
+  ) => {
     event.stopPropagation();
     navigate(`${API_CATEGORY_URL}/${slug}`);
   };
