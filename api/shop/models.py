@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from mptt.models import MPTTModel, TreeForeignKey
 from api.users.models import CustomUser
 from django.utils.text import slugify
@@ -61,24 +64,46 @@ def get_default_category():
 
 
 class Product(CommonFields):
-    category = models.ForeignKey(Category, related_name='product_images', on_delete=models.CASCADE,
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE,
                                  default=get_default_category)
     description = models.CharField(max_length=500, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_start = models.DateTimeField(null=True, blank=True)
     sale_end = models.DateTimeField(null=True, blank=True)
 
-    def get_main_image(self):
-        # Assuming the first image in the list is the main image
-        return self.images.first() if self.images.exists() else None
-
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+    position = models.PositiveIntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['product', 'position'], name='unique_product_image_position')
+        ]
+        ordering = ['position']
+
+    def save(self, *args, **kwargs):
+        if not self.position:
+            max_position = ProductImage.objects.filter(product=self.product).aggregate(models.Max('position'))[
+                'position__max']
+            self.position = (max_position or 0) + 1
+
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def get_default_image():
+        return settings.MEDIA_URL + 'shop_default_image.jpg'
 
     def __str__(self):
-        return f"Image for {self.product.name}"
+        return f"Image for {self.product.name} (Position {self.position})"
+
+
+@receiver(post_delete, sender=ProductImage)
+def delete_image_file(sender, instance, **kwargs):
+    # Check if the image file exists before attempting to delete it
+    if instance.image:
+        instance.image.delete(save=False)
 
 
 class ShoppingCart(models.Model):
