@@ -4,9 +4,14 @@ interface Image {
 
 interface Product {
   name: string;
-  slug: string;
-  images: Image[];
+  category: string;
+  description: string;
   price: number;
+  sale_start: string | null;
+  sale_end: string | null;
+  is_on_sale: boolean;
+  images: Image[];
+  slug: string;
 }
 
 interface CartItem {
