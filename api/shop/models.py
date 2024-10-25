@@ -91,10 +91,6 @@ class ProductImage(models.Model):
 
         super().save(*args, **kwargs)
 
-    @staticmethod
-    def get_default_image():
-        return settings.MEDIA_URL + 'shop_default_image.jpg'
-
     def __str__(self):
         return f"Image for {self.product.name} (Position {self.position})"
 
