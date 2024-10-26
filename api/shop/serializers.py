@@ -27,10 +27,22 @@ class SearchAssociatedCategorySerializer(serializers.ModelSerializer):
         return obj.get('children', [])
 
 
-class CategoryNameSlugSerializer(serializers.ModelSerializer):
+class CategoryNameSlugCountSerializer(serializers.ModelSerializer):
+    product_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ['name', 'slug']
+        fields = ['name', 'slug', 'product_count']
+
+    def get_product_count(self, obj):
+        # Count products in the current category
+        product_count = obj.products.count()
+
+        # Count products in all descendant categories (subcategories)
+        for descendant in obj.get_descendants():
+            product_count += descendant.products.count()
+
+        return product_count
 
 
 class CategoryChildrenListSerializer(serializers.ModelSerializer):
