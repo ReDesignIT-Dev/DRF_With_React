@@ -47,7 +47,7 @@ class CategoryNameSlugCountSerializer(serializers.ModelSerializer):
 
 class CategoryChildrenListSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
-    parent = CategoryNameSlugSerializer()
+    parent = CategoryNameSlugCountSerializer()
 
     class Meta:
         model = Category
@@ -55,7 +55,7 @@ class CategoryChildrenListSerializer(serializers.ModelSerializer):
 
     def get_children(self, obj):
         children = obj.children.all()
-        return CategoryNameSlugSerializer(children, many=True).data
+        return CategoryNameSlugCountSerializer(children, many=True).data
 
 
 class CategoryProductListSerializer(serializers.ModelSerializer):
