@@ -2,23 +2,12 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import Product, ShoppingCartItem, Category, ShoppingCart, ProductImage
 from decimal import Decimal
-from django.conf import settings
-
-
-class DefaultImageMixin:
-    def get_images(self, obj):
-        images = obj.images.all()
-        request = self.context.get('request')
-        if images.exists():
-            return ProductImageSerializer(images, many=True, context={'request': request}).data
-        default_image_url = request.build_absolute_uri(settings.MEDIA_URL + 'shop_default_image.jpg')
-        return [{'image': default_image_url}]
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['id', 'image']
+        fields = ['id', 'image', 'position']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -57,8 +46,8 @@ class CategoryChildrenListSerializer(serializers.ModelSerializer):
         return CategoryNameSlugSerializer(children, many=True).data
 
 
-class CategoryProductListSerializer(DefaultImageMixin, serializers.ModelSerializer):
-    images = serializers.SerializerMethodField()
+class CategoryProductListSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
@@ -93,8 +82,8 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
         return data
 
 
-class ProductSerializer(DefaultImageMixin, serializers.ModelSerializer):
-    images = serializers.SerializerMethodField()
+class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
     description = serializers.CharField(min_length=2, max_length=500)
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
     price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
