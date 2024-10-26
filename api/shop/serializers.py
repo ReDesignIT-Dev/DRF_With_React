@@ -120,30 +120,33 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = (
-            'name', 'category', 'description', 'images', 'price', 'sale_start', 'sale_end', 'is_on_sale', 'slug')
+        fields = ('id', 'name', 'category', 'description', 'images', 'images', 'price', 'sale_start', 'sale_end',
+                  'is_on_sale', 'slug')
 
-    def get_images(self, obj):
-        return super().get_images(obj)
+
+class ProductUpdateSerializer(serializers.ModelSerializer):
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        required=False,
+        write_only=True,
+        help_text="A list of images to be added to the product",
+    )
+
+    class Meta:
+        model = Product
+        fields = ('name', 'category', 'description', 'images', 'price', 'sale_start', 'sale_end')
+        extra_kwargs = {
+            'name': {'required': False},
+            'description': {'required': False},
+            'price': {'required': False},
+        }
 
     def update(self, instance, validated_data):
-        """Handle adding and deleting images when updating a product."""
-        # Pop out the fields for adding/deleting images
-        add_images = validated_data.pop('add_images', [])
-        delete_images = validated_data.pop('delete_images', [])
-
-        # Update other product fields
+        new_images = validated_data.pop('images', [])
+        instance.images.all().delete()
+        for img in new_images:
+            ProductImage.objects.create(product=instance, image=img)
         instance = super().update(instance, validated_data)
-
-        # Handle deleting images
-        if delete_images:
-            ProductImage.objects.filter(id__in=delete_images, product=instance).delete()
-
-        # Handle adding new images
-        if add_images:
-            for image_data in add_images:
-                ProductImage.objects.create(product=instance, image=image_data)
-
         return instance
 
 
