@@ -65,9 +65,6 @@ class CategoryProductListSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['name', 'slug', 'price', 'images']
 
-    def get_images(self, obj):
-        return super().get_images(obj)
-
 
 class CategoryTreeSerializer(serializers.ModelSerializer):
     parent_name = serializers.SerializerMethodField()
