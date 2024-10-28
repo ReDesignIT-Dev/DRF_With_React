@@ -1,5 +1,5 @@
 import React from 'react';
-import racoonLogo from 'images/racoon-logo.png';
+import racoonLogo from 'assets/images/racoon-logo.png';
 
 const LogoRacoon: React.FC = () => {
   return (
