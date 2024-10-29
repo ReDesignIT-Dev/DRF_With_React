@@ -38,6 +38,7 @@ class CommonFields(models.Model):
 
 class Category(CommonFields, MPTTModel):
     description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='category_images/', blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children',
                             on_delete=models.SET_NULL)
 
