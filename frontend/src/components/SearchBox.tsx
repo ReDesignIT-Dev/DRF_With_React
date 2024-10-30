@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import "./SearchBox.scss";
-import { ReactComponent as SearchIcon } from "images/search.svg";
+import { ReactComponent as SearchIcon } from "assets/images/search.svg";
 import { FRONTEND_SEARCH_URL } from "config";
 import { useNavigate } from "react-router-dom";
 
