@@ -76,6 +76,7 @@ class Product(CommonFields):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+    alt_text = models.CharField(max_length=255, blank=True, default="")
     position = models.PositiveIntegerField()
 
     class Meta:
