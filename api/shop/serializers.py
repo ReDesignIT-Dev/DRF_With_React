@@ -5,9 +5,25 @@ from decimal import Decimal
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    src = serializers.SerializerMethodField()
+    altText = serializers.SerializerMethodField()
+
     class Meta:
         model = ProductImage
-        fields = ['id', 'image', 'position']
+        fields = ['id', 'src', 'altText', 'position']
+
+    def get_src(self, obj):
+        request = self.context.get('request')
+        src = obj.image.url if obj.image else ""
+
+        if request:
+            src = request.build_absolute_uri(src)
+
+        return src
+
+    def get_altText(self, obj):
+        return obj.alt_text if obj.alt_text else ""  # Return altText as a string, not a dictionary
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
