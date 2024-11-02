@@ -1,5 +1,8 @@
 interface Image {
-  image: string;
+  id?: string;
+  src: string;
+  altText?: string;
+  position?: number;
 }
 
 interface Product {
@@ -7,9 +10,9 @@ interface Product {
   category: string;
   description: string;
   price: number;
-  sale_start: string | null;
-  sale_end: string | null;
-  is_on_sale: boolean;
+  saleStart?: Date | null;
+  saleEnd?: Date | null;
+  isOnSale: boolean;
   images: Image[];
   slug: string;
 }
@@ -22,7 +25,8 @@ interface CartItem {
 interface Category {
   slug: string;
   name: string;
+  image?: Image;
   children?: Category[];
-  parent?: Category;
-  product_count: number;
+  parent?: Category | null;
+  productCount?: number;
 }
