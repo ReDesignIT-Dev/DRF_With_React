@@ -13,11 +13,6 @@ import {
 import { API_CATEGORY_URL } from "config";
 import { RootState, AppDispatch } from "../reduxComponents/store"; 
 
-interface Category {
-  name: string;
-  slug: string;
-  children?: Category[];
-}
 
 const CategoryDropdown: React.FC = () => {
   const { categories, isLoading, error } = useSelector((state: RootState) => state.categories);
