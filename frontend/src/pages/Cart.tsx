@@ -97,7 +97,7 @@ export default function Cart() {
             }`}
           >
             <img
-              src={item.product.images[0].image}
+              src={item.product.images[0].src}
               alt={item.product.name}
               className="cart-item-image me-3"
             />
