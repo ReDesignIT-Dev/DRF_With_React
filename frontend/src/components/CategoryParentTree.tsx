@@ -1,7 +1,7 @@
 import { useEffect, useState, MouseEvent } from "react";
 import { useParams, useNavigate, useLocation, Params } from "react-router-dom";
 import { getAllParentsOfCategory, getProductParentCategory } from "services/shopServices/apiRequestsShop";
-import { API_CATEGORY_URL, API_PRODUCT_URL } from "config";
+import { FRONTEND_CATEGORY_URL, FRONTEND_PRODUCT_URL, FRONTEND_SHOP_URL } from "config";
 import "./CategoryParentTree.css";
 
 interface Ancestor {
@@ -53,16 +53,16 @@ export default function CategoryParentTree({ className, currentCategory }: Categ
     };
 
     const slug = params.slug as string;
-    if (location.pathname.startsWith(API_CATEGORY_URL)) {
+    if (location.pathname.startsWith(`${FRONTEND_SHOP_URL}${FRONTEND_CATEGORY_URL}`)) {
       fetchCategoryParents(slug);
-    } else if (location.pathname.startsWith(API_PRODUCT_URL)) {
+    } else if (location.pathname.startsWith(`${FRONTEND_SHOP_URL}${FRONTEND_PRODUCT_URL}`)) {
       fetchProductCategoryParents(slug);
     }
   }, [params, location.pathname, currentCategory]);
 
   const handleNavigationClick = (slug: string, event: MouseEvent<HTMLSpanElement>) => {
     event.stopPropagation();
-    navigate(`${API_CATEGORY_URL}/${slug}`);
+    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_CATEGORY_URL}/${slug}`);
   };
 
   return (
