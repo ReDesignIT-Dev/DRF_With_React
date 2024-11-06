@@ -18,18 +18,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import CategoryTopBar from "components/CategoryTopBar";
-
-interface ProductDetails {
-  name: string;
-  category: string;
-  description: string;
-  price: number;
-  sale_start: string | null;
-  sale_end: string | null;
-  is_on_sale: boolean;
-  images: Image[];
-  slug: string;
-}
+import Lightbox from "react-18-image-lightbox";
+import "react-18-image-lightbox/style.css";
+import shopDefaultImage from "assets/images/shop_default_image.jpg";
 
 export default function Product() {
   const params = useParams<Record<string, string>>();
@@ -38,35 +29,47 @@ export default function Product() {
   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string>("");
+  const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const { addToCart } = useCart();
-  const [product, setProduct] = useState<ProductDetails>({
+  const [product, setProduct] = useState<Product>({
     name: "",
     category: "",
     description: "",
     price: 0,
-    sale_start: null,
-    sale_end: null,
-    is_on_sale: false,
-    images: [{ image: "" }],
+    saleStart: null,
+    saleEnd: null,
+    isOnSale: false,
+    images: [{ src: shopDefaultImage }],
     slug: "",
   });
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        if (params.slug) {
-          const response = await getProduct(params.slug);
-          if (response && response.data) {
-            setProduct(response.data);
-            setSelectedImage(response.data.images[0].image);
-          }
+        if (!params.slug) return;
+  
+        const response = await getProduct(params.slug);
+        const productData = response?.data;
+  
+        if (productData) {
+          const images = productData.images;
+          const selectedImage = images?.[0]?.src || shopDefaultImage;
+          
+          setSelectedImage(selectedImage);
+          setProduct({
+            ...productData,
+            images: images.length > 0 ? images : [{ src: shopDefaultImage }],
+          });
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching product data:", error);
       }
     };
+  
     fetchProduct();
-  }, [params]);
+  }, [params.slug]);
+  
 
   const handleQuantityChange = (quantity: number) => {
     if (isNaN(quantity) || quantity < 1) {
@@ -78,7 +81,7 @@ export default function Product() {
   };
 
   const handleAddToCartClick = async (
-    product: ProductDetails,
+    product: Product,
     event: MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation();
@@ -90,6 +93,27 @@ export default function Product() {
     } catch (error) {
       console.error("Error adding product to cart:", error);
     }
+  };
+
+  const openLightbox = (index: number) => {
+    if (!isLightboxOpen) {
+      const img = new Image();
+      img.src = product.images[index].src;
+      img.onload = () => {
+        setCurrentImageIndex(index);
+        setIsLightboxOpen(true);
+      };
+    }
+  };
+
+  const handleLightboxNext = () => {
+    setCurrentImageIndex((currentImageIndex + 1) % product.images.length);
+  };
+
+  const handleLightboxPrev = () => {
+    setCurrentImageIndex(
+      (currentImageIndex + product.images.length - 1) % product.images.length
+    );
   };
 
   return (
@@ -106,115 +130,140 @@ export default function Product() {
 
       {/* Main product info */}
       <Grid>
-      <Grid container spacing={4}>
-        {/* Left: Product images */}
-        <Grid item xs={12} md={6}>
-          <Box mb={2}>
-            <Card>
-              <CardMedia
-                component="img"
-                image={selectedImage}
-                alt={product.name}
-                sx={{ width: "100%", height: "auto" }}
-              />
-            </Card>
-          </Box>
+        <Grid container spacing={4}>
+          {/* Left: Product images */}
+          <Grid item xs={12} md={6}>
+            <Box mb={2}>
+              <Card onClick={() => openLightbox(currentImageIndex)}>
+                <CardMedia
+                  component="img"
+                  image={selectedImage}
+                  alt={product.name}
+                  sx={{
+                    width: "100%",
+                    height: "400px",
+                    objectFit: "contain",
+                    cursor: "pointer",
+                  }}
+                />
+              </Card>
+            </Box>
 
-          {/* Thumbnails using Swiper */}
-          <Box>
-            <Swiper
-              modules={[Navigation, Pagination, Scrollbar, A11y]}
-              spaceBetween={10}
-              slidesPerView={3}
-              navigation
-              pagination={{ clickable: true }}
-              scrollbar={{ draggable: true }}
-            >
-              {product.images.map((img, index) => (
-                <SwiperSlide key={index}>
-                  <Card
-                    onClick={() => setSelectedImage(img.image)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <CardMedia
-                      component="img"
-                      image={img.image}
-                      alt={`Product image ${index + 1}`}
-                      sx={{ width: "100%", height: "auto" }}
-                    />
-                  </Card>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Box>
-        </Grid>
+            {/* Thumbnails using Swiper */}
+            <Box>
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={10}
+                slidesPerView={3}
+                navigation
+                pagination={{ clickable: true }}
+                scrollbar={{ draggable: true }}
+              >
+                {product.images.map((img, index) => (
+                  <SwiperSlide key={index}>
+                    <Card
+                      onClick={() => {
+                        setSelectedImage(img.src);
+                        setCurrentImageIndex(index);
+                      }}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      <CardMedia
+                        component="img"
+                        image={img.src}
+                        alt={`Product image ${index + 1}`}
+                        sx={{ width: "100%", height: "auto" }}
+                      />
+                    </Card>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Box>
+          </Grid>
 
-        {/* Right: Product details and cart actions */}
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-        >
-          <Typography
-            variant="h4"
-            gutterBottom
-          >
-            {product.name}
-          </Typography>
-          <Typography variant="h6" color="textSecondary">
-            {product.price} PLN
-          </Typography>
-
-          <Box
-            mt={3}
-            display="flex"
+          {/* Right: Product details and cart actions */}
+          <Grid
+            item
+            xs={12}
+            md={6}
             sx={{
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",
             }}
           >
-            <Typography variant="body1" sx={{ mr: 2 }}>
-              Quantity:
+            <Typography variant="h4" gutterBottom>
+              {product.name}
             </Typography>
-            <TextField
-              type="number"
-              value={quantity}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleQuantityChange(Math.max(1, parseInt(e.target.value, 10)))
-              }
-              inputProps={{ min: 1 }}
-              sx={{ width: 80 }}
-            />
-          </Box>
-
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3 }}
-            onClick={(event) => handleAddToCartClick(product, event)}
-          >
-            Add to Cart
-          </Button>
-
-          {error && (
-            <Typography color="error" sx={{ mt: 2 }}>
-              {error}
+            <Typography variant="h6" color="textSecondary">
+              {product.price} PLN
             </Typography>
-          )}
 
-          
-        </Grid>
-        <Box mt={4}>
-            <Typography variant="body1">{product.description}</Typography>
-          </Box>
+            <Box
+              mt={3}
+              display="flex"
+              sx={{
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <Typography variant="body1" sx={{ mr: 2 }}>
+                Quantity:
+              </Typography>
+              <TextField
+                type="number"
+                value={quantity}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleQuantityChange(
+                    Math.max(1, parseInt(e.target.value, 10))
+                  )
+                }
+                inputProps={{ min: 1 }}
+                sx={{ width: 80 }}
+              />
+            </Box>
+
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 3 }}
+              onClick={(event) => handleAddToCartClick(product, event)}
+            >
+              Add to Cart
+            </Button>
+
+            {error && (
+              <Typography color="error" sx={{ mt: 2 }}>
+                {error}
+              </Typography>
+            )}
           </Grid>
+        </Grid>
       </Grid>
+
+      <Box mt={4}>
+        <Typography variant="body1">{product.description}</Typography>
+      </Box>
+
+      {/* Lightbox for fullscreen images */}
+      {isLightboxOpen && (
+        <Lightbox
+          mainSrc={product.images[currentImageIndex].src}
+          nextSrc={
+            product.images[(currentImageIndex + 1) % product.images.length].src
+          }
+          prevSrc={
+            product.images[
+              (currentImageIndex + product.images.length - 1) %
+                product.images.length
+            ].src
+          }
+          onCloseRequest={() => setIsLightboxOpen(false)}
+          onMovePrevRequest={handleLightboxPrev}
+          onMoveNextRequest={handleLightboxNext}
+        />
+      )}
     </Box>
   );
 }
