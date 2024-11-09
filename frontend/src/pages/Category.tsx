@@ -32,7 +32,7 @@ export default function Category() {
     };
 
     checkCategory();
-  }, [params.slug]); // Dependency array should only include `params.slug`
+  }, [params.slug]); 
 
   if (categoryNotFound) {
     return <NotFound />;
