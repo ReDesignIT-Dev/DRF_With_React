@@ -1,5 +1,7 @@
 import "./Footer.css";
 import { Box, Typography, Link } from "@mui/material";
+import { LinkedIn, GitHub, YouTube } from "@mui/icons-material";
+
 const Footer: React.FC = () => {
   return (
     <Box
@@ -7,21 +9,31 @@ const Footer: React.FC = () => {
         backgroundColor: "#333",
         color: "#fff",
         py: 3,
-        textAlign: "center",
+        px: 2,
+        display: "flex",
+        alignItems: "center",
       }}
     >
-      <Typography variant="body2">
+      {/* Empty box as a spacer to center the text */}
+      <Box sx={{ flex: 1 }} />
+
+      {/* Centered Typography */}
+      <Typography variant="body2" sx={{ textAlign: "center", flex: 1 }}>
         © 2024 ReDesignIT. All rights reserved.
       </Typography>
-      <Link href="#" color="inherit" underline="hover" sx={{ mx: 1 }}>
-        LinkedIn
-      </Link>
-      <Link href="#" color="inherit" underline="hover" sx={{ mx: 1 }}>
-        GitHub
-      </Link>
-      <Link href="#" color="inherit" underline="hover" sx={{ mx: 1 }}>
-        YouTube
-      </Link>
+
+      {/* Icons on the right */}
+      <Box sx={{ display: "flex", gap: 2, flex: 1, justifyContent: "flex-end" }}>
+        <Link href="#" color="inherit" underline="none">
+          <LinkedIn fontSize="large" />
+        </Link>
+        <Link href="#" color="inherit" underline="none">
+          <GitHub fontSize="large" />
+        </Link>
+        <Link href="#" color="inherit" underline="none">
+          <YouTube fontSize="large" />
+        </Link>
+      </Box>
     </Box>
   );
 };
