@@ -1,5 +1,7 @@
 // config.ts
 export const BASE_URL: string = "http://localhost:8000";
+export const FRONTEND_SHOP_URL: string = "/shop";
+
 
 // user login/register based
 export const FRONTEND_LOGIN_URL: string = "/login";
@@ -9,8 +11,8 @@ export const FRONTEND_PASSWORD_RECOVERY_URL: string = "/password-recovery";
 export const FRONTEND_PASSWORD_RESET_URL: string = "/password-reset/:token";
 
 // shop based
-export const FRONTEND_PRODUCT_URL: string = "/product/:slug";
-export const FRONTEND_CATEGORY_URL: string = "/category/:slug";
+export const FRONTEND_PRODUCT_URL: string = "/product";
+export const FRONTEND_CATEGORY_URL: string = "/category";
 export const FRONTEND_SEARCH_URL: string = "/search";
 export const FRONTEND_CART_URL: string = "/cart";
 
