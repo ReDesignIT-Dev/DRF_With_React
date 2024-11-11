@@ -16,7 +16,7 @@ const ShopHeader: React.FC = () => {
       <div className="header d-flex flex-column py-2">
         <div className="top-header d-flex gap-2 justify-content-center align-items-center">
           <div className="header-logo d-flex justify-content-center align-items-center">
-            <Link to="/">
+            <Link to={FRONTEND_SHOP_URL}>
               <LogoRacoon />
             </Link>
           </div>
@@ -39,18 +39,7 @@ const ShopHeader: React.FC = () => {
           <div className="nav-element">
             <CategoryDropdown />
           </div>
-          <div className="nav-element">
-            <Link to="/"> Home </Link>
-          </div>
-          <div className="nav-element">
-            <Link to="/contact"> Contact </Link>
-          </div>
-          <div className="nav-element">
-            <Link to="/about"> About </Link>
-          </div>
-          <div className="nav-element">
-            <Link to="/about/history"> History </Link>
-          </div>
+
         </div>
       </div>
     </div>
