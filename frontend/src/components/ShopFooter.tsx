@@ -1,12 +1,37 @@
 import "./Footer.css";
-import React from "react";
+import { Box, Typography, Link } from "@mui/material";
+import { LinkedIn, GitHub, YouTube } from "@mui/icons-material";
 
-const ShopFooter: React.FC = () => {
+const Footer: React.FC = () => {
   return (
-    <div className="footer">
-      TODO FOOTER
-    </div>
+    <Box
+      sx={{
+        backgroundColor: "#333",
+        color: "#fff",
+        py: 2,
+        px: 6,
+        display: "flex",
+        alignItems: "center",
+        mt: 2,
+      }}
+    >
+      <Box sx={{ flex: 1 }} />
+      <Typography variant="body2" sx={{ textAlign: "center", flex: 1 }}>
+        © 2024 ReDesignIT. All rights reserved.
+      </Typography>
+      <Box sx={{ display: "flex", gap: 2, flex: 1, justifyContent: "flex-end" }}>
+        <Link href="https://www.linkedin.com/in/arkadiusz-budkowski/" color="inherit" underline="none">
+          <LinkedIn fontSize="large" />
+        </Link>
+        <Link href="https://github.com/Hamster-Inside" color="inherit" underline="none">
+          <GitHub fontSize="large" />
+        </Link>
+        <Link href="https://www.youtube.com/@ReDesignIT" color="inherit" underline="none">
+          <YouTube fontSize="large" />
+        </Link>
+      </Box>
+    </Box>
   );
-}
+};
 
-export default ShopFooter;
+export default Footer;
