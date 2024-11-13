@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getAllCategoryNamesAndSlugs } from "services/shopServices/apiRequestsShop";
 
-interface Category {
-  name: string;
-  slug: string;
-  children?: Category[];
-}
+
 
 interface CategoryState {
   categories: Category[];
