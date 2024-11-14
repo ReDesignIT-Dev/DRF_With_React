@@ -1,14 +1,21 @@
 import Footer from "components/Footer";
 import Header from "components/Header";
+import MainPageContainer from "components/MainPageContainer";
+import { Box } from "@mui/material";
 
 export default function Home() {
   return (
     <>
       <Header />
-      <div>
-        <h1> Main page </h1>
-        <h1>Welcome to Our Shop</h1>
-      </div>
+      <Box
+        sx={{
+          backgroundImage: "url(redesignit_background.jpg)",
+          backgroundSize: "cover",
+          width: "100vw"
+        }}
+      >
+      <MainPageContainer />
+      </Box>
       <Footer />
     </>
   );
