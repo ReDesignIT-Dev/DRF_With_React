@@ -14,7 +14,7 @@ import Product from "pages/Product";
 import Cart from "pages/Cart";
 import SearchPage from "pages/SearchPage";
 import NotFound from "pages/NotFound";
-
+import { Box } from "@mui/material";
 import {
   FRONTEND_PASSWORD_RESET_URL,
   FRONTEND_PASSWORD_RECOVERY_URL,
@@ -29,23 +29,25 @@ import {
 
 function Shop() {
   return (
-    <>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ShopHeader />
-      <Routes>
-        <Route path="" element={<ShopHome />} />
-        <Route path={FRONTEND_LOGIN_URL} element={<Login />} />
-        <Route path={FRONTEND_REGISTER_URL} element={<Register />} />
-        <Route path={FRONTEND_PASSWORD_RECOVERY_URL} element={<PasswordRecovery />} />
-        <Route path={FRONTEND_PASSWORD_RESET_URL} element={<PasswordReset />} />
-        <Route path={FRONTEND_ACTIVATE_USER_URL} element={<UserActivation />} />
-        <Route path={`${FRONTEND_CATEGORY_URL}/:slug`} element={<Category />} />
-        <Route path={`${FRONTEND_PRODUCT_URL}/:slug`} element={<Product />} />
-        <Route path={FRONTEND_SEARCH_URL} element={<SearchPage />} />
-        <Route path={FRONTEND_CART_URL} element={<Cart />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Box sx={{ flex: 1 }}>
+        <Routes>
+          <Route path="" element={<ShopHome />} />
+          <Route path={FRONTEND_LOGIN_URL} element={<Login />} />
+          <Route path={FRONTEND_REGISTER_URL} element={<Register />} />
+          <Route path={FRONTEND_PASSWORD_RECOVERY_URL} element={<PasswordRecovery />} />
+          <Route path={FRONTEND_PASSWORD_RESET_URL} element={<PasswordReset />} />
+          <Route path={FRONTEND_ACTIVATE_USER_URL} element={<UserActivation />} />
+          <Route path={`${FRONTEND_CATEGORY_URL}/:slug`} element={<Category />} />
+          <Route path={`${FRONTEND_PRODUCT_URL}/:slug`} element={<Product />} />
+          <Route path={FRONTEND_SEARCH_URL} element={<SearchPage />} />
+          <Route path={FRONTEND_CART_URL} element={<Cart />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Box>
       <ShopFooter />
-    </>
+    </Box>
   );
 }
 
