@@ -24,13 +24,13 @@ const Footer: React.FC = () => {
 
       {/* Icons on the right */}
       <Box sx={{ display: "flex", gap: 2, flex: 1, justifyContent: "flex-end" }}>
-        <Link href="#" color="inherit" underline="none">
+        <Link href="https://www.linkedin.com/in/arkadiusz-budkowski/" color="inherit" underline="none">
           <LinkedIn fontSize="large" />
         </Link>
-        <Link href="#" color="inherit" underline="none">
+        <Link href="https://github.com/Hamster-Inside" color="inherit" underline="none">
           <GitHub fontSize="large" />
         </Link>
-        <Link href="#" color="inherit" underline="none">
+        <Link href="https://www.youtube.com/@ReDesignIT" color="inherit" underline="none">
           <YouTube fontSize="large" />
         </Link>
       </Box>
