@@ -2,6 +2,9 @@
 export const BASE_URL: string = "http://localhost:8000";
 export const FRONTEND_SHOP_URL: string = "/shop";
 
+// main page
+export const FRONTEND_ABOUT_URL: string = "/about";
+export const FRONTEND_CONTACT_URL: string = "/contact";
 
 // user login/register based
 export const FRONTEND_LOGIN_URL: string = "/login";
