@@ -50,7 +50,7 @@ export default function ProductList({ className }: ProductListProps) {
             role='button'
             onClick={(event) => handleNavigationClick(product.slug, event)}
           >
-            <img src={product.images[0].image} alt={product.name}></img>
+            <img src={product.images[0].src} alt={product.name}></img>
             <div className='product-details d-flex justify-content-between w-100'>
               <h2>{product.name}</h2>
               <p className='product-price'>{product.price} PLN</p>
