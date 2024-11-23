@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { getAllChildrenOfCategory } from "services/shopServices/apiRequestsShop";
 import { useEffect, useState } from "react";
-import { API_CATEGORY_URL } from "config";
+import { API_CATEGORY_URL, FRONTEND_CATEGORY_URL, FRONTEND_SHOP_URL } from "config";
 import "./CategoryTree.css";
 
 interface Params {
@@ -55,7 +55,7 @@ export default function CategoryTree({ className }: CategoryTreeProps) {
 
   const handleNavigationClick = (slug: string, event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    navigate(`${API_CATEGORY_URL}/${slug}`);
+    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_CATEGORY_URL}/${slug}`);
   };
 
   const listCategoryChildren = () => {
