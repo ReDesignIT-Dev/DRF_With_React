@@ -50,7 +50,7 @@ const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({
           className="associated-category"
         >
           <span className="category-name">{category.name}</span>
-          <span className="category-count">{category.product_count}</span>
+          <span className="category-count">{category.productCount}</span>
         </div>
         {category.children && category.children.length > 0 && (
           <div className="category-children">
