@@ -5,6 +5,8 @@ import { Box } from "@mui/material";
 import Home from "./Home";
 import Header from "components/Header";
 import Footer from "components/ShopFooter";
+import { FRONTEND_ABOUT_URL } from "config";
+import About from "./About";
 
 function MainPage() {
   return (
@@ -19,16 +21,11 @@ function MainPage() {
       }}
     >
       <Header />
-      <Box
-        sx={{
-          flex: 1, // Fills the remaining vertical space
-        }}
-      >
         <Routes>
           <Route path="" element={<Home />} />
+          <Route path={FRONTEND_ABOUT_URL} element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Box>
       <Footer />
     </Box>
   );
