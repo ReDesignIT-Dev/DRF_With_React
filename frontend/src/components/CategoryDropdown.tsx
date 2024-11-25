@@ -10,7 +10,7 @@ import {
   MDBDropdownItem,
   MDBContainer,
 } from "mdb-react-ui-kit";
-import { API_CATEGORY_URL } from "config";
+import { FRONTEND_CATEGORY_URL, FRONTEND_SHOP_URL } from "config";
 import { RootState, AppDispatch } from "../reduxComponents/store"; 
 
 
@@ -21,7 +21,7 @@ const CategoryDropdown: React.FC = () => {
 
   const handleItemClick = (slug: string, event: MouseEvent<HTMLLIElement>) => {
     event.stopPropagation();
-    navigate(`${API_CATEGORY_URL}/${slug}`);
+    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_CATEGORY_URL}/${slug}`);
   };
 
   useEffect(() => {
