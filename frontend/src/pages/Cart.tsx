@@ -180,7 +180,6 @@ export default function Cart() {
         </>
       )}
 
-      {/* Modal for Checkout Confirmation */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Checkout Confirmation</Modal.Title>
