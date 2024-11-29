@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import store from "./reduxComponents/store";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
+
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
@@ -19,5 +20,4 @@ if (rootElement) {
     </React.StrictMode>
   );
 }
-
 reportWebVitals();
