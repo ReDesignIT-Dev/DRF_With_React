@@ -1,6 +1,17 @@
 import { useState, useCallback, useEffect } from "react";
-import { addToCart as apiAddToCart, deleteCartItem as apiDeleteCartItem, updateCartItemQuantity as apiUpdateCartItemQuantity, getCart as apiGetCart } from './cartRequests';
-import { addItemToCart as localAddToCart, removeItemFromCart as localRemoveItemFromCart, updateItemQuantity as localUpdateItemQuantity, getCart as localGetCart, clearCart as localClearCart } from './localStorageRequestsShop';
+import {
+  addToCart as apiAddToCart,
+  deleteCartItem as apiDeleteCartItem,
+  updateCartItemQuantity as apiUpdateCartItemQuantity,
+  getCart as apiGetCart,
+} from "./cartRequests";
+import {
+  addItemToCart as localAddToCart,
+  removeItemFromCart as localRemoveItemFromCart,
+  updateItemQuantity as localUpdateItemQuantity,
+  getCart as localGetCart,
+  clearCart as localClearCart,
+} from "./localStorageRequestsShop";
 import { useAuth } from "hooks/useAuth";
 
 export function useCart() {
@@ -63,15 +74,23 @@ export function useCart() {
   }, [isLoggedIn]);
 
   const calculateTotal = useCallback((cartItems: CartItem[]) => {
-    return cartItems.reduce((sum, item) => sum + item.quantity * item.product.price, 0);
+    return cartItems.reduce(
+      (sum, item) => sum + item.quantity * item.product.price,
+      0
+    );
   }, []);
 
-  const mergeCarts = (backendCart: CartItem[], localCart: CartItem[]): CartItem[] => {
+  const mergeCarts = (
+    backendCart: CartItem[],
+    localCart: CartItem[]
+  ): CartItem[] => {
     const mergedCart = [...backendCart];
-    const backendSlugs = new Set(backendCart.map(item => item.product.slug));
+    const backendSlugs = new Set(backendCart.map((item) => item.product.slug));
 
-    localCart.forEach(localItem => {
-      const backendItem = mergedCart.find(item => item.product.slug === localItem.product.slug);
+    localCart.forEach((localItem) => {
+      const backendItem = mergedCart.find(
+        (item) => item.product.slug === localItem.product.slug
+      );
       if (backendItem) {
         backendItem.quantity += localItem.quantity;
       } else {
