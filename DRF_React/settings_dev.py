@@ -1,4 +1,4 @@
-from .settings_base import *
+from DRF_React.settings_base import *
 
 PROJECT_NAME_FOR_DEV_DB = "DRF_React"  # my custom name for creating the dev db and user
 DEV_DB = getenv('DEV_DB')  # changing the value in .env gives possibility to use sqlite or postgres
