@@ -49,7 +49,7 @@ const Home: React.FC = () => {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`https://source.unsplash.com/featured/?project,${index}`}
+                  
                   alt={`Project ${index + 1}`}
                 />
                 <CardContent>
