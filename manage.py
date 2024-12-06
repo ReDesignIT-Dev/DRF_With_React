@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 def main():
     """Run administrative tasks."""
     load_dotenv()
-    if os.getenv('DEBUG') == True:
+    if os.getenv('DEBUG') == "True":
         settings_path = 'DRF_React.settings_dev'
     else:
         settings_path = 'DRF_React.settings_prod'
