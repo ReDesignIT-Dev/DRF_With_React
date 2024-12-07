@@ -7,6 +7,7 @@ import { API_PRODUCT_URL } from "config";
 import { Typography } from "@mui/material";
 import { useCart } from "services/shopServices/cartLogic"; 
 import "./Cart.css";
+import shopDefaultImage from "assets/images/shop_default_image.jpg";
 
 export default function Cart() {
   const { getCart, updateCart, deleteFromCart, calculateTotal } = useCart(); 
@@ -97,8 +98,14 @@ export default function Cart() {
             }`}
           >
             <img
-              src={item.product.images[0].src}
-              alt={item.product.name}
+              src={
+                item.product.images.length > 0 && item.product.images[0].src
+                  ? item.product.images[0].src
+                  : shopDefaultImage
+              }
+              alt={item.product.images.length > 0 && item.product.images[0].altText
+                ? item.product.images[0].altText
+                : "Default Image"}
               className="cart-item-image me-3"
             />
             <div className="flex-grow-1">
@@ -146,6 +153,7 @@ export default function Cart() {
       )}
     </>
   );
+  
 
   return (
     <div className="cart-container d-flex justify-content-center flex-column gap-2 text-center mx-auto">
