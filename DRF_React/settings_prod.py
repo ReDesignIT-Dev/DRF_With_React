@@ -1,11 +1,11 @@
-from settings_base import *
+from DRF_React.settings_base import *
 from os import getenv
 from dotenv import load_dotenv
 
 load_dotenv()
 
 DEBUG = False
-ALLOWED_HOSTS = ['www.redesignit.pl']
+ALLOWED_HOSTS = ['redesignit.pl']
 DRF_RECAPTCHA_SECRET_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
 
 DATABASES = {
