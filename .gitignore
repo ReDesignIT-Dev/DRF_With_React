@@ -170,3 +170,5 @@ api/shop/migrations/*
 api/users/migrations/*
 /media/
 node_modules/
+frontend/build.7z
+.env.production
