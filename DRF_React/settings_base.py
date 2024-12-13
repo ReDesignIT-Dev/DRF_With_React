@@ -55,11 +55,13 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
     'django_filters',
+    'api.home',
     'api.shop',
     'api.users',
     'drf_recaptcha',
     'rest_framework.authtoken',
     'knox',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -142,12 +144,12 @@ LOGGING = {
         },
     },
     'loggers': {
-        # 'django': {
-        #     'handlers': ['file'],
-        #     'level': 'DEBUG',
-        #     'propagate': True,
-        # },
-        'api.shop.middleware': {  # Add your custom logger here
+         'django': {
+             'handlers': ['file'],
+             'level': 'DEBUG',
+             'propagate': True,
+         },
+        'api.shop.middleware': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
