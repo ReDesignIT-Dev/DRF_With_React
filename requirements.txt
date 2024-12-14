@@ -10,3 +10,4 @@ drf-recaptcha # google recaptcha for registration + login
 unidecode #to deal with polish letters in slugs
 django-mptt #for a easy use of tree in shop app (easy loop through categories)
 django-rest-knox # improved token auth
+django-extensions #for the python manage.py show_urls
