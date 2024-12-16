@@ -144,11 +144,11 @@ LOGGING = {
         },
     },
     'loggers': {
-         'django': {
-             'handlers': ['file'],
-             'level': 'DEBUG',
-             'propagate': True,
-         },
+         #'django': {
+         #    'handlers': ['file'],
+         #    'level': 'DEBUG',
+         #    'propagate': True,
+         #},
         'api.shop.middleware': {
             'handlers': ['file'],
             'level': 'DEBUG',
