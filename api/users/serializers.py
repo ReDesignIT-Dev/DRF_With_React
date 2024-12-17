@@ -52,7 +52,7 @@ class CustomUserRegisterSerializer(PasswordValidationMixin, ModelSerializer, V2S
         return self.user
 
     def send_activation_email(self):
-        activation_link = f"{frontend_url}/activate/{self.user.activation_token}"
+        activation_link = f"{frontend_url}/shop/activate/{self.user.activation_token}"
         html_content = render_to_string('user_activation_template.html', {
             'username': self.user.username,
             'activation_link': activation_link,
@@ -125,7 +125,7 @@ class PasswordResetSerializer(V2Serializer):
         request = self.context.get('request')
         if not request:
             raise ValidationError('Request context is missing')
-        recovery_link = f"{frontend_url}/password-reset/{self.user.password_reset_token}"
+        recovery_link = f"{frontend_url}/shop/password-reset/{self.user.password_reset_token}"
         html_content = render_to_string('user_password_recovery_template.html', {
             'username': self.user.username,
             'recovery_link': recovery_link,
