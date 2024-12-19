@@ -5,8 +5,9 @@ import { Box } from "@mui/material";
 import Home from "./Home";
 import Header from "components/Header";
 import Footer from "components/ShopFooter";
-import { FRONTEND_ABOUT_URL } from "config";
+import { FRONTEND_ABOUT_URL, FRONTEND_CONTACT_URL } from "config";
 import About from "./About";
+import Contact from "./Contact";
 
 function MainPage() {
   return (
@@ -15,7 +16,7 @@ function MainPage() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        backgroundImage: "url(redesignit_background.jpg)",
+        backgroundImage: "url(redesignit_background.webp)",
         backgroundSize: "cover",
         width: "100vw",
       }}
@@ -24,6 +25,7 @@ function MainPage() {
         <Routes>
           <Route path="" element={<Home />} />
           <Route path={FRONTEND_ABOUT_URL} element={<About />} />
+          <Route path={FRONTEND_CONTACT_URL} element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       <Footer />
