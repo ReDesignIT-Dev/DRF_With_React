@@ -7,7 +7,7 @@ import { logout } from "reduxComponents/reducers/authReducer";
 import { useAuth } from "hooks/useAuth";
 import { AppDispatch } from "reduxComponents/store" 
 import { useNavigate } from "react-router-dom";
-import { FRONTEND_LOGIN_URL } from "config";
+import { FRONTEND_LOGIN_URL, FRONTEND_SHOP_URL } from "config";
 import { debounce } from "lodash";
 
 
@@ -21,7 +21,7 @@ const SignInButton: React.FC = () => {
       if (isLoggedIn) {
         dispatch(logout());
       } else {
-        navigate(FRONTEND_LOGIN_URL);
+        navigate(`${FRONTEND_SHOP_URL}${FRONTEND_LOGIN_URL}`);
       }
     }, 300), // Adjust debounce delay as needed
     [isLoggedIn, dispatch, navigate]
