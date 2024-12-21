@@ -6,8 +6,12 @@ import "./Header.scss";
 import LogoRacoon from "./LogoRacoon";
 import CategoryDropdown from "./CategoryDropdown";
 import { FaShoppingCart } from "react-icons/fa";
-import { FRONTEND_CART_URL, FRONTEND_SHOP_URL } from "config";
-
+import {
+  FRONTEND_BASE_URL,
+  FRONTEND_CART_URL,
+  FRONTEND_SHOP_URL,
+} from "config";
+import { ArrowLeft } from "@mui/icons-material";
 const ShopHeader: React.FC = () => {
   const navigate = useNavigate();
 
@@ -18,6 +22,14 @@ const ShopHeader: React.FC = () => {
           <div className="header-logo d-flex justify-content-center align-items-center">
             <Link to={FRONTEND_SHOP_URL}>
               <LogoRacoon />
+            </Link>
+          </div>
+          <div className="d-flex justify-content-center align-items-center">
+            <Link to={FRONTEND_BASE_URL}>
+              <button className="base-url-button btn btn-primary ms-3">
+                <ArrowLeft />
+                {`Leave the Shop App`}
+              </button>
             </Link>
           </div>
           <div className="header-searchbar">
@@ -39,7 +51,6 @@ const ShopHeader: React.FC = () => {
           <div className="nav-element">
             <CategoryDropdown />
           </div>
-
         </div>
       </div>
     </div>
