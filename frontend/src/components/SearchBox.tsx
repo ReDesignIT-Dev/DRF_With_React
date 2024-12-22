@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import "./SearchBox.scss";
 import { ReactComponent as SearchIcon } from "assets/images/search.svg";
-import { FRONTEND_SEARCH_URL } from "config";
+import { FRONTEND_SEARCH_URL, FRONTEND_SHOP_URL } from "config";
 import { useNavigate } from "react-router-dom";
 
 export default function SearchBox() {
@@ -15,7 +15,7 @@ export default function SearchBox() {
     const handleSearchClick = (event: MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         const encodedSearchTerm = encodeURIComponent(searchTerm.trim());
-        navigate(`${FRONTEND_SEARCH_URL}?string=${encodedSearchTerm}`);
+        navigate(`${FRONTEND_SHOP_URL}${FRONTEND_SEARCH_URL}?string=${encodedSearchTerm}`);
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
