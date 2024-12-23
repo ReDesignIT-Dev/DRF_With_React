@@ -3,7 +3,7 @@ import Loading from "components/Loading";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { API_PRODUCT_URL } from "config";
+import { FRONTEND_PRODUCT_URL, FRONTEND_SHOP_URL } from "config";
 import { Typography } from "@mui/material";
 import { useCart } from "services/shopServices/cartLogic"; 
 import "./Cart.css";
@@ -23,7 +23,15 @@ export default function Cart() {
       try {
         setLoading(true);
         const responseItems = await getCart();
-        setItems(responseItems); 
+        const validatedItems = responseItems.map(item => ({
+          ...item,
+          product: {
+            ...item.product,
+            images: item.product.images || [], // Default to an empty array if undefined
+          },
+        }));
+        
+        setItems(validatedItems); 
         const totalAmount = calculateTotal(responseItems); 
         setTotal(totalAmount.toFixed(2)); 
       } catch (error) {
@@ -72,7 +80,7 @@ export default function Cart() {
 
   const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    navigate(`${API_PRODUCT_URL}/${slug}`);
+    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_PRODUCT_URL}/${slug}`);
   };
 
   const handleCheckout = () => {
