@@ -1,4 +1,4 @@
-import { FRONTEND_LOGIN_URL } from 'config';
+import { FRONTEND_LOGIN_URL, FRONTEND_SHOP_URL } from 'config';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { activateUser } from 'services/apiRequestsUser';
@@ -23,7 +23,7 @@ const UserActivation: React.FC = () => {
           const response = await activateUser(token);
           if (response && response.status === 200) {
             setSuccess(true);
-            navigate(FRONTEND_LOGIN_URL, { replace: true });
+            navigate(`${FRONTEND_SHOP_URL}${FRONTEND_LOGIN_URL}`, { replace: true });
           } else {
             setMessage("Failed to activate.");
           }
