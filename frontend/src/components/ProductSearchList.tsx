@@ -2,8 +2,9 @@ import { useEffect, useState, MouseEvent } from "react";
 import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate } from "react-router-dom";
-import { API_PRODUCT_URL } from "config";
+import { FRONTEND_PRODUCT_URL, FRONTEND_SHOP_URL } from "config";
 import { getAllSearchProducts } from "services/shopServices/apiRequestsShop";
+import shopDefaultImage from "assets/images/shop_default_image.jpg";
 
 interface ProductListProps {
   className?: string;
@@ -33,7 +34,7 @@ export default function ProductList({ className }: ProductListProps) {
 
   const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    navigate(`${API_PRODUCT_URL}/${slug}`);
+    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_PRODUCT_URL}/${slug}`);
   };
 
   const listProducts = () => {
@@ -50,7 +51,17 @@ export default function ProductList({ className }: ProductListProps) {
             role='button'
             onClick={(event) => handleNavigationClick(product.slug, event)}
           >
-            <img src={product.images[0].src} alt={product.name}></img>
+            <img
+              src={
+                product.images.length > 0 && product.images[0].src
+                  ? product.images[0].src
+                  : shopDefaultImage
+              }
+              alt={product.images.length > 0 && product.images[0].altText
+                ? product.images[0].altText
+                : "Default Image"}
+              className="cart-item-image me-3"
+            />
             <div className='product-details d-flex justify-content-between w-100'>
               <h2>{product.name}</h2>
               <p className='product-price'>{product.price} PLN</p>
