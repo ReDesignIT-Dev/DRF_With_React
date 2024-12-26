@@ -168,6 +168,7 @@ cython_debug/
 #.idea/
 api/shop/migrations/*
 api/users/migrations/*
+api/home/migrations/*
 /media/
 node_modules/
 frontend/build.7z
