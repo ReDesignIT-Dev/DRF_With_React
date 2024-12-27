@@ -5,8 +5,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DEBUG = False
-ALLOWED_HOSTS = ['redesignit.pl']
+ALLOWED_HOSTS = ['api.redesignit.pl', 'redesignit.pl']
+CORS_ALLOWED_ORIGINS = ["https://redesignit.pl",]
+
+CSRF_TRUSTED_ORIGINS = ["https://api.redesignit.pl", "https://redesignit.pl"]
+
+CORS_ORIGIN_WHITELIST = ["http://api.redesignit.pl", "https://redesignit.pl",]
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
 DRF_RECAPTCHA_SECRET_KEY = getenv('RECAPTCHA_PRIVATE_KEY')
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+#USE_X_FORWARDED_HOST = True
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 DATABASES = {
     'default': {
@@ -18,6 +31,3 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
