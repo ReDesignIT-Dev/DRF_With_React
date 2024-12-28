@@ -25,7 +25,7 @@ urlpatterns = [
     path('shopping-admin-panel', ShopAdminPanel.as_view(), name='shop_admin_panel'),
     path('shopping-admin-panel/products', ShopAdminPanelProducts.as_view(), name='shop_admin_panel_products'),
     path('cart', ShoppingCartItemListView.as_view(), name='shopping-cart'),
-    path('cart/item/add', ShoppingCartItemCreateView.as_view(), name='add-cart-item'),
-    path('cart/item/update', ShoppingCartItemUpdateView.as_view(), name='update-cart-item'),
-    path('cart/item/delete', ShoppingCartItemDestroyView.as_view(), name='delete-cart-item')
+    path('cart/add', ShoppingCartItemCreateView.as_view(), name='add-cart-item'),
+    path('cart/update', ShoppingCartItemUpdateView.as_view(), name='update-cart-item'),
+    path('cart/delete', ShoppingCartItemDestroyView.as_view(), name='delete-cart-item')
 ]
