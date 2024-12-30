@@ -1,12 +1,6 @@
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Container,
-  Grid2,
-} from "@mui/material";
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import ProjectsBox from "components/ProjectsBox";
 
 const Home: React.FC = () => {
   return (
@@ -32,41 +26,11 @@ const Home: React.FC = () => {
           solutions
         </Typography>
       </Box>
-
-      <Container maxWidth="lg" sx={{ py: 5 }}>
-        <Typography variant="h4" component="h2" align="center" gutterBottom>
-          My Projects
-        </Typography>
-        <Grid2 container spacing={4} sx={{ display: "flex", flexWrap: "wrap" }}>
-          {Array.from({ length: 6 }).map((_, index) => (
-            <Grid2
-              container
-              size={{ xs: 12, sm: 6, md: 4 }}
-              key={index}
-              sx={{ display: "flex" }}
-            >
-              <Card sx={{ width: "100%" }}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  
-                  alt={`Project ${index + 1}`}
-                />
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    Project {index + 1}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Description of project {index + 1}, highlighting key
-                    features and technologies used.
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid2>
-          ))}
-        </Grid2>
-      </Container>
+      <Box sx={{ marginTop: '20px', marginBottom: "auto" }}>
+      <ProjectsBox />
+      </Box>
     </>
   );
 };
+
 export default Home;
