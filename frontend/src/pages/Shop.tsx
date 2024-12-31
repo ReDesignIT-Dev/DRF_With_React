@@ -16,15 +16,15 @@ import SearchPage from "pages/SearchPage";
 import NotFound from "pages/NotFound";
 import { Box } from "@mui/material";
 import {
-  FRONTEND_PASSWORD_RESET_URL,
-  FRONTEND_PASSWORD_RECOVERY_URL,
-  FRONTEND_ACTIVATE_USER_URL,
-  FRONTEND_LOGIN_URL,
-  FRONTEND_REGISTER_URL,
-  FRONTEND_PRODUCT_URL,
-  FRONTEND_CATEGORY_URL,
-  FRONTEND_SEARCH_URL,
-  FRONTEND_CART_URL,
+  ROUTE_PATH_CART,
+  ROUTE_PATH_SEARCH,
+  ROUTE_PATH_PRODUCT,
+  ROUTE_PATH_CATEGORY,
+  ROUTE_PATH_LOGIN,
+  ROUTE_PATH_REGISTER,
+  ROUTE_PATH_PASSWORD_RECOVERY,
+  ROUTE_PATH_PASSWORD_RESET,
+  ROUTE_PATH_ACTIVATE_USER,
 } from "config";
 
 function Shop() {
@@ -34,15 +34,15 @@ function Shop() {
       <Box sx={{ flex: 1 }}>
         <Routes>
           <Route path="" element={<ShopHome />} />
-          <Route path={FRONTEND_LOGIN_URL} element={<Login />} />
-          <Route path={FRONTEND_REGISTER_URL} element={<Register />} />
-          <Route path={FRONTEND_PASSWORD_RECOVERY_URL} element={<PasswordRecovery />} />
-          <Route path={FRONTEND_PASSWORD_RESET_URL} element={<PasswordReset />} />
-          <Route path={FRONTEND_ACTIVATE_USER_URL} element={<UserActivation />} />
-          <Route path={`${FRONTEND_CATEGORY_URL}/:slug`} element={<Category />} />
-          <Route path={`${FRONTEND_PRODUCT_URL}/:slug`} element={<Product />} />
-          <Route path={FRONTEND_SEARCH_URL} element={<SearchPage />} />
-          <Route path={FRONTEND_CART_URL} element={<Cart />} />
+          <Route path={ROUTE_PATH_LOGIN} element={<Login />} />
+          <Route path={ROUTE_PATH_REGISTER} element={<Register />} />
+          <Route path={ROUTE_PATH_PASSWORD_RECOVERY} element={<PasswordRecovery />} />
+          <Route path={ROUTE_PATH_PASSWORD_RESET} element={<PasswordReset />} />
+          <Route path={ROUTE_PATH_ACTIVATE_USER} element={<UserActivation />} />
+          <Route path={ROUTE_PATH_CATEGORY} element={<Category />} />
+          <Route path={ROUTE_PATH_PRODUCT} element={<Product />} />
+          <Route path={ROUTE_PATH_SEARCH} element={<SearchPage />} />
+          <Route path={ROUTE_PATH_CART} element={<Cart />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>
