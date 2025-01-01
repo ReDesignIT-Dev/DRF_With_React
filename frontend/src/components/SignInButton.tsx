@@ -21,7 +21,7 @@ const SignInButton: React.FC = () => {
       if (isLoggedIn) {
         dispatch(logout());
       } else {
-        navigate(`${FRONTEND_SHOP_URL}${FRONTEND_LOGIN_URL}`);
+        navigate(FRONTEND_LOGIN_URL);
       }
     }, 300), // Adjust debounce delay as needed
     [isLoggedIn, dispatch, navigate]
