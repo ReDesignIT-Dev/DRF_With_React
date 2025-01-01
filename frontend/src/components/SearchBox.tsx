@@ -15,7 +15,7 @@ export default function SearchBox() {
     const handleSearchClick = (event: MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         const encodedSearchTerm = encodeURIComponent(searchTerm.trim());
-        navigate(`${FRONTEND_SHOP_URL}${FRONTEND_SEARCH_URL}?string=${encodedSearchTerm}`);
+        navigate(`${FRONTEND_SEARCH_URL}?string=${encodedSearchTerm}`);
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
