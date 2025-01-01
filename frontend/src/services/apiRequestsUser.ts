@@ -120,12 +120,12 @@ export async function getDataUsingUserToken(endpoint: string, token: string): Pr
 }
 
 export async function activateUser(token: string): Promise<ApiResponse | undefined> {
-  return makePostRequest(`${API_ACTIVATE_USER_URL}/${token}/`, {});
+  return makePostRequest(`${API_ACTIVATE_USER_URL}/${token}`, {});
 }
 
 export async function validatePasswordResetToken(token: string): Promise<ApiResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_PASSWORD_RESET_URL}/${token}/`, {
+    const response = await apiClient.get(`${API_PASSWORD_RESET_URL}/${token}`, {
       headers: getHeaders()
     });
     return response;
@@ -135,7 +135,7 @@ export async function validatePasswordResetToken(token: string): Promise<ApiResp
 }
 
 export async function postPasswordReset(token: string, data: PasswordResetData): Promise<ApiResponse | undefined> {
-  return makePostRequest(`${API_PASSWORD_RESET_URL}/${token}/`, data);
+  return makePostRequest(`${API_PASSWORD_RESET_URL}/${token}`, data);
 }
 
 export async function postPasswordRecovery(data: PasswordRecoveryData): Promise<ApiResponse | undefined> {
