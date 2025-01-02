@@ -1,3 +1,4 @@
+import { RECAPTCHA_SITEKEY } from "config";
 import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -9,8 +10,6 @@ interface RecaptchaFieldProps {
 
 const RecaptchaField: React.FC<RecaptchaFieldProps> = ({ customClasses, setReturnToken, onValidate }) => {
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-
-  const devRecaptchaToken = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
   useEffect(() => {
     const isValid = isReCAPTCHAValid();
@@ -25,7 +24,7 @@ const RecaptchaField: React.FC<RecaptchaFieldProps> = ({ customClasses, setRetur
   return (
     <ReCAPTCHA
       className={`my-1 ${customClasses}`}
-      sitekey={devRecaptchaToken}
+      sitekey={RECAPTCHA_SITEKEY}
       onChange={(token) => setRecaptchaToken(token)}
     />
   );
