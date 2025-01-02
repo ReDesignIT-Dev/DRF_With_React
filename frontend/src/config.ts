@@ -5,7 +5,7 @@ export const BACKEND_SHOP_URL: string =  "/shop";
 export const FRONTEND_SHOP_URL: string = "/shop";
 export const BACKEND_USER_URL: string = "/user";
 export const BACKEND_HOME_URL: string = "/home";
-
+export const RECAPTCHA_SITEKEY: string = process.env.REACT_APP_RECAPTCHA_SITEKEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
 
 // main page
 export const FRONTEND_ABOUT_URL: string = "/about";
