@@ -24,9 +24,13 @@ export const ROUTE_PATH_PASSWORD_RESET: string = "/passwrod-reset/:token";
 export const FRONTEND_PASSWORD_RESET_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_PASSWORD_RESET}`;
 
 // shop based
-export const ROUTE_PATH_PRODUCT: string = "/product/:slug";
+export const PRODUCT_PATH: string = "/product";
+export const FRONTEND_PRODUCT_PATH: string = `${FRONTEND_SHOP_URL}${PRODUCT_PATH}`;
+export const ROUTE_PATH_PRODUCT: string = `${PRODUCT_PATH}/:slug`;
 export const FRONTEND_PRODUCT_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_PRODUCT}`;
-export const ROUTE_PATH_CATEGORY: string = "/category/:slug";
+export const CATEGORY_PATH: string = "/category";
+export const FRONTEND_CATEGORY_PATH: string = `${FRONTEND_SHOP_URL}${CATEGORY_PATH}`;
+export const ROUTE_PATH_CATEGORY: string = `${CATEGORY_PATH}/:slug`;
 export const FRONTEND_CATEGORY_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_CATEGORY}`;
 export const ROUTE_PATH_SEARCH: string = "/search";
 export const FRONTEND_SEARCH_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_SEARCH}`;
