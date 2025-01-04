@@ -6,6 +6,7 @@ import {
   API_SEARCH_URL,
   API_CATEGORY_URL,
   API_ALL_CATEGORIES,
+  BACKEND_SHOP_URL,
 } from "config";
 import { AxiosResponse } from "axios";
 
@@ -80,7 +81,7 @@ export async function getProductParentCategory(productSlug: string): Promise<Axi
 export async function getAllSearchAssociatedCategories(searchString: string): Promise<AxiosResponse<CategoryResponse> | undefined> {
   try {
     const response = await apiClient.get(
-      `${API_SEARCH_ASSOCIATED_CATEGORIES_URL}?string=${searchString}`
+      `${API_SEARCH_ASSOCIATED_CATEGORIES_URL}${searchString}`
     );
     return response;
   } catch (error) {
@@ -90,7 +91,7 @@ export async function getAllSearchAssociatedCategories(searchString: string): Pr
 
 export async function getAllSearchProducts(searchString: string): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_SEARCH_URL}?string=${searchString}`);
+    const response = await apiClient.get(`${API_SEARCH_URL}${searchString}`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
