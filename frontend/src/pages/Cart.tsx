@@ -2,38 +2,39 @@ import React, { useEffect, useState, MouseEvent } from "react";
 import Loading from "components/Loading";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { FRONTEND_PRODUCT_URL, FRONTEND_SHOP_URL } from "config";
+import { generatePath, useNavigate } from "react-router-dom";
+import { FRONTEND_PRODUCT_URL } from "config";
 import { Typography } from "@mui/material";
-import { useCart } from "services/shopServices/cartLogic"; 
+import { useCart } from "services/shopServices/cartLogic";
 import "./Cart.css";
 import shopDefaultImage from "assets/images/shop_default_image.jpg";
 
 export default function Cart() {
-  const { getCart, updateCart, deleteFromCart, calculateTotal } = useCart(); 
-  const [items, setItems] = useState<CartItem[]>([]); 
+  const { getCart, updateCart, deleteFromCart, calculateTotal } = useCart();
+  const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<string>("0");
   const [showModal, setShowModal] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [debounceTimeouts, setDebounceTimeouts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
         setLoading(true);
         const responseItems = await getCart();
-        const validatedItems = responseItems.map(item => ({
+        const validatedItems = responseItems.map((item) => ({
           ...item,
           product: {
             ...item.product,
             images: item.product.images || [], // Default to an empty array if undefined
           },
         }));
-        
-        setItems(validatedItems); 
-        const totalAmount = calculateTotal(responseItems); 
-        setTotal(totalAmount.toFixed(2)); 
+
+        setItems(validatedItems);
+        const totalAmount = calculateTotal(responseItems);
+        setTotal(totalAmount.toFixed(2));
       } catch (error) {
         setError("Error fetching products.");
       } finally {
@@ -43,25 +44,36 @@ export default function Cart() {
     fetchCart();
   }, [getCart, calculateTotal]);
 
-  const handleQuantityChange = async (product: Product, quantity: number) => {
-    if (isNaN(quantity) || quantity < 1) {
-      setError("Quantity must be a number greater than 0.");
-      return;
+  const handleQuantityChange = (product: Product, quantity: number) => {
+    // Update the quantity immediately in the local state (UI)
+    const updatedItems = items.map((item) =>
+      item.product && item.product.slug === product.slug
+        ? { ...item, quantity }
+        : item
+    );
+    setItems(updatedItems);
+
+    // Cancel any existing timeout for the current product
+    if (debounceTimeouts[product.slug]) {
+      clearTimeout(debounceTimeouts[product.slug]);
     }
-    setError("");
-    try {
-      await updateCart(product, quantity); 
-      const updatedItems = items.map((item) =>
-        item.product && item.product.slug === product.slug
-          ? { ...item, quantity }
-          : item
-      );
-      setItems(updatedItems); 
-      const totalAmount = calculateTotal(updatedItems); 
-      setTotal(totalAmount.toFixed(2));
-    } catch (error: any) {
-      setError(error.message);
-    }
+
+    // Set a new timeout to update the quantity after a delay (debounce logic)
+    const timeout = window.setTimeout(async () => {
+      try {
+        await updateCart(product, quantity); // Backend update
+        const totalAmount = calculateTotal(updatedItems);
+        setTotal(totalAmount.toFixed(2));
+      } catch (error: any) {
+        setError(error.message);
+      }
+    }, 500); // 500ms debounce delay
+
+    // Update the timeout reference
+    setDebounceTimeouts((prev) => ({
+      ...prev,
+      [product.slug]: timeout,
+    }));
   };
 
   const handleRemoveItem = async (product: Product) => {
@@ -71,8 +83,8 @@ export default function Cart() {
         (item) => item.product && item.product.slug !== product.slug
       );
       setItems(updatedItems);
-      const totalAmount = calculateTotal(updatedItems); 
-      setTotal(totalAmount.toFixed(2)); 
+      const totalAmount = calculateTotal(updatedItems);
+      setTotal(totalAmount.toFixed(2));
     } catch (error: any) {
       setError(error.message);
     }
@@ -80,15 +92,16 @@ export default function Cart() {
 
   const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_PRODUCT_URL}/${slug}`);
+    const productPath = generatePath(FRONTEND_PRODUCT_URL, { slug });
+    navigate(productPath);
   };
 
   const handleCheckout = () => {
-    setShowModal(true); 
+    setShowModal(true);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); 
+    setShowModal(false);
   };
 
   if (loading) {
@@ -111,9 +124,11 @@ export default function Cart() {
                   ? item.product.images[0].src
                   : shopDefaultImage
               }
-              alt={item.product.images.length > 0 && item.product.images[0].altText
-                ? item.product.images[0].altText
-                : "Default Image"}
+              alt={
+                item.product.images.length > 0 && item.product.images[0].altText
+                  ? item.product.images[0].altText
+                  : "Default Image"
+              }
               className="cart-item-image me-3"
             />
             <div className="flex-grow-1">
@@ -123,9 +138,9 @@ export default function Cart() {
                 component="h4"
                 onClick={(event) => handleNavigationClick(item.product.slug, event)}
                 sx={{
-                  cursor: 'pointer',
-                  '&:hover': {
-                    color: 'blue', 
+                  cursor: "pointer",
+                  "&:hover": {
+                    color: "blue",
                   },
                 }}
               >
@@ -161,7 +176,6 @@ export default function Cart() {
       )}
     </>
   );
-  
 
   return (
     <div className="cart-container d-flex justify-content-center flex-column gap-2 text-center mx-auto">
