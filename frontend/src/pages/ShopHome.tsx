@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../reduxComponents/reducers/categoryReducer";
 import { RootState, AppDispatch } from "../reduxComponents/store";
 import {
@@ -26,7 +26,8 @@ export default function ShopHome() {
   }, [dispatch]);
 
   const handleCategoryClick = (slug: string) => {
-    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_CATEGORY_URL}/${slug}`);
+    const categoryPath = generatePath(FRONTEND_CATEGORY_URL, { slug });
+    navigate(categoryPath);
   };
 
   const renderCategoryTree = (categories: Category[]) => (
