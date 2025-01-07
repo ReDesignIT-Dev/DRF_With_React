@@ -38,7 +38,7 @@ const ShopHeader: React.FC = () => {
 
           <div className="header-signin d-flex flex-row gap-2 justify-content-center align-items-center">
             <Link
-              to={`${FRONTEND_SHOP_URL}${FRONTEND_CART_URL}`}
+              to={FRONTEND_CART_URL}
               className="shopping-cart-icon d-flex justify-content-center align-items-center"
             >
               <FaShoppingCart size={"40px"} />
