@@ -1,7 +1,7 @@
 import { useEffect, useState, MouseEvent } from "react";
 import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, generatePath } from "react-router-dom";
 import { FRONTEND_PRODUCT_URL, FRONTEND_SHOP_URL } from "config";
 import { getAllSearchProducts } from "services/shopServices/apiRequestsShop";
 import shopDefaultImage from "assets/images/shop_default_image.jpg";
@@ -34,7 +34,8 @@ export default function ProductList({ className }: ProductListProps) {
 
   const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_PRODUCT_URL}/${slug}`);
+    const productPath = generatePath(FRONTEND_PRODUCT_URL, { slug });
+    navigate(productPath);
   };
 
   const listProducts = () => {
