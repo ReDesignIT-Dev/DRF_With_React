@@ -3,7 +3,7 @@ import { getAllProductsInCategory } from "services/shopServices/apiRequestsShop"
 import { useCart } from "services/shopServices/cartLogic";
 import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, generatePath } from "react-router-dom";
 import { API_PRODUCT_URL, FRONTEND_PRODUCT_URL, FRONTEND_SHOP_URL } from "config";
 import shopDefaultImage from "assets/images/shop_default_image.jpg";
 
@@ -49,7 +49,8 @@ export default function ProductList({ className }: ProductListProps) {
     event: MouseEvent<HTMLDivElement>
   ) => {
     event.stopPropagation();
-    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_PRODUCT_URL}/${slug}`);
+    const productPath = generatePath(FRONTEND_PRODUCT_URL, { slug });
+    navigate(productPath);
   };
 
   const handleAddToCartClick = async (
