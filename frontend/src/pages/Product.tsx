@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import {
   Box,
-  Grid,
+  Grid2,
   Typography,
   Button,
   TextField,
@@ -129,20 +129,21 @@ export default function Product() {
       />
 
       {/* Main product info */}
-      <Grid>
-        <Grid container spacing={4}>
+      <Grid2>
+        <Grid2 container spacing={2}>
           {/* Left: Product images */}
-          <Grid item xs={12} md={6}>
-            <Box mb={2}>
+          <Grid2 container direction="column" sx={{xs:12, md:6}}>
+            <Box>
               <Card onClick={() => openLightbox(currentImageIndex)}>
                 <CardMedia
                   component="img"
                   image={selectedImage}
                   alt={product.name}
                   sx={{
-                    width: "100%",
-                    height: "400px",
+                    width: "400px",
+                    height: "400px", 
                     objectFit: "contain",
+                    objectPosition: "center",
                     cursor: "pointer",
                   }}
                 />
@@ -166,27 +167,36 @@ export default function Product() {
                         setSelectedImage(img.src);
                         setCurrentImageIndex(index);
                       }}
-                      sx={{ cursor: "pointer" }}
+                     
+                      sx={{                
+                        cursor: "pointer",
+                        width: "150px",
+                          height: "150px",
+                      }}
                     >
                       <CardMedia
                         component="img"
                         image={img.src}
                         alt={`Product image ${index + 1}`}
-                        sx={{ width: "100%", height: "auto" }}
+                        sx={{
+                          width: "150px",
+                          height: "150px", 
+                          objectFit: "contain",
+                          objectPosition: "center",}}
                       />
                     </Card>
                   </SwiperSlide>
                 ))}
               </Swiper>
             </Box>
-          </Grid>
+          </Grid2>
 
           {/* Right: Product details and cart actions */}
-          <Grid
-            item
-            xs={12}
-            md={6}
+          <Grid2
+            
             sx={{
+              xs:12,
+            md:6,
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",
@@ -238,9 +248,9 @@ export default function Product() {
                 {error}
               </Typography>
             )}
-          </Grid>
-        </Grid>
-      </Grid>
+          </Grid2>
+        </Grid2>
+      </Grid2>
 
       <Box mt={4}>
         <Typography variant="body1">{product.description}</Typography>
