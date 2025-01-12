@@ -15,18 +15,36 @@ const Footer: React.FC = () => {
         mt: 2,
       }}
     >
-      <Box sx={{ flex: 1 }} />
       <Typography variant="body2" sx={{ textAlign: "center", flex: 1 }}>
         © 2024 ReDesignIT. All rights reserved.
       </Typography>
-      <Box sx={{ display: "flex", gap: 2, flex: 1, justifyContent: "flex-end" }}>
-        <Link href="https://www.linkedin.com/in/arkadiusz-budkowski/" color="inherit" underline="none">
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          justifyContent: "flex-end",
+          flexShrink: 0,
+        }}
+      >
+        <Link
+          href="https://www.linkedin.com/in/arkadiusz-budkowski/"
+          color="inherit"
+          underline="none"
+        >
           <LinkedIn fontSize="large" />
         </Link>
-        <Link href="https://github.com/Hamster-Inside" color="inherit" underline="none">
+        <Link
+          href="https://github.com/Hamster-Inside"
+          color="inherit"
+          underline="none"
+        >
           <GitHub fontSize="large" />
         </Link>
-        <Link href="https://www.youtube.com/@ReDesignIT" color="inherit" underline="none">
+        <Link
+          href="https://www.youtube.com/@ReDesignIT"
+          color="inherit"
+          underline="none"
+        >
           <YouTube fontSize="large" />
         </Link>
       </Box>
