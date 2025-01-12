@@ -1,59 +1,83 @@
 import React from "react";
 import SignInButton from "./SignInButton";
 import SearchBox from "./SearchBox";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Header.scss";
 import LogoRacoon from "./LogoRacoon";
 import CategoryDropdown from "./CategoryDropdown";
 import { FaShoppingCart } from "react-icons/fa";
-import {
-  FRONTEND_BASE_URL,
-  FRONTEND_CART_URL,
-  FRONTEND_SHOP_URL,
-} from "config";
 import { ArrowLeft } from "@mui/icons-material";
-const ShopHeader: React.FC = () => {
-  const navigate = useNavigate();
+import { Grid2 } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import { FRONTEND_BASE_URL, FRONTEND_CART_URL, FRONTEND_SHOP_URL } from "config";
 
+const ShopHeader: React.FC = () => {
   return (
-    <div className="main-header px-3">
-      <div className="header d-flex flex-column py-2">
-        <div className="top-header d-flex gap-2 justify-content-center align-items-center">
-          <div className="header-logo d-flex justify-content-center align-items-center">
+    <Box className="main-header" px={3}>
+      <Box className="header" py={2}>
+        {/* Top Header */}
+        <Grid2 
+          container 
+          spacing={2} 
+          className="top-header" 
+          justifyContent="center" 
+          alignItems="center"
+        >
+          {/* Logo */}
+          <Grid2 sx={{ xs: 12 }} className="header-logo">
             <Link to={FRONTEND_SHOP_URL}>
               <LogoRacoon />
             </Link>
-          </div>
-          <div className="d-flex justify-content-center align-items-center">
+          </Grid2>
+
+          {/* Leave Button */}
+          <Grid2 sx={{ xs: 12 }} textAlign="center">
             <Link to={FRONTEND_BASE_URL}>
-              <button className="base-url-button btn btn-primary ms-3">
-                <ArrowLeft />
-                {`Leave the Shop App`}
-              </button>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowLeft />}
+                className="base-url-button"
+                sx={{ textTransform: "none" }}
+              >
+                ReDesignIT
+              </Button>
             </Link>
-          </div>
-          <div className="header-searchbar">
+          </Grid2>
+
+          {/* Search Box */}
+          <Grid2 sx={{ xs: 12 }} className="header-searchbar">
             <SearchBox />
-          </div>
+          </Grid2>
 
-          <div className="header-signin d-flex flex-row gap-2 justify-content-center align-items-center">
-            <Link
-              to={FRONTEND_CART_URL}
-              className="shopping-cart-icon d-flex justify-content-center align-items-center"
-            >
-              <FaShoppingCart size={"40px"} />
-            </Link>
-            <SignInButton />
-          </div>
-        </div>
+          {/* Sign-in and Cart */}
+          <Grid2 sx={{ xs: 12 }} textAlign="center">
+            <Box className="header-signin" display="flex" gap={2} justifyContent="center" alignItems="center">
+              <Link
+                to={FRONTEND_CART_URL}
+                className="shopping-cart-icon"
+              >
+                <FaShoppingCart size={40} />
+              </Link>
+              <SignInButton />
+            </Box>
+          </Grid2>
+        </Grid2>
 
-        <div className="header-nav d-flex flex-row gap-2 my-2">
-          <div className="nav-element">
+        {/* Navigation */}
+        <Grid2 
+          container 
+          spacing={2} 
+          className="header-nav" 
+          my={2} 
+          justifyContent="center"
+        >
+          <Grid2 sx={{ xs: 12 }} className="nav-element">
             <CategoryDropdown />
-          </div>
-        </div>
-      </div>
-    </div>
+          </Grid2>
+        </Grid2>
+      </Box>
+    </Box>
   );
 };
 
