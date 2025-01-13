@@ -1,5 +1,5 @@
 import React, { useEffect, MouseEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../reduxComponents/reducers/categoryReducer";
 import "./CategoryDropdown.css";
@@ -21,7 +21,8 @@ const CategoryDropdown: React.FC = () => {
 
   const handleItemClick = (slug: string, event: MouseEvent<HTMLLIElement>) => {
     event.stopPropagation();
-    navigate(`${FRONTEND_SHOP_URL}${FRONTEND_CATEGORY_URL}/${slug}`);
+    const categoryPath = generatePath(FRONTEND_CATEGORY_URL, { slug });
+        navigate(categoryPath);
   };
 
   useEffect(() => {
