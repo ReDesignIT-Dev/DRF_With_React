@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { useEffect, useState, MouseEvent } from "react";
-import { API_CATEGORY_URL } from "config";
+import { FRONTEND_CATEGORY_URL, FRONTEND_SHOP_URL } from "config";
 import useQueryParams from "hooks/useQueryParams";
 import "./CategoryAssociatedTree.css";
 import { getAllSearchAssociatedCategories } from "services/shopServices/apiRequestsShop";
@@ -39,7 +39,8 @@ const CategoryAssociatedTree: React.FC<CategoryAssociatedTreeProps> = ({
     event: MouseEvent<HTMLDivElement>
   ) => {
     event.stopPropagation();
-    navigate(`${API_CATEGORY_URL}/${slug}`);
+    const categoryPath = generatePath(FRONTEND_CATEGORY_URL, { slug });
+        navigate(categoryPath);
   };
 
   const CategoryTree: React.FC<{ category: Category }> = ({ category }) => {
