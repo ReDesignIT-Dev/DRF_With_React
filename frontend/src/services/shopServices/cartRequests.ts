@@ -2,7 +2,7 @@ import { AxiosResponse, AxiosRequestConfig } from "axios";
 import { getToken } from "utils/cookies";
 import apiClient from "services/axiosConfig";
 import { apiErrorHandler } from "services/apiErrorHandler";
-import { API_CART_URL, API_CART_ITEM } from "config";
+import { API_CART_URL, API_ADD_TO_CART_URL, API_UPDATE_CART_URL, API_DELETE_FROM_CART_URL} from "config";
 
 type Headers = Record<string, string | undefined>;
 
@@ -63,10 +63,10 @@ export const getCart = async (): Promise<CartItem[]> => {
 };
 
 export const addToCart = (product: Product, quantity: number): Promise<AxiosResponse | undefined> => 
-  apiRequest('post', `${API_CART_ITEM}/add`, { product_slug: product.slug, quantity });
+  apiRequest('post', API_ADD_TO_CART_URL, { product_slug: product.slug, quantity });
 
 export const updateCartItemQuantity = (product: Product, quantity: number): Promise<AxiosResponse | undefined> => 
-  apiRequest('put', `${API_CART_ITEM}/update`, { product_slug: product.slug, quantity });
+  apiRequest('put', API_UPDATE_CART_URL, { product_slug: product.slug, quantity });
 
 export const deleteCartItem = (product: Product): Promise<AxiosResponse | undefined> => 
-  apiRequest('delete', `${API_CART_ITEM}/delete`, { product_slug: product.slug });
+  apiRequest('delete', API_DELETE_FROM_CART_URL, { product_slug: product.slug });
