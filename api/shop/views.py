@@ -68,7 +68,7 @@ class ProductCreate(CreateAPIView):
 
 
 class ProductEditView(RetrieveUpdateDestroyAPIView):
-    lookup_field = "slug"
+    lookup_field = 'id'
     queryset = Product.objects.all()
 
     def get_serializer_class(self):
@@ -80,13 +80,13 @@ class ProductEditView(RetrieveUpdateDestroyAPIView):
 class ProductView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    lookup_field = 'slug'
+    lookup_field = 'id'
 
 
 class ProductParentCategoryView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductParentCategorySerializer
-    lookup_field = 'slug'
+    lookup_field = 'id'
 
 
 class ProductSearchView(ListAPIView):
@@ -191,8 +191,8 @@ def build_category_tree(category, product_categories, product_counts, processed_
 
 
 class CategoryView(APIView):
-    def get(self, request, slug, format=None):
-        category = get_object_or_404(Category, slug=slug)
+    def get(self, request, id, format=None):
+        category = get_object_or_404(Category, id=id)
         products = Product.objects.filter(category=category)
         child_categories = category.children.all()
         category_serializer = CategoryTreeSerializer(category)
@@ -209,29 +209,29 @@ class CategoryView(APIView):
 
 
 class CategoryValidateView(APIView):
-    def get(self, request, slug, format=None):
-        category = get_object_or_404(Category, slug=slug)
+    def get(self, request, id, format=None):
+        category = get_object_or_404(Category, id=id)
         return Response({"exists": True}, status=status.HTTP_200_OK)
 
 
 class CategoryChildrenView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryChildrenListSerializer
-    lookup_field = 'slug'
+    lookup_field = 'id'
 
     def get_object(self):
-        slug = self.kwargs.get("slug")
-        return get_object_or_404(Category, slug=slug)
+        id = self.kwargs.get("id")
+        return get_object_or_404(Category, id=id)
 
 
 class CategoryProductsView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryProductListSerializer
-    lookup_field = 'slug'
+    lookup_field = 'id'
 
     def get_object(self):
-        slug = self.kwargs.get("slug")
-        return get_object_or_404(Category, slug=slug)
+        id = self.kwargs.get("id")
+        return get_object_or_404(Category, id=id)
 
     def retrieve(self, request, *args, **kwargs):
         category = self.get_object()
@@ -244,11 +244,11 @@ class CategoryProductsView(RetrieveAPIView):
 class CategoryParentsView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryNameSlugCountSerializer
-    lookup_field = 'slug'
+    lookup_field = 'id'
 
     def get_object(self):
-        slug = self.kwargs.get("slug")
-        return get_object_or_404(Category, slug=slug)
+        id = self.kwargs.get("id")
+        return get_object_or_404(Category, id=id)
 
     def retrieve(self, request, *args, **kwargs):
         category = self.get_object()
@@ -268,13 +268,13 @@ class CategoryCreateView(CreateAPIView):
 
 
 class CategoryEditView(RetrieveUpdateDestroyAPIView):
-    lookup_field = "slug"
+    lookup_field = 'id'
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        slug = self.kwargs.get('slug')
-        return Category.objects.filter(slug=slug)
+        id = self.kwargs.get('id')
+        return Category.objects.filter(id=id)
 
     def perform_destroy(self, instance):
         if instance.parent is None:
@@ -336,18 +336,18 @@ class ShoppingCartItemBaseView:
     authentication_classes = (TokenAuthentication,)
     permission_classes = [IsAuthenticated]
 
-    def get_product_slug(self):
-        product_slug = self.request.data.get('product_slug')
-        if not product_slug:
-            raise ValidationError({"product_slug": "This field is required."})
-        return product_slug
+    def get_product_id(self):
+        product_id = self.request.data.get('product_id')
+        if not product_id:
+            raise ValidationError({"product_id": "This field is required."})
+        return product_id
 
     def get_queryset(self):
-        product_slug = self.get_product_slug()
+        product_id = self.get_product_id()
         return ShoppingCartItem.objects.filter(
             shopping_cart__owner=self.request.user,
             shopping_cart__status='active',
-            product__slug=product_slug
+            product__id=product_id
         )
 
 
