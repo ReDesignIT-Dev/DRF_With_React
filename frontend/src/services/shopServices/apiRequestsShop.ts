@@ -6,7 +6,6 @@ import {
   API_SEARCH_URL,
   API_CATEGORY_URL,
   API_ALL_CATEGORIES,
-  BACKEND_SHOP_URL,
 } from "config";
 import { AxiosResponse } from "axios";
 
