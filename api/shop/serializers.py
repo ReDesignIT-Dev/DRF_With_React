@@ -37,7 +37,7 @@ class SearchAssociatedCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['name', 'slug', 'children']
+        fields = ['name', 'id', 'children']
 
     def get_children(self, obj):
         return obj.get('children', [])
@@ -48,7 +48,7 @@ class CategoryNameSlugCountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['name', 'slug', 'product_count']
+        fields = ['name', 'id', 'product_count']
 
     def get_product_count(self, obj):
         # Count products in the current category
@@ -79,7 +79,7 @@ class CategoryProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['name', 'slug', 'price', 'images']
+        fields = ['name', 'id', 'price', 'images']
 
 
 class CategoryTreeSerializer(serializers.ModelSerializer):
@@ -88,7 +88,7 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('name', 'description', 'level', 'slug', 'parent_name', 'children')
+        fields = ('name', 'description', 'level', 'id', 'parent_name', 'children')
 
     def get_children(self, obj):
         children = Category.objects.filter(parent=obj)
