@@ -14,18 +14,18 @@ interface CategoryResponse {
   categories: any[]; 
 }
 
-export async function validateIfCategoryExists(categorySlug: string): Promise<AxiosResponse | undefined> {
+export async function validateIfCategoryExists(categoryId: number): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/validate`);
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}/validate`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
   }
 }
 
-export async function getAllProductsInCategory(categorySlug: string): Promise<AxiosResponse | undefined> {
+export async function getAllProductsInCategory(categoryId: number): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/products`);
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}/products`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -41,36 +41,36 @@ export async function getAllCategoryNamesAndSlugs(): Promise<AxiosResponse | und
   }
 }
 
-export async function getAllChildrenOfCategory(categorySlug: string): Promise<AxiosResponse | undefined> {
+export async function getAllChildrenOfCategory(categoryId: number): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/children`);
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}/children`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
   }
 }
 
-export async function getAllParentsOfCategory(categorySlug: string): Promise<AxiosResponse | undefined> {
+export async function getAllParentsOfCategory(categoryId: number): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categorySlug}/parents`);
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}/parents`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
   }
 }
 
-export async function getProduct(productSlug: string): Promise<AxiosResponse | undefined> {
+export async function getProduct(productId: number): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}`);
+    const response = await apiClient.get(`${API_PRODUCT_URL}/${productId}`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
   }
 }
 
-export async function getProductParentCategory(productSlug: string): Promise<AxiosResponse | undefined> {
+export async function getProductParentCategory(productId: number): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_PRODUCT_URL}/${productSlug}/parent-category`);
+    const response = await apiClient.get(`${API_PRODUCT_URL}/${productId}/parent-category`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
