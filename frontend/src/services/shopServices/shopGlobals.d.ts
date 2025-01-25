@@ -6,6 +6,7 @@ interface Image {
 }
 
 interface Product {
+  id: number;
   name: string;
   category: string;
   description: string;
@@ -23,6 +24,7 @@ interface CartItem {
 }
 
 interface Category {
+  id: number;
   slug: string;
   name: string;
   image?: Image;
