@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import ProductList, ProductCreate, ProductEditView, HomeView, ProductView, CategoriesView, \
+from .views import ProductList, ProductCreate, ProductEditView, HomeView, ProductView, CategoryTreeView, \
     CategoryView, CategoryCreateView, CategoryEditView, ShopAdminPanel, ShopAdminPanelProducts, CategoryChildrenView, \
     CategoryProductsView, CategoryParentsView, ProductParentCategoryView, ProductSearchView, \
     CategoriesSearchAssociatedView, ShoppingCartItemCreateView, \
-    ShoppingCartItemUpdateView, ShoppingCartItemDestroyView, ShoppingCartItemListView
+    ShoppingCartItemUpdateView, ShoppingCartItemDestroyView, ShoppingCartItemListView, CategoryFlatView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -14,7 +14,8 @@ urlpatterns = [
     path('product/<int:id>', ProductView.as_view(), name='product'),
     path('product/<int:id>/edit', ProductEditView.as_view(), name='product_edit'),
     path('product/<int:id>/parent-category', ProductParentCategoryView.as_view(), name='parent-category-detail'),
-    path('categories', CategoriesView.as_view(), name='categories'),
+    path('category/tree', CategoryTreeView.as_view(), name='tree_categories'),
+    path('category/flat', CategoryFlatView.as_view(), name='flat_categories'),
     path('category/create', CategoryCreateView.as_view(), name='category_create'),
     path('category/<int:id>', CategoryView.as_view(), name='category'),
     path('category/<int:id>/edit', CategoryEditView.as_view(), name='category_edit'),
