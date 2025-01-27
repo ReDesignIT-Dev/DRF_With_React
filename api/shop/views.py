@@ -10,7 +10,8 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
     CategoryProductListSerializer, CategoryNameSlugCountSerializer, ProductParentCategorySerializer, \
-    SearchAssociatedCategorySerializer, ShoppingCartItemSerializer, ShoppingCartSerializer, ProductUpdateSerializer
+    SearchAssociatedCategorySerializer, ShoppingCartItemSerializer, ShoppingCartSerializer, ProductUpdateSerializer, \
+    CategoryFlatSerializer
 from .models import Product, Category, ShoppingCartItem, ShoppingCart
 from rest_framework.views import APIView
 from rest_framework import status
@@ -208,12 +209,6 @@ class CategoryView(APIView):
         return Response(response_data)
 
 
-class CategoryValidateView(APIView):
-    def get(self, request, id, format=None):
-        category = get_object_or_404(Category, id=id)
-        return Response({"exists": True}, status=status.HTTP_200_OK)
-
-
 class CategoryChildrenView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryChildrenListSerializer
@@ -257,9 +252,13 @@ class CategoryParentsView(RetrieveAPIView):
         return Response({'ancestors': ancestors_serializer.data})
 
 
-class CategoriesView(ListAPIView):
+class CategoryTreeView(ListAPIView):
     queryset = Category.objects.filter(parent__isnull=True)
     serializer_class = CategoryTreeSerializer
+
+class CategoryFlatView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryFlatSerializer
 
 
 class CategoryCreateView(CreateAPIView):
