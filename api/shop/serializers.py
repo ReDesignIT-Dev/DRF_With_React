@@ -116,6 +116,22 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
         return data
 
 
+class CategoryFlatSerializer(serializers.ModelSerializer):
+    parent_id = serializers.SerializerMethodField()
+    children = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'slug', 'image', 'description', 'level', 'parent_id', 'children')
+
+    def get_parent_id(self, obj):
+        return obj.parent.id if obj.parent else None
+
+    def get_children(self, obj):
+        return list(Category.objects.filter(parent=obj).values_list('id', flat=True))
+
+
+
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     description = serializers.CharField(min_length=2, max_length=500)
