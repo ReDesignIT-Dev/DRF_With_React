@@ -52,9 +52,6 @@ class Category(CommonFields, MPTTModel):
         self.children.update(parent=self.parent)
         super().delete(*args, **kwargs)
 
-    def get_parent_name(self):
-        return self.parent.name if self.parent else None
-
 
 def get_default_category():
     default_category = Category.objects.filter(level=0).first()

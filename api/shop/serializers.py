@@ -83,19 +83,28 @@ class CategoryProductListSerializer(serializers.ModelSerializer):
 
 
 class CategoryTreeSerializer(serializers.ModelSerializer):
-    parent_name = serializers.SerializerMethodField()
+    parent_id = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
+    product_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ('name', 'description', 'level', 'id', 'parent_name', 'children')
+        fields = ('id', 'name', 'slug', 'image', 'description', 'level', 'parent_id', 'product_count', 'children')
 
     def get_children(self, obj):
         children = Category.objects.filter(parent=obj)
-        return CategoryTreeSerializer(children, many=True).data
+        return CategoryTreeSerializer(children, many=True).data if children else None
 
-    def get_parent_name(self, obj):
-        return obj.get_parent_name()
+    def get_parent_id(self, obj):
+        return obj.parent.id if obj.parent else None
+
+    def get_product_count(self, obj):
+        product_count = obj.products.count()
+
+        for descendant in obj.get_descendants():
+            product_count += descendant.products.count()
+
+        return product_count
 
     def validate(self, data):
         name = data.get('name')
