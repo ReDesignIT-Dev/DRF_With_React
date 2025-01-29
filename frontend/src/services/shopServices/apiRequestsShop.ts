@@ -5,22 +5,14 @@ import {
   API_SEARCH_ASSOCIATED_CATEGORIES_URL,
   API_SEARCH_URL,
   API_CATEGORY_URL,
-  API_ALL_CATEGORIES,
+  API_ALL_CATEGORIES_TREE,
+  API_ALL_CATEGORIES_FLAT,
 } from "config";
 import { AxiosResponse } from "axios";
 
 
 interface CategoryResponse {
   categories: any[]; 
-}
-
-export async function validateIfCategoryExists(categoryId: number): Promise<AxiosResponse | undefined> {
-  try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}/validate`);
-    return response;
-  } catch (error) {
-    apiErrorHandler(error);
-  }
 }
 
 export async function getAllProductsInCategory(categoryId: number): Promise<AxiosResponse | undefined> {
@@ -32,9 +24,18 @@ export async function getAllProductsInCategory(categoryId: number): Promise<Axio
   }
 }
 
-export async function getAllCategoryNamesAndSlugs(): Promise<AxiosResponse | undefined> {
+export async function getCategoriesTree(): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(API_ALL_CATEGORIES);
+    const response = await apiClient.get(API_ALL_CATEGORIES_TREE);
+    return response;
+  } catch (error) {
+    apiErrorHandler(error);
+  }
+}
+
+export async function getAllCategories(): Promise<AxiosResponse | undefined> {
+  try {
+    const response = await apiClient.get(API_ALL_CATEGORIES_FLAT);
     return response;
   } catch (error) {
     apiErrorHandler(error);
@@ -62,6 +63,15 @@ export async function getAllParentsOfCategory(categoryId: number): Promise<Axios
 export async function getProduct(productId: number): Promise<AxiosResponse | undefined> {
   try {
     const response = await apiClient.get(`${API_PRODUCT_URL}/${productId}`);
+    return response;
+  } catch (error) {
+    apiErrorHandler(error);
+  }
+}
+
+export async function getCategory(categoryId: number): Promise<AxiosResponse | undefined> {
+  try {
+    const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}`);
     return response;
   } catch (error) {
     apiErrorHandler(error);
