@@ -24,14 +24,33 @@ interface CartItem {
   quantity: number;
 }
 
-interface Category {
-  id: number;
-  slug: string;
-  name: string;
-  image?: Image;
-  children: Category[] | null;
-  parent_id: number | null;
-  product_count: number;
+interface BaseCategory {
+  readonly id: number;
+  readonly slug: string;
+  readonly name: string;
+  readonly parentId: number | null;
+}
+
+interface Category extends BaseCategory {
+  readonly image?: Image;
+  readonly children: number[] | null;
+  readonly productCount: number;
+}
+
+interface CategoryNode extends BaseCategory {
+  readonly children: CategoryNode[] | null;
+}
+
+interface CategoryTreeStore {
+  readonly categories: CategoryNode[];
+  readonly isLoading: boolean;
+  readonly error: boolean;
+}
+
+interface CategoryStore {
+  readonly categories: Category[];
+  readonly isLoading: boolean;
+  readonly error: boolean;
 }
 
 interface CategoryAncestor {
