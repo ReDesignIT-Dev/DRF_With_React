@@ -1,7 +1,7 @@
 import React, { useEffect, MouseEvent } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../reduxComponents/reducers/categoryReducer";
+import { fetchCategories } from "../reduxComponents/reducers/categoryTreeReducer";
 import "./CategoryDropdown.css";
 import {
   MDBDropdown,
@@ -46,7 +46,7 @@ const CategoryDropdown: React.FC = () => {
     );
   };
 
-  const renderCategoryTree = (categories: Category[]): JSX.Element => {
+  const renderCategoryTree = (categories: CategoryTreeElement[]): JSX.Element => {
     return (
       <>
         {categories.map((category) => (
