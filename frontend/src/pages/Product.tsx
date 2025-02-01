@@ -21,6 +21,7 @@ import CategoryTopBar from "components/CategoryTopBar";
 import Lightbox from "react-18-image-lightbox";
 import "react-18-image-lightbox/style.css";
 import shopDefaultImage from "assets/images/shop_default_image.jpg";
+import { extractIdFromSlug } from "utils/utils";
 
 export default function Product() {
   const params = useParams<Record<string, string>>();
@@ -33,6 +34,7 @@ export default function Product() {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const { addToCart } = useCart();
   const [product, setProduct] = useState<Product>({
+    id: 1,
     name: "",
     category: "",
     description: "",
@@ -48,10 +50,15 @@ export default function Product() {
     const fetchProduct = async () => {
       try {
         if (!params.slug) return;
-  
-        const response = await getProduct(params.slug);
-        const productData = response?.data;
-  
+        const productId = extractIdFromSlug(params.slug);
+        if (productId == null){
+            return;
+            // TODO return 404 if there is no id in the slug
+        }
+        else {
+          const response = await getProduct(productId);
+          const productData = response?.data;
+
         if (productData) {
           const images = productData.images;
           const selectedImage = images?.[0]?.src || shopDefaultImage;
@@ -62,6 +69,8 @@ export default function Product() {
             images: images.length > 0 ? images : [{ src: shopDefaultImage }],
           });
         }
+        }
+        
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
