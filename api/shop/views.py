@@ -8,9 +8,9 @@ from rest_framework.generics import (
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
-from .serializers import ProductSerializer, CategoryTreeSerializer, CategorySerializer, CategoryChildrenListSerializer, \
-    CategoryProductListSerializer, CategoryNameSlugCountSerializer, ProductParentCategorySerializer, \
-    SearchAssociatedCategorySerializer, ShoppingCartItemSerializer, ShoppingCartSerializer, ProductUpdateSerializer, \
+from .serializers import ProductSerializer, CategoryTreeSerializer, CategoryCreateEditSerializer, \
+    CategoryProductListSerializer, \
+    SearchAssociatedCategorySerializer, ShoppingCartItemSerializer, ProductUpdateSerializer, \
     CategoryFlatSerializer
 from .models import Product, Category, ShoppingCartItem, ShoppingCart
 from rest_framework.views import APIView
@@ -81,12 +81,6 @@ class ProductEditView(RetrieveUpdateDestroyAPIView):
 class ProductView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    lookup_field = 'id'
-
-
-class ProductParentCategoryView(RetrieveAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductParentCategorySerializer
     lookup_field = 'id'
 
 
@@ -198,25 +192,15 @@ class CategoryView(APIView):
         child_categories = category.children.all()
         category_serializer = CategoryTreeSerializer(category)
         product_serializer = ProductSerializer(products, many=True)
-        child_category_serializer = CategoryTreeSerializer(child_categories, many=True)
+        child_category_serializer = [child.id for child in child_categories]
 
         response_data = {
             'category': category_serializer.data,
             'products': product_serializer.data,
-            'child_categories': child_category_serializer.data
+            'child_categories': child_category_serializer
         }
 
         return Response(response_data)
-
-
-class CategoryChildrenView(RetrieveAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategoryChildrenListSerializer
-    lookup_field = 'id'
-
-    def get_object(self):
-        id = self.kwargs.get("id")
-        return get_object_or_404(Category, id=id)
 
 
 class CategoryProductsView(RetrieveAPIView):
@@ -236,25 +220,10 @@ class CategoryProductsView(RetrieveAPIView):
         return Response({'products': serializer.data})
 
 
-class CategoryParentsView(RetrieveAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategoryNameSlugCountSerializer
-    lookup_field = 'id'
-
-    def get_object(self):
-        id = self.kwargs.get("id")
-        return get_object_or_404(Category, id=id)
-
-    def retrieve(self, request, *args, **kwargs):
-        category = self.get_object()
-        ancestors = category.get_ancestors(include_self=True)
-        ancestors_serializer = self.get_serializer(ancestors, many=True)
-        return Response({'ancestors': ancestors_serializer.data})
-
-
 class CategoryTreeView(ListAPIView):
     queryset = Category.objects.filter(parent__isnull=True)
     serializer_class = CategoryTreeSerializer
+
 
 class CategoryFlatView(ListAPIView):
     queryset = Category.objects.all()
@@ -262,13 +231,13 @@ class CategoryFlatView(ListAPIView):
 
 
 class CategoryCreateView(CreateAPIView):
-    serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
+    serializer_class = CategoryCreateEditSerializer
+    permission_classes = [IsAdminUser]
 
 
 class CategoryEditView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
-    serializer_class = CategorySerializer
+    serializer_class = CategoryCreateEditSerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
