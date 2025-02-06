@@ -25,11 +25,19 @@ class ProductImageSerializer(serializers.ModelSerializer):
         return obj.alt_text if obj.alt_text else ""  # Return altText as a string, not a dictionary
 
 
-
-class CategorySerializer(serializers.ModelSerializer):
+class CategoryCreateEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('name', 'description', 'parent')
+        fields = ('name', 'description', 'parent', 'image')
+
+    def validate(self, data):
+        name = data.get('name')
+        parent = data.get('parent')
+
+        if Category.objects.filter(name=name, parent=parent).exists():
+            raise ValidationError("Category with this name in this parent category already exists.")
+
+        return data
 
 
 class SearchAssociatedCategorySerializer(serializers.ModelSerializer):
