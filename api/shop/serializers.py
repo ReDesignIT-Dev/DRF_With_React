@@ -51,37 +51,6 @@ class SearchAssociatedCategorySerializer(serializers.ModelSerializer):
         return obj.get('children', [])
 
 
-class CategoryNameSlugCountSerializer(serializers.ModelSerializer):
-    product_count = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Category
-        fields = ['name', 'id', 'product_count']
-
-    def get_product_count(self, obj):
-        # Count products in the current category
-        product_count = obj.products.count()
-
-        # Count products in all descendant categories (subcategories)
-        for descendant in obj.get_descendants():
-            product_count += descendant.products.count()
-
-        return product_count
-
-
-class CategoryChildrenListSerializer(serializers.ModelSerializer):
-    children = serializers.SerializerMethodField()
-    parent = CategoryNameSlugCountSerializer()
-
-    class Meta:
-        model = Category
-        fields = ['id', 'name', 'slug', 'children', 'parent']
-
-    def get_children(self, obj):
-        children = obj.children.all()
-        return CategoryNameSlugCountSerializer(children, many=True).data
-
-
 class CategoryProductListSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
 
@@ -91,20 +60,33 @@ class CategoryProductListSerializer(serializers.ModelSerializer):
 
 
 class CategoryTreeSerializer(serializers.ModelSerializer):
-    parent_id = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
-    product_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'slug', 'image', 'description', 'level', 'parent_id', 'product_count', 'children')
+        fields = ('name', 'slug', 'children')
 
     def get_children(self, obj):
         children = Category.objects.filter(parent=obj)
         return CategoryTreeSerializer(children, many=True).data if children else None
 
+
+class CategoryFlatSerializer(serializers.ModelSerializer):
+    parent_id = serializers.SerializerMethodField()
+    children = serializers.SerializerMethodField()
+    product_count = serializers.SerializerMethodField()
+    ancestors = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = (
+        'id', 'name', 'slug', 'image', 'description', 'level', 'parent_id', 'children', 'product_count', 'ancestors')
+
     def get_parent_id(self, obj):
         return obj.parent.id if obj.parent else None
+
+    def get_children(self, obj):
+        return list(Category.objects.filter(parent=obj).values_list('id', flat=True))
 
     def get_product_count(self, obj):
         product_count = obj.products.count()
@@ -114,30 +96,9 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
 
         return product_count
 
-    def validate(self, data):
-        name = data.get('name')
-        parent = data.get('parent')
-
-        if Category.objects.filter(name=name, parent=parent).exists():
-            raise ValidationError("Category with this name in this parent category already exists.")
-
-        return data
-
-
-class CategoryFlatSerializer(serializers.ModelSerializer):
-    parent_id = serializers.SerializerMethodField()
-    children = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'slug', 'image', 'description', 'level', 'parent_id', 'children')
-
-    def get_parent_id(self, obj):
-        return obj.parent.id if obj.parent else None
-
-    def get_children(self, obj):
-        return list(Category.objects.filter(parent=obj).values_list('id', flat=True))
-
+    def get_ancestors(self, obj):
+        ancestors = obj.get_ancestors(ascending=True, include_self=False).values('name', 'slug')
+        return ancestors
 
 
 class ProductSerializer(serializers.ModelSerializer):
