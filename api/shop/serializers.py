@@ -64,7 +64,7 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('name', 'slug', 'children')
+        fields = ('id', 'name', 'slug', 'children')
 
     def get_children(self, obj):
         children = Category.objects.filter(parent=obj)
