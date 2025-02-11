@@ -148,7 +148,7 @@ class CategoriesSearchAssociatedView(ListAPIView):
             if tree and tree not in full_trees:
                 full_trees.append(tree)
 
-        return Response({'categories': full_trees}, status=status.HTTP_200_OK)
+        return Response(full_trees, status=status.HTTP_200_OK)
 
 
 def get_full_category_tree(category):
