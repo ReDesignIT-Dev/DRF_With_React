@@ -1,47 +1,27 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { validateIfCategoryExists } from "services/shopServices/apiRequestsShop";
 import ProductList from "components/ProductList";
 import CategoryTree from "components/CategoryTree";
 import CategoryTopBar from "components/CategoryTopBar";
 import NotFound from "./NotFound";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  IconButton,
-  Grid2,
-} from "@mui/material";
+import { Box, Button, Dialog, DialogTitle, IconButton, Grid2 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { getIdFromSlug } from "utils/utils";
+import { useSelector } from "react-redux";
+import { RootState } from "reduxComponents/store";
+import { selectFlatCategoryById, selectTreeCategoryById } from "reduxComponents/reduxShop/Categories/selectors";
 
 export default function Category() {
-  const params = useParams<Record<string, string>>();
-  const [isValidCategory, setIsValidCategory] = useState<boolean>(false);
   const [categoryNotFound, setCategoryNotFound] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { slug } = useParams() as { slug: string };
+  const categoryId = getIdFromSlug(slug);
+  const category = useSelector((state: RootState) => (categoryId !== null ? selectFlatCategoryById(state, categoryId) : null));
+  const categoryTree = useSelector((state: RootState) => (categoryId !== null ? selectTreeCategoryById(state, categoryId) : null));
 
   useEffect(() => {
-    const checkCategory = async () => {
-      try {
-        if (params.slug) {
-          const exists = await validateIfCategoryExists(params.slug);
-          if (exists) {
-            setIsValidCategory(true);
-          } else {
-            setCategoryNotFound(true);
-          }
-        } else {
-          setCategoryNotFound(true);
-        }
-      } catch (error) {
-        console.error("Error checking category:", error);
-        setCategoryNotFound(true);
-      }
-    };
-
-    checkCategory();
-  }, [params.slug]);
+    setCategoryNotFound(!category);
+  }, [category, categoryTree]);
 
   const handleDialogOpen = () => setIsDialogOpen(true);
   const handleDialogClose = () => setIsDialogOpen(false);
@@ -52,23 +32,11 @@ export default function Category() {
 
   return (
     <>
-      {isValidCategory && params.slug && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          mx="auto"
-          gap={3}
-          sx={{ maxWidth: 1264,  }}
-        >
-          <CategoryTopBar
-            currentCategory={params.slug}
-          />
+      {slug && category && (
+        <Box display="flex" flexDirection="column" mx="auto" gap={3} sx={{ maxWidth: 1264 }}>
+          <CategoryTopBar category={category} />
 
-          <Grid2
-            container
-            spacing={3}
-            sx={{ flexDirection: { xs: "column", md: "row" } }}
-          >
+          <Grid2 container spacing={3} sx={{ flexDirection: { xs: "column", md: "row" } }}>
             {/* Button for smaller screens */}
             <Grid2
               sx={{
@@ -76,12 +44,7 @@ export default function Category() {
                 width: "100%",
               }}
             >
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleDialogOpen}
-              >
+              <Button variant="contained" color="primary" fullWidth onClick={handleDialogOpen}>
                 Subcategories
               </Button>
             </Grid2>
@@ -98,7 +61,7 @@ export default function Category() {
                 boxSizing: "border-box",
               }}
             >
-              <CategoryTree />
+              <CategoryTree categoryTree={categoryTree} />
             </Grid2>
 
             {/* ProductList */}
@@ -109,7 +72,7 @@ export default function Category() {
                 borderRadius: 1,
                 flexGrow: 1,
                 flexBasis: { md: "70%" },
-                 boxSizing: "border-box",
+                boxSizing: "border-box",
               }}
             >
               <ProductList />
@@ -117,12 +80,7 @@ export default function Category() {
           </Grid2>
 
           {/* Dialog for CategoryTree */}
-          <Dialog
-            fullScreen
-            open={isDialogOpen}
-            onClose={handleDialogClose}
-            PaperProps={{ sx: { backgroundColor: "background.default" } }}
-          >
+          <Dialog fullScreen open={isDialogOpen} onClose={handleDialogClose} PaperProps={{ sx: { backgroundColor: "background.default" } }}>
             <DialogTitle
               sx={{
                 display: "flex",
@@ -136,7 +94,7 @@ export default function Category() {
               </IconButton>
             </DialogTitle>
             <Box p={3}>
-              <CategoryTree />
+              <CategoryTree categoryTree={categoryTree} />
             </Box>
           </Dialog>
         </Box>
