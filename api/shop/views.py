@@ -217,7 +217,7 @@ class CategoryProductsView(RetrieveAPIView):
         descendants = category.get_descendants(include_self=True)
         products = Product.objects.filter(category__in=descendants).distinct()
         serializer = self.get_serializer(products, many=True)
-        return Response({'products': serializer.data})
+        return Response(serializer.data)
 
 
 class CategoryTreeView(ListAPIView):
