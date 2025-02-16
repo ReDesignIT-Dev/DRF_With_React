@@ -33,8 +33,8 @@ export const fetchCategoryTree = createAsyncThunk(
     },
     {
       condition: (_, { getState }) => {
-        const state = getState() as { categories: CategoryStore };
-        return !state.categories.isLoading;
+        const state = getState() as { categoriesFlat: CategoryStore };
+        return !state.categoriesFlat.isLoading;
       }
       
     }
