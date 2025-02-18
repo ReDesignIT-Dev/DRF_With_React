@@ -40,6 +40,7 @@ class Category(CommonFields, MPTTModel):
     image = models.ImageField(upload_to='category_images/', blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children',
                             on_delete=models.SET_NULL)
+    short_name = models.CharField(max_length=20, default="Short Name")
 
     class MPTTMeta:
         order_insertion_by = ['level']
