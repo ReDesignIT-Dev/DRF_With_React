@@ -6,7 +6,9 @@ import { FRONTEND_SHOP_URL } from "config";
 import MainPage from "pages/MainPage";
 import { Box } from "@mui/material";
 
+
 function App() {
+  
   return (
     <Box
       sx={{
