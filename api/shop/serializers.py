@@ -28,7 +28,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class CategoryCreateEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('name', 'description', 'parent', 'image')
+        fields = ('name', 'short_name', 'description', 'parent', 'image')
 
     def validate(self, data):
         name = data.get('name')
@@ -80,7 +80,7 @@ class CategoryFlatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = (
-        'id', 'name', 'slug', 'image', 'description', 'level', 'parent_id', 'children', 'product_count', 'ancestors')
+        'id', 'name', 'short_name', 'slug', 'image', 'description', 'level', 'parent_id', 'children', 'product_count', 'ancestors')
 
     def get_parent_id(self, obj):
         return obj.parent.id if obj.parent else None
@@ -97,7 +97,7 @@ class CategoryFlatSerializer(serializers.ModelSerializer):
         return product_count
 
     def get_ancestors(self, obj):
-        ancestors = obj.get_ancestors(ascending=True, include_self=False).values('name', 'slug')
+        ancestors = obj.get_ancestors(ascending=True, include_self=False).values('name', 'short_name', 'slug')
         return ancestors
 
 
