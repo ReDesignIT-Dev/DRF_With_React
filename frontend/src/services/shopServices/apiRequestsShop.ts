@@ -11,10 +11,6 @@ import {
 import { AxiosResponse } from "axios";
 
 
-interface CategoryResponse {
-  categories: any[]; 
-}
-
 export async function getAllProductsInCategory(categoryId: number): Promise<AxiosResponse | undefined> {
   try {
     const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}/products`);
@@ -87,7 +83,7 @@ export async function getProductParentCategory(productId: number): Promise<Axios
   }
 }
 
-export async function getAllSearchAssociatedCategories(searchString: string): Promise<AxiosResponse<CategoryResponse> | undefined> {
+export async function getAllSearchAssociatedCategories(searchString: string): Promise<AxiosResponse<CategoryNode[]> | undefined> {
   try {
     const response = await apiClient.get(
       `${API_SEARCH_ASSOCIATED_CATEGORIES_URL}${searchString}`
