@@ -10,8 +10,7 @@ export function getCategoryAncestors(category: Category, includeSelf: boolean = 
   
   // Optionally include the current category.
   if (includeSelf) {
-    ancestors.unshift({ name: category.name, slug: category.slug });
+    ancestors.unshift({name: category.name, shortName: category.shortName, slug: category.slug });
   }
-  
   return ancestors;
 }
