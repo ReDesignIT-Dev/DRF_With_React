@@ -1,30 +1,25 @@
-import React, { useEffect, useState, ChangeEvent, MouseEvent } from "react";
+import { useEffect, useState, ChangeEvent, MouseEvent } from "react";
 import { useParams } from "react-router-dom";
 import { getProduct } from "services/shopServices/apiRequestsShop";
 import { useCart } from "services/shopServices/cartLogic";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import {
-  Box,
-  Grid2,
-  Typography,
-  Button,
-  TextField,
-  Card,
-  CardMedia,
-} from "@mui/material";
+import { Box, Grid2, Typography, Button, TextField, Card, CardMedia } from "@mui/material";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import CategoryTopBar from "components/CategoryTopBar";
 import Lightbox from "react-18-image-lightbox";
 import "react-18-image-lightbox/style.css";
 import shopDefaultImage from "assets/images/shop_default_image.jpg";
-import { extractIdFromSlug } from "utils/utils";
+import { getIdFromSlug } from "utils/utils";
+import { useSelector } from "react-redux";
+import { selectFlatCategories } from "reduxComponents/reduxShop/Categories/selectors";
+import NotFound from "./NotFound";
+import CategoryBreadcrumb from "components/CategoryBreadcrumb";
 
 export default function Product() {
-  const params = useParams<Record<string, string>>();
+  const { slug } = useParams() as { slug: string };
   const [quantity, setQuantity] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
@@ -36,49 +31,61 @@ export default function Product() {
   const [product, setProduct] = useState<Product>({
     id: 1,
     name: "",
-    category: "",
+    categoryId: 0,
     description: "",
     price: 0,
     saleStart: null,
     saleEnd: null,
     isOnSale: false,
-    images: [{ src: shopDefaultImage }],
+    images: [{ id: 0, src: shopDefaultImage }],
     slug: "",
   });
+
+  const [category, setCategory] = useState<Category | null>(null);
+  const categories = useSelector(selectFlatCategories);
+  const [notFound, setNotFound] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (product.categoryId) {
+      const foundCategory = categories.find((cat) => cat.id === product.categoryId);
+      setCategory(foundCategory || null);
+    }
+  }, [product, categories]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        if (!params.slug) return;
-        const productId = extractIdFromSlug(params.slug);
-        if (productId == null){
-            return;
-            // TODO return 404 if there is no id in the slug
+        if (!slug) {
+          setNotFound(true);
+          return;
         }
-        else {
+        const productId = getIdFromSlug(slug);
+        if (productId == null) {
+          setNotFound(true);
+          return;
+        } else {
           const response = await getProduct(productId);
           const productData = response?.data;
 
-        if (productData) {
-          const images = productData.images;
-          const selectedImage = images?.[0]?.src || shopDefaultImage;
-          
-          setSelectedImage(selectedImage);
-          setProduct({
-            ...productData,
-            images: images.length > 0 ? images : [{ src: shopDefaultImage }],
-          });
+          if (productData) {
+            const images = productData.images;
+            const selectedImage = images?.[0]?.src || shopDefaultImage;
+
+            setSelectedImage(selectedImage);
+            setProduct({
+              ...productData,
+              categoryId: productData.category,
+              images: images.length > 0 ? images : [{ src: shopDefaultImage }],
+            });
+          }
         }
-        }
-        
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
     };
-  
+
     fetchProduct();
-  }, [params.slug]);
-  
+  }, [slug]);
 
   const handleQuantityChange = (quantity: number) => {
     if (isNaN(quantity) || quantity < 1) {
@@ -89,10 +96,7 @@ export default function Product() {
     setError(null);
   };
 
-  const handleAddToCartClick = async (
-    product: Product,
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleAddToCartClick = async (product: Product, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     try {
       await addToCart(product, quantity);
@@ -120,10 +124,12 @@ export default function Product() {
   };
 
   const handleLightboxPrev = () => {
-    setCurrentImageIndex(
-      (currentImageIndex + product.images.length - 1) % product.images.length
-    );
+    setCurrentImageIndex((currentImageIndex + product.images.length - 1) % product.images.length);
   };
+
+  if (notFound) {
+    return <NotFound />;
+  }
 
   return (
     <Box maxWidth="lg" mx="auto" p={3}>
@@ -132,16 +138,13 @@ export default function Product() {
           {confirmationMessage}
         </Box>
       )}
-      <CategoryTopBar
-        className="bg-secondary mt-3 p-2 mb-2"
-        currentCategory={product.category}
-      />
+      {category? <CategoryBreadcrumb category={category} includeSelf={true} /> : "Category missing"}
 
       {/* Main product info */}
       <Grid2>
         <Grid2 container spacing={2}>
           {/* Left: Product images */}
-          <Grid2 container direction="column" sx={{xs:12, md:6}}>
+          <Grid2 container direction="column" sx={{ xs: 12, md: 6 }}>
             <Box>
               <Card onClick={() => openLightbox(currentImageIndex)}>
                 <CardMedia
@@ -150,7 +153,7 @@ export default function Product() {
                   alt={product.name}
                   sx={{
                     width: "400px",
-                    height: "400px", 
+                    height: "400px",
                     objectFit: "contain",
                     objectPosition: "center",
                     cursor: "pointer",
@@ -176,11 +179,10 @@ export default function Product() {
                         setSelectedImage(img.src);
                         setCurrentImageIndex(index);
                       }}
-                     
-                      sx={{                
+                      sx={{
                         cursor: "pointer",
                         width: "150px",
-                          height: "150px",
+                        height: "150px",
                       }}
                     >
                       <CardMedia
@@ -189,9 +191,10 @@ export default function Product() {
                         alt={`Product image ${index + 1}`}
                         sx={{
                           width: "150px",
-                          height: "150px", 
+                          height: "150px",
                           objectFit: "contain",
-                          objectPosition: "center",}}
+                          objectPosition: "center",
+                        }}
                       />
                     </Card>
                   </SwiperSlide>
@@ -202,10 +205,9 @@ export default function Product() {
 
           {/* Right: Product details and cart actions */}
           <Grid2
-            
             sx={{
-              xs:12,
-            md:6,
+              xs: 12,
+              md: 6,
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",
@@ -233,22 +235,13 @@ export default function Product() {
               <TextField
                 type="number"
                 value={quantity}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleQuantityChange(
-                    Math.max(1, parseInt(e.target.value, 10))
-                  )
-                }
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleQuantityChange(Math.max(1, parseInt(e.target.value, 10)))}
                 inputProps={{ min: 1 }}
                 sx={{ width: 80 }}
               />
             </Box>
 
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3 }}
-              onClick={(event) => handleAddToCartClick(product, event)}
-            >
+            <Button variant="contained" color="primary" sx={{ mt: 3 }} onClick={(event) => handleAddToCartClick(product, event)}>
               Add to Cart
             </Button>
 
@@ -269,15 +262,8 @@ export default function Product() {
       {isLightboxOpen && (
         <Lightbox
           mainSrc={product.images[currentImageIndex].src}
-          nextSrc={
-            product.images[(currentImageIndex + 1) % product.images.length].src
-          }
-          prevSrc={
-            product.images[
-              (currentImageIndex + product.images.length - 1) %
-                product.images.length
-            ].src
-          }
+          nextSrc={product.images[(currentImageIndex + 1) % product.images.length].src}
+          prevSrc={product.images[(currentImageIndex + product.images.length - 1) % product.images.length].src}
           onCloseRequest={() => setIsLightboxOpen(false)}
           onMovePrevRequest={handleLightboxPrev}
           onMoveNextRequest={handleLightboxNext}
