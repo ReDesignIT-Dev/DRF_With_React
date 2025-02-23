@@ -1,5 +1,5 @@
 interface Image {
-  id: string;
+  id: number;
   src: string;
   altText?: string;
   position?: number;
@@ -8,7 +8,7 @@ interface Image {
 interface Product {
   id: number;
   name: string;
-  category: string;
+  categoryId: number;
   description: string;
   price: number;
   saleStart?: Date | null;
@@ -19,7 +19,6 @@ interface Product {
 }
 
 interface CartItem {
-  id: number;
   product: Product;
   quantity: number;
 }
@@ -28,13 +27,16 @@ interface BaseCategory {
   readonly id: number;
   readonly slug: string;
   readonly name: string;
-  readonly parentId: number | null;
+  readonly shortName: string;
+  readonly productCount: number;
+
 }
 
 interface Category extends BaseCategory {
   readonly image?: Image;
   readonly children: number[] | null;
-  readonly productCount: number;
+  readonly ancestors: CategoryAncestor[];
+  readonly parentId: number | null;
 }
 
 interface CategoryNode extends BaseCategory {
@@ -54,6 +56,7 @@ interface CategoryStore {
 }
 
 interface CategoryAncestor {
-  name: string;
-  slug: string;
+  readonly name: string;
+  readonly shortName: string;
+  readonly slug: string;
 }
