@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import ShopHome from "pages/ShopHome";
 import ShopHeader from "components/ShopHeader";
 import ShopFooter from "components/ShopFooter";
@@ -26,8 +25,19 @@ import {
   ROUTE_PATH_PASSWORD_RESET,
   ROUTE_PATH_ACTIVATE_USER,
 } from "config";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchCategoryFlat, fetchCategoryTree } from "reduxComponents/reduxShop/Categories/thunks";
+import { AppDispatch } from "reduxComponents/store";
 
 function Shop() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchCategoryTree());
+    dispatch(fetchCategoryFlat());
+  }, [dispatch]);
+
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ShopHeader />
