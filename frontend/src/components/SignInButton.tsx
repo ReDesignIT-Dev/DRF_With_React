@@ -3,7 +3,7 @@ import "./SignInButton.css";
 import "react-bootstrap";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { logout } from "reduxComponents/reducers/authReducer";
+import { logout } from "reduxComponents/reduxUser/Auth/authReducer";
 import { useAuth } from "hooks/useAuth";
 import { AppDispatch } from "reduxComponents/store" 
 import { useNavigate } from "react-router-dom";
