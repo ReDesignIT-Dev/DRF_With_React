@@ -4,7 +4,7 @@ import RecaptchaField from "components/Fields/RecaptchaField";
 import { useEffect, useState, FormEvent } from "react";
 import Loading from "components/Loading";
 import "./LoginFormComponent.css"; 
-import { loginUser } from "reduxComponents/reducers/authReducer";
+import { loginUser } from "reduxComponents/reduxUser/Auth/authReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "reduxComponents/store"; // Adjust the import according to your store setup
 
