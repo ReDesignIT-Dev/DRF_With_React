@@ -4,59 +4,46 @@ import { useCart } from "services/shopServices/cartLogic";
 import "./ProductList.css";
 import useQueryParams from "hooks/useQueryParams";
 import { useParams, useNavigate, generatePath } from "react-router-dom";
-import { API_PRODUCT_URL, FRONTEND_PRODUCT_URL, FRONTEND_SHOP_URL } from "config";
+import { FRONTEND_PRODUCT_URL } from "config";
 import shopDefaultImage from "assets/images/shop_default_image.jpg";
+import { getIdFromSlug } from "utils/utils";
 
-interface ProductListProps {
-  className?: string;
-}
-
-export default function ProductList({ className }: ProductListProps) {
-  const params = useParams<{ slug: string }>();
+export default function ProductList() {
+  const { slug } = useParams() as { slug: string };
   const queryParams = useQueryParams();
   const [products, setProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
   const [confirmationMessage, setConfirmationMessage] = useState<string>("");
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const categoryId = getIdFromSlug(slug);
 
   const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
-      if (!params.slug) {
-        console.error("Category slug is undefined");
-        return;
-      }
-
-      try {
-        const response = await getAllProductsInCategory(params.slug);
-        if (response && response.data) {
-          setProducts(response.data.products);
-        } else {
-          console.error(
-            "Error fetching products: response is undefined or has no data"
-          );
+      if (categoryId) {
+        try {
+          const response = await getAllProductsInCategory(categoryId);
+          if (response && response.data) {
+            setProducts(response.data);
+          } else {
+            console.error("Error fetching products: response is undefined or has no data");
+          }
+        } catch (error) {
+          console.error("Error fetching products:", error);
         }
-      } catch (error) {
-        console.error("Error fetching products:", error);
       }
     };
     fetchProducts();
-  }, [params, queryParams]);
+  }, [slug, queryParams]);
 
-  const handleNavigationClick = (
-    slug: string,
-    event: MouseEvent<HTMLDivElement>
-  ) => {
+  const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     const productPath = generatePath(FRONTEND_PRODUCT_URL, { slug });
     navigate(productPath);
   };
 
-  const handleAddToCartClick = async (
-    product: Product,
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleAddToCartClick = async (product: Product, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
     try {
@@ -73,20 +60,12 @@ export default function ProductList({ className }: ProductListProps) {
     return (
       <>
         {products.map((product) => {
-          const imageSrc =
-            product.images && product.images.length > 0
-              ? product.images[0].src
-              : shopDefaultImage;
+          const imageSrc = product.images && product.images.length > 0 ? product.images[0].src : shopDefaultImage;
 
-          const imageAlt =
-            product.images &&
-            product.images.length > 0 &&
-            product.images[0].altText
-              ? product.images[0].altText
-              : product.name;
+          const imageAlt = product.images && product.images.length > 0 && product.images[0].altText ? product.images[0].altText : product.name;
           return (
             <div
-              key={product.slug}
+              key={product.id}
               className="single-product-on-list d-flex flex-row w-100"
               role="button"
               onClick={(event) => handleNavigationClick(product.slug, event)}
@@ -96,10 +75,7 @@ export default function ProductList({ className }: ProductListProps) {
                 <h2>{product.name}</h2>
                 <div className="product-price-and-cart d-flex align-items-center">
                   <p className="product-price">{product.price} PLN</p>
-                  <button
-                    className="product-add-to-cart-btn"
-                    onClick={(event) => handleAddToCartClick(product, event)}
-                  >
+                  <button className="product-add-to-cart-btn" onClick={(event) => handleAddToCartClick(product, event)}>
                     Add to cart
                   </button>
                 </div>
@@ -112,12 +88,8 @@ export default function ProductList({ className }: ProductListProps) {
   };
 
   return (
-    <div
-      className={`product-list-container d-flex flex-column gap-3 w-100 p-3 ${className}`}
-    >
-      {showConfirmation && (
-        <div className="confirmation-message">{confirmationMessage}</div>
-      )}
+    <div className={`product-list-container d-flex flex-column gap-3 w-100 p-3`}>
+      {showConfirmation && <div className="confirmation-message">{confirmationMessage}</div>}
       {listProducts()}
     </div>
   );
