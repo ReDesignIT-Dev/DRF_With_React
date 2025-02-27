@@ -1,7 +1,6 @@
-import React, { useEffect, MouseEvent } from "react";
+import React, { MouseEvent } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../reduxComponents/reducers/categoryTreeReducer";
+import { useSelector } from "react-redux";
 import "./CategoryDropdown.css";
 import {
   MDBDropdown,
@@ -10,24 +9,27 @@ import {
   MDBDropdownItem,
   MDBContainer,
 } from "mdb-react-ui-kit";
-import { FRONTEND_CATEGORY_URL, FRONTEND_SHOP_URL } from "config";
-import { RootState, AppDispatch } from "../reduxComponents/store"; 
-
+import { FRONTEND_CATEGORY_URL } from "config";
+import { RootState } from "../reduxComponents/store";
+import {
+  selectIsTreeLoading,
+  selectTreeCategories,
+  selectTreeCategoriesError,
+} from "reduxComponents/reduxShop/Categories/selectors";
 
 const CategoryDropdown: React.FC = () => {
-  const { categories, isLoading, error } = useSelector((state: RootState) => state.categories);
-  const dispatch = useDispatch<AppDispatch>();
+  const categories = useSelector(selectTreeCategories);
+  const isLoading = useSelector(selectIsTreeLoading);
+  const error = useSelector(selectTreeCategoriesError);
+
   const navigate = useNavigate();
 
   const handleItemClick = (slug: string, event: MouseEvent<HTMLLIElement>) => {
     event.stopPropagation();
     const categoryPath = generatePath(FRONTEND_CATEGORY_URL, { slug });
-        navigate(categoryPath);
+    navigate(categoryPath);
   };
 
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading categories.</p>;
@@ -37,42 +39,60 @@ const CategoryDropdown: React.FC = () => {
       return null;
     }
     return (
-      <MDBContainer className='d-flex justify-content-center basic'>
+      <MDBContainer className="d-flex justify-content-center basic">
         <MDBDropdown animation={false}>
           <MDBDropdownToggle>Categories</MDBDropdownToggle>
-          <MDBDropdownMenu>{renderCategoryTree(categories[0].children!)}</MDBDropdownMenu>
+          <MDBDropdownMenu>
+            {renderCategoryTree(categories)}
+          </MDBDropdownMenu>
         </MDBDropdown>
       </MDBContainer>
     );
   };
 
-  const renderCategoryTree = (categories: CategoryTreeElement[]): JSX.Element => {
+  const renderCategoryTree = (categories: CategoryNode[]): JSX.Element => {
     return (
       <>
         {categories.map((category) => (
           <MDBDropdownItem
             key={category.slug}
-            className='dropdown-item'
-            onClick={(event) => handleItemClick(category.slug, event as MouseEvent<HTMLLIElement>)}
+            className="dropdown-item"
+            onClick={(event) =>
+              handleItemClick(category.slug, event as MouseEvent<HTMLLIElement>)
+            }
           >
             <span style={{ display: "flex", justifyContent: "space-between" }}>
               {category.name}
-              {category.children && category.children.length > 0 && <span>&raquo;</span>}
+              {category.children && category.children.length > 0 && (
+                <span>&raquo;</span>
+              )}
             </span>
             {category.children && category.children.length > 0 && (
-              <ul className='dropdown-menu dropdown-submenu'>
+              <ul className="dropdown-menu dropdown-submenu">
                 {category.children.map((child) => (
                   <MDBDropdownItem
                     key={child.slug}
-                    className='dropdown-item'
-                    onClick={(event) => handleItemClick(child.slug, event as MouseEvent<HTMLLIElement>)}
+                    className="dropdown-item"
+                    onClick={(event) =>
+                      handleItemClick(
+                        child.slug,
+                        event as MouseEvent<HTMLLIElement>
+                      )
+                    }
                   >
-                    <span style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       {child.name}{" "}
-                      {child.children && child.children.length > 0 && <span>&raquo;</span>}
+                      {child.children && child.children.length > 0 && (
+                        <span>&raquo;</span>
+                      )}
                     </span>
                     {child.children && child.children.length > 0 && (
-                      <ul className='dropdown-menu dropdown-submenu'>
+                      <ul className="dropdown-menu dropdown-submenu">
                         {renderCategoryTree(child.children)}
                       </ul>
                     )}
