@@ -10,8 +10,8 @@ interface ProductListProps {
   className?: string;
 }
 
-export default function ProductList({ className }: ProductListProps) {
-  const params = useParams();
+export default function ProductList() {
+  const { slug } = useParams() as { slug: string };
   const queryParams = useQueryParams();
   const [products, setProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function ProductList({ className }: ProductListProps) {
       }
     };
     fetchProducts();
-  }, [params, queryParams]);
+  }, [slug, queryParams]);
 
   const handleNavigationClick = (slug: string, event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -47,7 +47,7 @@ export default function ProductList({ className }: ProductListProps) {
       <>
         {products.map((product) => (
           <div
-            key={product.slug}
+            key={product.id}
             className='single-product-on-list d-flex flex-row w-100'
             role='button'
             onClick={(event) => handleNavigationClick(product.slug, event)}
@@ -74,7 +74,7 @@ export default function ProductList({ className }: ProductListProps) {
   };
 
   return (
-    <div className={`product-list-container d-flex flex-column gap-3 w-100 p-3 ${className}`}>
+    <div className={`product-list-container d-flex flex-column gap-3 w-100 p-3`}>
       {listProducts()}
     </div>
   );
