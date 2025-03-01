@@ -1,72 +1,50 @@
-import { useParams, useNavigate, generatePath } from "react-router-dom";
-import { getAllChildrenOfCategory } from "services/shopServices/apiRequestsShop";
+import { useNavigate, generatePath } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FRONTEND_CATEGORY_URL, FRONTEND_SHOP_URL } from "config";
 import "./CategoryTree.css";
+import { useSelector } from "react-redux";
+import { selectParentCategoryById } from "reduxComponents/reduxShop/Categories/selectors";
+import { RootState } from "reduxComponents/store";
 
-interface Params {
-  [key: string]: string | undefined; 
-  slug?: string;
-}
- 
 interface CategoryTreeProps {
-  className?: string;
+  categoryTree: CategoryNode | null;
 }
 
-export default function CategoryTree({ className }: CategoryTreeProps) {
-  const params = useParams<Params>();
-  const [categoryChildren, setCategoryChildren] = useState<Category[]>([]);
-  const [parent, setParent] = useState<Category | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+export default function CategoryTree({ categoryTree }: CategoryTreeProps) {
+  const parentCategory = useSelector((state: RootState) => (categoryTree ? selectParentCategoryById(state, categoryTree.id) : null));
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [categoryToMap, setCategoryToMap] = useState<CategoryNode | null>(categoryTree);
   const navigate = useNavigate();
 
-  const fetchCategoryChildren = async (slug: string): Promise<Category> => {
-    try {
-      const response = await getAllChildrenOfCategory(slug);
-      if (response && response.data) {
-        return response.data;
-      }
-      return {} as Category;
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return {} as Category;
-    }
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      if (!params.slug) return;
-      const result = await fetchCategoryChildren(params.slug);
-      if (result.children && result.children.length > 0) {
-        setCategoryChildren(result.children);
+    if (categoryTree) {
+      if (categoryTree.children) {
+        setCategoryToMap(categoryTree);
         setSelectedCategory(null);
       } else {
-        setSelectedCategory(params.slug);
-        if (result.parent) {
-          const newResult = await fetchCategoryChildren(result.parent.slug);
-          setCategoryChildren(newResult.children || []);
-        }
+        setCategoryToMap(parentCategory);
+        setSelectedCategory(categoryTree.id);
       }
-      setParent(result.parent || null);
-    };
-
-    fetchData(); // Call the async function
-  }, [params]);
+    } else {
+      setSelectedCategory(null);
+    }
+  }, [categoryTree]);
 
   const handleNavigationClick = (slug: string, event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     const categoryPath = generatePath(FRONTEND_CATEGORY_URL, { slug });
-        navigate(categoryPath);
+    navigate(categoryPath);
   };
 
   const listCategoryChildren = () => {
+    if (!categoryToMap || !categoryToMap.children) return null;
     return (
       <>
-        {categoryChildren.map((child) => (
+        {categoryToMap.children.map((child) => (
           <p
-            key={child.slug}
+            key={child.id}
             onClick={(event) => handleNavigationClick(child.slug, event)}
-            className={`category-child ${selectedCategory === child.slug ? "selected" : ""}`}
+            className={`category-child ${selectedCategory === child.id ? "selected" : ""}`}
           >
             {child.name}
           </p>
@@ -76,16 +54,13 @@ export default function CategoryTree({ className }: CategoryTreeProps) {
   };
 
   return (
-    <div className={`${className} d-flex flex-column gap-2`}>
+    <div className={`d-flex flex-column gap-2`}>
       <h3>Subcategories:</h3>
-      {parent && parent.slug ? (
+      {parentCategory && parentCategory.slug ? (
         <p>
           <span>Go back to </span>
-          <span
-            onClick={(event) => handleNavigationClick(parent.slug, event)}
-            className='parent-link'
-          >
-            {parent.name}
+          <span onClick={(event) => handleNavigationClick(parentCategory.slug, event)} className="parent-link">
+            {parentCategory.name}
           </span>
         </p>
       ) : null}
