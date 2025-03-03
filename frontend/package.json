@@ -32,7 +32,8 @@
     "sass": "^1.77.8",
     "svgo": "^2.8.0",
     "swiper": "^11.1.14",
-    "web-vitals": "^4.2.3"
+    "web-vitals": "^4.2.3",
+    "yet-another-react-lightbox": "^3.21.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",
