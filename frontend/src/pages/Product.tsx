@@ -9,14 +9,16 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import Lightbox from "react-18-image-lightbox";
-import "react-18-image-lightbox/style.css";
+import Lightbox from "yet-another-react-lightbox";
+import Inline from "yet-another-react-lightbox/plugins/inline";
+import "yet-another-react-lightbox/styles.css";
 import shopDefaultImage from "assets/images/shop_default_image.jpg";
 import { getIdFromSlug } from "utils/utils";
 import { useSelector } from "react-redux";
 import { selectFlatCategories } from "reduxComponents/reduxShop/Categories/selectors";
 import NotFound from "./NotFound";
 import CategoryBreadcrumb from "components/CategoryBreadcrumb";
+import { useMemo } from "react";
 
 export default function Product() {
   const { slug } = useParams() as { slug: string };
@@ -77,6 +79,10 @@ export default function Product() {
               categoryId: productData.category,
               images: images.length > 0 ? images : [{ src: shopDefaultImage }],
             });
+            if (productData.category) {
+              const foundCategory = categories.find((cat) => cat.id === product.categoryId);
+              setCategory(foundCategory || null);
+            }
           }
         }
       } catch (error) {
@@ -86,6 +92,43 @@ export default function Product() {
 
     fetchProduct();
   }, [slug]);
+
+  const swiperSlides = useMemo(
+    () =>
+      product.images.map((img, index) => (
+        <SwiperSlide key={index} style={{ backgroundColor: "transparent" }}>
+          <Card
+            onClick={() => {
+              setSelectedImage(img.src);
+              setCurrentImageIndex(index);
+            }}
+            sx={{
+              cursor: "pointer",
+              width: "160px",
+              height: "90px",
+              marginTop: "10px",
+              marginBottom: "35px",
+              backgroundColor: "transparent",
+              boxShadow: "none",
+            }}
+          >
+            <CardMedia
+              component="img"
+              image={img.src}
+              alt={`Product image ${index + 1}`}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                objectPosition: "center",
+                backgroundColor: "transparent",
+              }}
+            />
+          </Card>
+        </SwiperSlide>
+      )),
+    [product.images]
+  );
 
   const handleQuantityChange = (quantity: number) => {
     if (isNaN(quantity) || quantity < 1) {
@@ -109,22 +152,8 @@ export default function Product() {
   };
 
   const openLightbox = (index: number) => {
-    if (!isLightboxOpen) {
-      const img = new Image();
-      img.src = product.images[index].src;
-      img.onload = () => {
-        setCurrentImageIndex(index);
-        setIsLightboxOpen(true);
-      };
-    }
-  };
-
-  const handleLightboxNext = () => {
-    setCurrentImageIndex((currentImageIndex + 1) % product.images.length);
-  };
-
-  const handleLightboxPrev = () => {
-    setCurrentImageIndex((currentImageIndex + product.images.length - 1) % product.images.length);
+    setCurrentImageIndex(index);
+    setIsLightboxOpen(true);
   };
 
   if (notFound) {
@@ -138,71 +167,47 @@ export default function Product() {
           {confirmationMessage}
         </Box>
       )}
-      {category? <CategoryBreadcrumb category={category} includeSelf={true} /> : "Category missing"}
+      {category ? <CategoryBreadcrumb category={category} includeSelf={true} /> : "Category missing"}
 
       {/* Main product info */}
-      <Grid2>
-        <Grid2 container spacing={2}>
-          {/* Left: Product images */}
-          <Grid2 container direction="column" sx={{ xs: 12, md: 6 }}>
-            <Box>
-              <Card onClick={() => openLightbox(currentImageIndex)}>
-                <CardMedia
-                  component="img"
-                  image={selectedImage}
-                  alt={product.name}
-                  sx={{
-                    width: "400px",
-                    height: "400px",
-                    objectFit: "contain",
-                    objectPosition: "center",
-                    cursor: "pointer",
-                  }}
-                />
-              </Card>
-            </Box>
+      <Grid2 container direction="column">
+        <Grid2 container direction="row" spacing={2}>
+          <Box sx={{ maxWidth: "500px" }}>
+            {/* Left: Product images */}
+            <Grid2 container direction="column" sx={{ xs: 12, md: 6, width: "100%" }}>
+              <Box sx={{ width: "100%" }}>
+                <Card onClick={() => openLightbox(currentImageIndex)}>
+                  <CardMedia
+                    component="img"
+                    image={selectedImage}
+                    alt={product.name}
+                    sx={{
+                      width: "400px",
+                      height: "400px",
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      cursor: "pointer",
+                    }}
+                  />
+                </Card>
+              </Box>
 
-            {/* Thumbnails using Swiper */}
-            <Box>
-              <Swiper
-                modules={[Navigation, Pagination, Scrollbar, A11y]}
-                spaceBetween={10}
-                slidesPerView={3}
-                navigation
-                pagination={{ clickable: true }}
-                scrollbar={{ draggable: true }}
-              >
-                {product.images.map((img, index) => (
-                  <SwiperSlide key={index}>
-                    <Card
-                      onClick={() => {
-                        setSelectedImage(img.src);
-                        setCurrentImageIndex(index);
-                      }}
-                      sx={{
-                        cursor: "pointer",
-                        width: "150px",
-                        height: "150px",
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        image={img.src}
-                        alt={`Product image ${index + 1}`}
-                        sx={{
-                          width: "150px",
-                          height: "150px",
-                          objectFit: "contain",
-                          objectPosition: "center",
-                        }}
-                      />
-                    </Card>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </Box>
-          </Grid2>
-
+              {/* Thumbnails using Swiper */}
+              <Box sx={{ width: "100%" }}>
+                <Swiper
+                  modules={[Navigation, Pagination, Scrollbar, A11y]}
+                  spaceBetween={10}
+                  slidesPerView={3}
+                  navigation
+                  pagination={{ clickable: true }}
+                  scrollbar={{ draggable: true }}
+                  style={{ width: "100%" }}
+                >
+                  {swiperSlides}
+                </Swiper>
+              </Box>
+            </Grid2>
+          </Box>
           {/* Right: Product details and cart actions */}
           <Grid2
             sx={{
@@ -260,13 +265,23 @@ export default function Product() {
 
       {/* Lightbox for fullscreen images */}
       {isLightboxOpen && (
+        <Lightbox open={isLightboxOpen} close={() => setIsLightboxOpen(false)} slides={product.images.map((img) => ({ src: img.src }))} />
+      )}
+      {isLightboxOpen && (
         <Lightbox
-          mainSrc={product.images[currentImageIndex].src}
-          nextSrc={product.images[(currentImageIndex + 1) % product.images.length].src}
-          prevSrc={product.images[(currentImageIndex + product.images.length - 1) % product.images.length].src}
-          onCloseRequest={() => setIsLightboxOpen(false)}
-          onMovePrevRequest={handleLightboxPrev}
-          onMoveNextRequest={handleLightboxNext}
+          plugins={[Inline]}
+          open={isLightboxOpen}
+          close={() => setIsLightboxOpen(false)}
+          slides={product.images.map((img) => ({ src: img.src }))}
+          inline={{
+            style: {
+              width: "80%", // Set desired width
+              maxWidth: "900px", // Set maximum width
+              height: "auto", // Maintain aspect ratio
+              maxHeight: "80vh", // Set maximum height relative to viewport height
+              margin: "0 auto", // Center the lightbox
+            },
+          }}
         />
       )}
     </Box>
