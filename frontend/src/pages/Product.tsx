@@ -170,9 +170,15 @@ export default function Product() {
       {category ? <CategoryBreadcrumb category={category} includeSelf={true} /> : "Category missing"}
 
       {/* Main product info */}
-      <Grid2 container direction="column">
-        <Grid2 container direction="row" spacing={2}>
-          <Box sx={{ maxWidth: "500px" }}>
+      <Grid2 container direction="column" sx={{marginX: "auto"}}>
+        <Grid2 container direction="row" spacing={2} sx={{width: "100%"}}>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "500px",
+              aspectRatio: "16 / 9",
+            }}
+          >
             {/* Left: Product images */}
             <Grid2 container direction="column" sx={{ xs: 12, md: 6, width: "100%" }}>
               <Box sx={{ width: "100%" }}>
@@ -182,8 +188,8 @@ export default function Product() {
                     image={selectedImage}
                     alt={product.name}
                     sx={{
-                      width: "400px",
-                      height: "400px",
+                      width: "100%",
+                      height: "100%",
                       objectFit: "contain",
                       objectPosition: "center",
                       cursor: "pointer",
