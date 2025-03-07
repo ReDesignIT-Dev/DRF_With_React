@@ -141,15 +141,19 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         write_only=True,
         help_text="A list of images to be added to the product",
     )
+    image_urls = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = ('name', 'category', 'description', 'images', 'price', 'sale_start', 'sale_end')
+        fields = ('name', 'category', 'description', 'images', 'image_urls', 'price', 'sale_start', 'sale_end')
         extra_kwargs = {
             'name': {'required': False},
             'description': {'required': False},
             'price': {'required': False},
         }
+
+    def get_image_urls(self, obj):
+        return [image.image.url for image in obj.images.all() if image.image and image.image.name]
 
     def update(self, instance, validated_data):
         new_images = validated_data.pop('images', [])
