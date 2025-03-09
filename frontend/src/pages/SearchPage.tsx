@@ -1,15 +1,18 @@
+import { Box, Stack } from "@mui/material";
 import ProductSearchList from "components/ProductSearchList";
 import CategoryAssociatedTree from "components/CategoryAssociatedTree";
 
-import "./SearchPage.css";
-
 export default function SearchPage() {
   return (
-    <div className='searchpage-view-container mx-auto gap-3'>
-      <div className='d-flex gap-3 mt-3 align-items-start'>
-        <CategoryAssociatedTree />
-        <ProductSearchList />
-      </div>
-    </div>
+    <Box maxWidth={1264} mx="auto">
+      <Stack direction="row" spacing={3} mt={3} alignItems="flex-start">
+        <Box flex={1} maxWidth="25%">
+          <CategoryAssociatedTree />
+        </Box>
+        <Box flex={3} maxWidth="75%">
+          <ProductSearchList />
+        </Box>
+      </Stack>
+    </Box>
   );
 }
