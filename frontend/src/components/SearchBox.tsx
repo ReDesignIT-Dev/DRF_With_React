@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, KeyboardEvent, MouseEvent } from "react";
-import "./SearchBox.scss";
-import { ReactComponent as SearchIcon } from "assets/images/search.svg";
-import { FRONTEND_SEARCH_URL, FRONTEND_SHOP_URL } from "config";
+import { TextField, IconButton, Box } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { FRONTEND_SEARCH_URL } from "config";
 import { useNavigate } from "react-router-dom";
 
 export default function SearchBox() {
@@ -25,18 +25,27 @@ export default function SearchBox() {
     };
 
     return (
-        <div className="search-box d-flex flex-row align-items-center gap-2">
-            <input
-                className="search-input flex-fill p-3"
-                type="text"
+        <Box
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                width: "100%",
+                maxWidth: 600, 
+            }}
+        >
+            <TextField
+                fullWidth
+                variant="outlined"
                 placeholder="Search"
                 value={searchTerm}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
+                sx={{ flex: 1, backgroundColor: "white" }}
             />
-            <button className="search-btn btn btn-primary d-flex justify-content-center align-items-center" onClick={handleSearchClick}>
+            <IconButton color="primary" onClick={handleSearchClick} sx={{backgroundColor: "white"}}>
                 <SearchIcon />
-            </button>
-        </div>
+            </IconButton>
+        </Box>
     );
 }
