@@ -2,7 +2,6 @@ import React from "react";
 import SignInButton from "./SignInButton";
 import SearchBox from "./SearchBox";
 import { Link } from "react-router-dom";
-import "./Header.scss";
 import LogoRacoon from "./LogoRacoon";
 import CategoryDropdown from "./CategoryDropdown";
 import { FaShoppingCart } from "react-icons/fa";
@@ -13,70 +12,59 @@ import { FRONTEND_BASE_URL, FRONTEND_CART_URL, FRONTEND_SHOP_URL } from "config"
 
 const ShopHeader: React.FC = () => {
   return (
-    <Box className="main-header" px={3}>
-      <Box className="header" py={2}>
-        {/* Top Header */}
-        <Grid2 
-          container 
-          spacing={2} 
-          className="top-header" 
-          justifyContent="center" 
-          alignItems="center"
-        >
+    <Box
+      sx={{
+        paddingY: "10px",
+        paddingX: "10px",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        backgroundColor: "grey",
+      }}
+    >
+      <Grid2 container spacing={2} alignItems="center" flexWrap="nowrap" sx={{width: "100%"}} >
+        
+        {/* First Row: Logo on Left, Leave Button Center, Sign-in & Cart on Right */}
+        <Grid2 sx={{ xs: 12, md: 6 }} display="flex" justifyContent="flex-start" alignItems="center">
           {/* Logo */}
-          <Grid2 sx={{ xs: 12 }} className="header-logo">
-            <Link to={FRONTEND_SHOP_URL}>
-              <LogoRacoon />
-            </Link>
-          </Grid2>
+          <Link to={FRONTEND_SHOP_URL}>
+            <LogoRacoon />
+          </Link>
+        </Grid2>
 
+        <Grid2 sx={{ xs: 12, md: 6, width: "100%" }} display="flex" alignItems="center">
           {/* Leave Button */}
-          <Grid2 sx={{ xs: 12 }} textAlign="center">
-            <Link to={FRONTEND_BASE_URL}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<ArrowLeft />}
-                className="base-url-button"
-                sx={{ textTransform: "none" }}
-              >
-                ReDesignIT
-              </Button>
-            </Link>
-          </Grid2>
-
-          {/* Search Box */}
-          <Grid2 sx={{ xs: 12 }} className="header-searchbar">
-            <SearchBox />
-          </Grid2>
+          <Link to={FRONTEND_BASE_URL}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<ArrowLeft />}
+              sx={{ textTransform: "none" }}
+            >
+              ReDesignIT
+            </Button>
+          </Link>
 
           {/* Sign-in and Cart */}
-          <Grid2 sx={{ xs: 12 }} textAlign="center">
-            <Box className="header-signin" display="flex" gap={2} justifyContent="center" alignItems="center">
-              <Link
-                to={FRONTEND_CART_URL}
-                className="shopping-cart-icon"
-              >
-                <FaShoppingCart size={40} />
-              </Link>
-              <SignInButton />
-            </Box>
-          </Grid2>
+          <Box display="flex" gap={2} alignItems="center" marginLeft={2} justifyContent="flex-end" sx={{width: "100%"}}>
+            <Link to={FRONTEND_CART_URL}>
+              <FaShoppingCart size={40} />
+            </Link>
+            <SignInButton />
+          </Box>
         </Grid2>
 
-        {/* Navigation */}
-        <Grid2 
-          container 
-          spacing={2} 
-          className="header-nav" 
-          my={2} 
-          justifyContent="center"
-        >
-          <Grid2 sx={{ xs: 12 }} className="nav-element">
-            <CategoryDropdown />
-          </Grid2>
+        
+        
+      </Grid2>
+      {/* Second Row: Search Box (Full Width on Small Screens, Moves Below on Large Screens) */}
+      <Grid2 sx={{ xs: 12, md: 12, marginTop: "10px" }} display="flex" justifyContent="center">
+          <SearchBox />
         </Grid2>
-      </Box>
+      {/* Always at Bottom: Category Dropdown */}
+      <Grid2 sx={{ xs: 12, mt: "auto" }}>
+        <CategoryDropdown />
+      </Grid2>
     </Box>
   );
 };
