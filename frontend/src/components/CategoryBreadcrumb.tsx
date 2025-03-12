@@ -26,7 +26,7 @@ const CategoryBreadcrumb: React.FC<CategoryBreadcrumbProps> = ({ category, inclu
           return (
             <li key={index} className="breadcrumb-item">
               <span role="button" onClick={(event) => handleNavigationClick(ancestor.slug, event)}>
-                {ancestor.name}
+                {ancestor.shortName}
               </span>
             </li>
           );
