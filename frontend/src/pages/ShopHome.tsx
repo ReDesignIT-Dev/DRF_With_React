@@ -1,8 +1,5 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { generatePath, useNavigate } from "react-router-dom";
-import { fetchCategories } from "../reduxComponents/reducers/categoryReducer";
-import { RootState, AppDispatch } from "../reduxComponents/store";
 import {
   Card,
   CardActionArea,
@@ -12,25 +9,22 @@ import {
   Container,
   Box,
 } from "@mui/material";
-import { FRONTEND_SHOP_URL, FRONTEND_CATEGORY_URL } from "config";
+import { FRONTEND_CATEGORY_URL } from "config";
+import { selectIsTreeLoading, selectTreeCategories, selectTreeCategoriesError } from "reduxComponents/reduxShop/Categories/selectors";
 
 export default function ShopHome() {
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { categories, isLoading, error } = useSelector(
-    (state: RootState) => state.categories
-  );
+  const categories = useSelector(selectTreeCategories);
+  const isLoading = useSelector(selectIsTreeLoading);
+  const error = useSelector(selectTreeCategoriesError);
 
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
-
+ 
   const handleCategoryClick = (slug: string) => {
     const categoryPath = generatePath(FRONTEND_CATEGORY_URL, { slug });
     navigate(categoryPath);
   };
 
-  const renderCategoryTree = (categories: Category[]) => (
+  const renderCategoryTree = (categories: CategoryNode[]) => (
     <>
       {categories.map((category) => (
         <Grid2 container key={category.slug} sx={{ display: "flex", flexDirection: "column" }} gap={5}>
