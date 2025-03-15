@@ -69,7 +69,7 @@ export const selectCategoryAncestors = createSelector(
       const parentCategory = categories.find((category) => category.id === currentCategory?.parentId);
       if (!parentCategory) break;
 
-      ancestors.unshift({ name: parentCategory.name, slug: parentCategory.slug });
+      ancestors.unshift({ name: parentCategory.name, shortName: parentCategory.shortName, slug: parentCategory.slug });
       currentCategory = parentCategory;
     }
 
