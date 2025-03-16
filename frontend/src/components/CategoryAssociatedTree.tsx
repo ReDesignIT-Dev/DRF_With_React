@@ -1,9 +1,9 @@
 import { generatePath, useNavigate } from "react-router-dom";
 import { useEffect, useState, MouseEvent } from "react";
-import { FRONTEND_CATEGORY_URL, FRONTEND_SHOP_URL } from "config";
+import { FRONTEND_CATEGORY_URL } from "config";
 import useQueryParams from "hooks/useQueryParams";
-import "./CategoryAssociatedTree.css";
 import { getAllSearchAssociatedCategories } from "services/shopServices/apiRequestsShop";
+import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 
 const CategoryAssociatedTree: React.FC = () => {
   const [categories, setCategories] = useState<CategoryNode[]>([]);
@@ -14,7 +14,7 @@ const CategoryAssociatedTree: React.FC = () => {
     const fetchAssociatedCategoriesTree = async () => {
       try {
         const response = await getAllSearchAssociatedCategories(queryParams.string);
-        if (response && response.data && response.data) {
+        if (response?.data) {
           setCategories(response.data);
         } else {
           console.error("No categories found in response");
@@ -35,37 +35,36 @@ const CategoryAssociatedTree: React.FC = () => {
 
   const CategoryTree: React.FC<{ category: CategoryNode }> = ({ category }) => {
     return (
-      <div className="category-tree">
-        <div onClick={(event) => handleNavigationClick(category.slug, event)} className="associated-category">
-          <span className="category-name">{category.name}</span>
-          <span className="category-count">{category.productCount}</span>
-        </div>
+      <Box ml={2}>
+        <ListItem component="div" onClick={(event) => handleNavigationClick(category.slug, event)}>
+          <ListItemText
+            primary={
+              <Typography variant="body1" sx={{ '&:hover': { color: "#00ff22" }, cursor: "pointer" }}>
+                {category.name} ({category.productCount})
+              </Typography>
+            }
+          />
+        </ListItem>
         {category.children && category.children.length > 0 && (
-          <div className="category-children">
+          <List component="div" disablePadding>
             {category.children.map((childCategory) => (
               <CategoryTree key={childCategory.slug} category={childCategory} />
             ))}
-          </div>
+          </List>
         )}
-      </div>
-    );
-  };
-
-  const listAssociatedCategories = () => {
-    return (
-      <>
-        {categories.map((category) => (
-          <CategoryTree key={category.slug} category={category} />
-        ))}
-      </>
+      </Box>
     );
   };
 
   return (
-    <div className={`d-flex flex-column gap-2`}>
-      <h3>Subcategories:</h3>
-      {listAssociatedCategories()}
-    </div>
+    <Box display="flex" flexDirection="column" gap={2}>
+      <Typography variant="h6">Subcategories:</Typography>
+      <List>
+        {categories.map((category) => (
+          <CategoryTree key={category.slug} category={category} />
+        ))}
+      </List>
+    </Box>
   );
 };
 
