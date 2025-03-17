@@ -83,16 +83,33 @@ export async function getProductParentCategory(productId: number): Promise<Axios
   }
 }
 
-export async function getAllSearchAssociatedCategories(searchString: string): Promise<AxiosResponse<CategoryNode[]> | undefined> {
+export async function getAllSearchAssociatedCategories(
+  searchString: string
+): Promise<AxiosResponse<CategoryNode[]> | undefined> {
   try {
-    const response = await apiClient.get(
-      `${API_SEARCH_ASSOCIATED_CATEGORIES_URL}${searchString}`
-    );
+    const response = await apiClient.get(`${API_SEARCH_ASSOCIATED_CATEGORIES_URL}${searchString}`);
+
+    if (response.data) {
+      const remapCategoryNode = (category: any): CategoryNode => ({
+        id: category.id,
+        shortName: category.shortName,
+        slug: category.slug,
+        name: category.name,
+        productCount: category.product_count,
+        children: category.children ? category.children.map(remapCategoryNode) : [], // Recursively remap children
+      });
+
+      // Transform data and return the modified response
+      const transformedData = response.data.map(remapCategoryNode);
+      return { ...response, data: transformedData };
+    }
+
     return response;
   } catch (error) {
     apiErrorHandler(error);
   }
 }
+
 
 export async function getAllSearchProducts(searchString: string): Promise<AxiosResponse | undefined> {
   try {
