@@ -10,7 +10,6 @@ import {
   MDBContainer,
 } from "mdb-react-ui-kit";
 import { FRONTEND_CATEGORY_URL } from "config";
-import { RootState } from "../reduxComponents/store";
 import {
   selectIsTreeLoading,
   selectTreeCategories,
@@ -39,7 +38,7 @@ const CategoryDropdown: React.FC = () => {
       return null;
     }
     return (
-      <MDBContainer className="d-flex justify-content-center basic">
+      <MDBContainer fluid style={{ padding: 0, marginTop: "10px" }}>
         <MDBDropdown animation={false}>
           <MDBDropdownToggle>Categories</MDBDropdownToggle>
           <MDBDropdownMenu>
