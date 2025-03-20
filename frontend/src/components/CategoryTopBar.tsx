@@ -1,19 +1,16 @@
 import "./CategoryTopBar.css";
-import CategoryParentTree from "./CategoryParentTree";
-import { useState } from "react";
+import CategoryBreadcrumb from "./CategoryBreadcrumb";
 
-interface CategoryTopBarProps {
-  className?: string;
-  currentCategory: string;
+interface CategoryTopBarProps{
+  category: Category | null;
 }
 
-export default function CategoryTopBar({ className, currentCategory }: CategoryTopBarProps) {
-  const [categoryName, setCategoryName] = useState<string>("");
-
+export default function CategoryTopBar({category}: CategoryTopBarProps) {
+  
   return (
-    <div className={`${className}`}>
-      <h1>{categoryName}</h1>
-      <CategoryParentTree currentCategory={currentCategory} />
+    <div>
+      <h1>{category? category.name: "Missing Category info :("}</h1>
+      {category? <CategoryBreadcrumb category={category} includeSelf={true} /> : "Category missing"}
     </div>
   );
 }
