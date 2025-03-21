@@ -10,10 +10,12 @@ import { getIdFromSlug } from "utils/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "reduxComponents/store";
 import { selectFlatCategoryById, selectTreeCategoryById } from "reduxComponents/reduxShop/Categories/selectors";
+import { getAllProductsInCategory } from "services/shopServices/apiRequestsShop";
 
 export default function Category() {
   const [categoryNotFound, setCategoryNotFound] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
   const { slug } = useParams() as { slug: string };
   const categoryId = getIdFromSlug(slug);
   const category = useSelector((state: RootState) => (categoryId !== null ? selectFlatCategoryById(state, categoryId) : null));
@@ -22,6 +24,24 @@ export default function Category() {
   useEffect(() => {
     setCategoryNotFound(!category);
   }, [category, categoryTree]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (categoryId) {
+        try {
+          const response = await getAllProductsInCategory(categoryId);
+          if (response?.data) {
+            setProducts(response.data);
+          } else {
+            console.error("Error fetching products: response is undefined or has no data");
+          }
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      }
+    };
+    fetchProducts();
+  }, [categoryId]);
 
   const handleDialogOpen = () => setIsDialogOpen(true);
   const handleDialogClose = () => setIsDialogOpen(false);
@@ -38,12 +58,7 @@ export default function Category() {
 
           <Grid2 container spacing={3} sx={{ flexDirection: { xs: "column", md: "row" } }}>
             {/* Button for smaller screens */}
-            <Grid2
-              sx={{
-                display: { xs: "block", md: "none" },
-                width: "100%",
-              }}
-            >
+            <Grid2 sx={{ display: { xs: "block", md: "none" }, width: "100%" }}>
               <Button variant="contained" color="primary" fullWidth onClick={handleDialogOpen}>
                 Subcategories
               </Button>
@@ -75,19 +90,13 @@ export default function Category() {
                 boxSizing: "border-box",
               }}
             >
-              <ProductList />
+              <ProductList products={products} />
             </Grid2>
           </Grid2>
 
           {/* Dialog for CategoryTree */}
           <Dialog fullScreen open={isDialogOpen} onClose={handleDialogClose} PaperProps={{ sx: { backgroundColor: "background.default" } }}>
-            <DialogTitle
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
+            <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>Subcategories</span>
               <IconButton onClick={handleDialogClose}>
                 <CloseIcon />
