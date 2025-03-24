@@ -11,9 +11,10 @@ import {
 import { AxiosResponse } from "axios";
 
 
-export async function getAllProductsInCategory(categoryId: number): Promise<AxiosResponse | undefined> {
+export async function getAllProductsInCategory(categoryId: number, page: number = 1): Promise<AxiosResponse | undefined> {
   try {
-    const response = await apiClient.get(`${API_CATEGORY_URL}/${categoryId}/products`);
+    const url = `${API_CATEGORY_URL}/${categoryId}/products?page=${page}`;
+    const response = await apiClient.get(url);
     return response;
   } catch (error) {
     apiErrorHandler(error);
