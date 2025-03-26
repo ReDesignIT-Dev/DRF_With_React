@@ -5,7 +5,7 @@ from rest_framework.generics import (
     CreateAPIView,
     RetrieveUpdateDestroyAPIView, RetrieveAPIView, get_object_or_404, UpdateAPIView, DestroyAPIView
 )
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategoryTreeSerializer, CategoryCreateEditSerializer, \
@@ -18,7 +18,6 @@ from rest_framework import status
 from rest_framework.filters import SearchFilter
 from django.db.models import Q
 from urllib.parse import unquote
-
 
 class HomeView(APIView):
     permission_classes = [AllowAny]
@@ -202,11 +201,13 @@ class CategoryView(APIView):
 
         return Response(response_data)
 
+class TenPerPagePagination(PageNumberPagination):
+    page_size = 10
 
 class CategoryProductsView(RetrieveAPIView):
-    queryset = Category.objects.all()
     serializer_class = CategoryProductListSerializer
     lookup_field = 'id'
+    pagination_class = TenPerPagePagination
 
     def get_object(self):
         id = self.kwargs.get("id")
@@ -215,7 +216,13 @@ class CategoryProductsView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         category = self.get_object()
         descendants = category.get_descendants(include_self=True)
-        products = Product.objects.filter(category__in=descendants).distinct()
+        products = Product.objects.filter(category__in=descendants).distinct().order_by('id')
+        page = self.paginate_queryset(products)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        print('reach this')
         serializer = self.get_serializer(products, many=True)
         return Response(serializer.data)
 
