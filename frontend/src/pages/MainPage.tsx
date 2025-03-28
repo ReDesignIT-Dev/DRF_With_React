@@ -4,7 +4,7 @@ import NotFound from "pages/NotFound";
 import { Box } from "@mui/material";
 import Home from "./Home";
 import Header from "components/Header";
-import Footer from "components/ShopFooter";
+import Footer from "components/Footer";
 import { FRONTEND_ABOUT_URL, FRONTEND_CONTACT_URL } from "config";
 import About from "./About";
 import Contact from "./Contact";
