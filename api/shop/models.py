@@ -64,7 +64,7 @@ def get_default_category():
 class Product(CommonFields):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE,
                                  default=get_default_category)
-    description = models.CharField(max_length=500, blank=True)
+    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_start = models.DateTimeField(null=True, blank=True)
     sale_end = models.DateTimeField(null=True, blank=True)
