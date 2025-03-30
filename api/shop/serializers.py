@@ -80,7 +80,8 @@ class CategoryFlatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = (
-        'id', 'name', 'short_name', 'slug', 'image', 'description', 'level', 'parent_id', 'children', 'product_count', 'ancestors')
+            'id', 'name', 'short_name', 'slug', 'image', 'description', 'level', 'parent_id', 'children',
+            'product_count', 'ancestors')
 
     def get_parent_id(self, obj):
         return obj.parent.id if obj.parent else None
@@ -103,7 +104,7 @@ class CategoryFlatSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
-    description = serializers.CharField(min_length=2, max_length=500)
+    description = serializers.CharField(allow_blank=True, style={'base_template': 'textarea.html'})
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
     price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
                                      max_digits=None)
