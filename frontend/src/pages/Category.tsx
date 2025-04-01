@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProductList from "components/ProductList";
 import CategoryTree from "components/CategoryTree";
@@ -17,6 +17,8 @@ export default function Category() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const { slug } = useParams() as { slug: string };
+  const [searchParams] = useSearchParams();
+  const pageParam = parseInt(searchParams.get("page") || "1", 10);
   const categoryId = getIdFromSlug(slug);
   const category = useSelector((state: RootState) => (categoryId !== null ? selectFlatCategoryById(state, categoryId) : null));
   const categoryTree = useSelector((state: RootState) => (categoryId !== null ? selectTreeCategoryById(state, categoryId) : null));
@@ -29,9 +31,9 @@ export default function Category() {
     const fetchProducts = async () => {
       if (categoryId) {
         try {
-          const response = await getAllProductsInCategory(categoryId);
+          const response = await getAllProductsInCategory(categoryId, pageParam);
           if (response?.data) {
-            setProducts(response.data);
+            setProducts(response.data.results);
           } else {
             console.error("Error fetching products: response is undefined or has no data");
           }
