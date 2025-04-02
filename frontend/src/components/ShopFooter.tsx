@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
           <LinkedIn fontSize="large" />
         </Link>
         <Link
-          href="https://github.com/Hamster-Inside"
+          href="https://github.com/ReDesignIT-Dev"
           color="inherit"
           underline="none"
         >
