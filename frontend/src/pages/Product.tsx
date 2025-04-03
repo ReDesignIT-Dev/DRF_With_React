@@ -170,17 +170,13 @@ export default function Product() {
       {category ? <CategoryBreadcrumb category={category} includeSelf={true} /> : "Category missing"}
 
       {/* Main product info */}
-      <Grid2 container direction="column" sx={{marginX: "auto"}}>
-        <Grid2 container direction="row" spacing={2} sx={{width: "100%"}}>
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: "500px",
-              aspectRatio: "16 / 9",
-            }}
-          >
+      <Grid2 container direction="column" sx={{width: "100%"}}>
+
+        {/* Images on left with title and price on right*/}
+        <Grid2 container direction="row" sx={{width: "100%"}} spacing={2}>
+
             {/* Left: Product images */}
-            <Grid2 container direction="column" sx={{ xs: 12, md: 6, width: "100%" }}>
+            <Grid2 container direction="column" size={{xs: 12, md: 6,}} sx={{ maxWidth: "500px", marginX: "auto" }}>
               <Box sx={{ width: "100%" }}>
                 <Card onClick={() => openLightbox(currentImageIndex)}>
                   <CardMedia
@@ -213,12 +209,10 @@ export default function Product() {
                 </Swiper>
               </Box>
             </Grid2>
-          </Box>
           {/* Right: Product details and cart actions */}
           <Grid2
+          size={{xs: 12, md: 6,}}
             sx={{
-              xs: 12,
-              md: 6,
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",
