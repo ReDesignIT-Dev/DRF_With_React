@@ -27,6 +27,9 @@ export const FRONTEND_PASSWORD_RESET_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_
 export const PRODUCT_PATH: string = "/product";
 export const FRONTEND_PRODUCT_PATH: string = `${FRONTEND_SHOP_URL}${PRODUCT_PATH}`;
 export const ROUTE_PATH_PRODUCT: string = `${PRODUCT_PATH}/:slug`;
+export const PRODUCT_ADD_PATH: string = "/add";
+export const FRONTEND_PRODUCT_ADD_PATH: string = `${FRONTEND_SHOP_URL}${PRODUCT_PATH}${PRODUCT_ADD_PATH}`;
+export const ROUTE_PATH_PRODUCT_ADD: string = `${PRODUCT_PATH}${PRODUCT_ADD_PATH}`;
 export const FRONTEND_PRODUCT_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_PRODUCT}`;
 export const CATEGORY_PATH: string = "/category";
 export const FRONTEND_CATEGORY_PATH: string = `${FRONTEND_SHOP_URL}${CATEGORY_PATH}`;
@@ -46,6 +49,7 @@ export const API_PASSWORD_RESET_URL: string = `${BACKEND_USER_URL}/password-rese
 
 // API shop based
 export const API_PRODUCT_URL: string = `${BACKEND_SHOP_URL}/product`;
+export const API_PRODUCT_ADD_URL: string = `${API_PRODUCT_URL}/create`;
 export const API_CATEGORY_URL: string = `${BACKEND_SHOP_URL}/category`;
 export const API_ALL_CATEGORIES_TREE: string = `${API_CATEGORY_URL}/tree`;
 export const API_ALL_CATEGORIES_FLAT: string = `${API_CATEGORY_URL}/flat`;
