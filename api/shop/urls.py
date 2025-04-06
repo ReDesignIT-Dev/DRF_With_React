@@ -1,11 +1,16 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
 from .views import ProductList, ProductCreate, ProductEditView, HomeView, ProductView, CategoryTreeView, \
     CategoryView, CategoryCreateView, CategoryEditView, ShopAdminPanel, ShopAdminPanelProducts, \
     CategoryProductsView, ProductSearchView, \
-    CategoriesSearchAssociatedView, ShoppingCartItemCreateView, \
-    ShoppingCartItemUpdateView, ShoppingCartItemDestroyView, ShoppingCartItemListView, CategoryFlatView
+    CategoriesSearchAssociatedView, CategoryFlatView, ShoppingCartItemViewSet
+
+router = DefaultRouter()
+router.register(r'cart', ShoppingCartItemViewSet, basename='cart')
 
 urlpatterns = [
+    path('', include(router.urls)),
     path('', HomeView.as_view(), name='home'),
     path('search', ProductSearchView.as_view(), name='search'),
     path('search-associated-categories', CategoriesSearchAssociatedView.as_view(), name='associated_categories'),
@@ -21,8 +26,4 @@ urlpatterns = [
     path('category/<int:id>/products', CategoryProductsView.as_view(), name='category_products'),
     path('shopping-admin-panel', ShopAdminPanel.as_view(), name='shop_admin_panel'),
     path('shopping-admin-panel/products', ShopAdminPanelProducts.as_view(), name='shop_admin_panel_products'),
-    path('cart', ShoppingCartItemListView.as_view(), name='shopping-cart'),
-    path('cart/add', ShoppingCartItemCreateView.as_view(), name='add-cart-item'),
-    path('cart/update', ShoppingCartItemUpdateView.as_view(), name='update-cart-item'),
-    path('cart/delete', ShoppingCartItemDestroyView.as_view(), name='delete-cart-item')
 ]
