@@ -7,6 +7,7 @@ import {
   API_CATEGORY_URL,
   API_ALL_CATEGORIES_TREE,
   API_ALL_CATEGORIES_FLAT,
+  API_PRODUCT_ADD_URL,
 } from "config";
 import { AxiosResponse } from "axios";
 
@@ -121,3 +122,14 @@ export async function getAllSearchProducts(searchString: string): Promise<AxiosR
   }
 }
 
+export async function addProduct(formData : FormData): Promise<AxiosResponse | undefined> {
+  try {
+    const response = await apiClient.post(`${API_PRODUCT_ADD_URL}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }});
+    return response;
+  } catch (error) {
+    apiErrorHandler(error);
+  }
+}
