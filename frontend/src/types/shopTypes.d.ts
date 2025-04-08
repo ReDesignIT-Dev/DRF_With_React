@@ -5,8 +5,7 @@ interface Image {
   position?: number;
 }
 
-interface Product {
-  id: number;
+interface BaseProductFields {
   name: string;
   categoryId: number;
   description: string;
@@ -14,9 +13,18 @@ interface Product {
   saleStart?: Date | null;
   saleEnd?: Date | null;
   isOnSale: boolean;
-  images: Image[];
-  slug: string;
 }
+
+interface Product extends BaseProductFields {
+  id: number;
+  slug: string;
+  images: Image[];
+}
+
+interface ProductFormData extends BaseProductFields {
+  images: File[];
+}
+
 
 interface CartItem {
   product: Product;
