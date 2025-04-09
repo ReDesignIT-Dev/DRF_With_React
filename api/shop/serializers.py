@@ -183,18 +183,18 @@ class ProductParentCategorySerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartItemSerializer(serializers.ModelSerializer):
-    product_slug = serializers.SlugRelatedField(
+    product_id = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all(),
-        slug_field='slug',
         source='product',
         write_only=True
     )
+
     product = ProductSerializer(read_only=True)
 
     class Meta:
         model = ShoppingCartItem
-        fields = ['product_slug', 'product', 'quantity', 'price']
-        read_only_fields = ['price', 'product_slug', 'product']
+        fields = ['product_id', 'quantity', 'product']
+        read_only_fields = ['product']
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
