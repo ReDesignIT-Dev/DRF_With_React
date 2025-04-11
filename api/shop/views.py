@@ -14,10 +14,11 @@ from .serializers import ProductSerializer, CategoryTreeSerializer, CategoryCrea
     CategoryFlatSerializer
 from .models import Product, Category, ShoppingCartItem, ShoppingCart
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import status, mixins, viewsets
 from rest_framework.filters import SearchFilter
 from django.db.models import Q
 from urllib.parse import unquote
+
 
 class HomeView(APIView):
     permission_classes = [AllowAny]
@@ -201,8 +202,10 @@ class CategoryView(APIView):
 
         return Response(response_data)
 
+
 class TenPerPagePagination(PageNumberPagination):
     page_size = 10
+
 
 class CategoryProductsView(RetrieveAPIView):
     serializer_class = CategoryProductListSerializer
@@ -279,63 +282,49 @@ class ShopAdminPanelProducts(ListAPIView):
     search_fields = ['name']
 
 
-class ShoppingCartItemListView(ListAPIView):
-    authentication_classes = (TokenAuthentication,)
+class ShoppingCartItemViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
     serializer_class = ShoppingCartItemSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        # Ensure you only return items for the logged-in user
-        cart, created = ShoppingCart.objects.get_or_create(owner=self.request.user, status='active')
-        return cart.items.all()
-
-
-class ShoppingCartItemCreateView(CreateAPIView):
     authentication_classes = (TokenAuthentication,)
-    serializer_class = ShoppingCartItemSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        cart, _ = ShoppingCart.objects.get_or_create(owner=self.request.user, status='active')
+        return cart.items.all()
+
     def perform_create(self, serializer):
-        cart, created = ShoppingCart.objects.get_or_create(owner=self.request.user, status='active')
+        cart, _ = ShoppingCart.objects.get_or_create(
+            owner=self.request.user, status='active'
+        )
         product = serializer.validated_data['product']
 
         try:
-            cart_item = ShoppingCartItem.objects.get(shopping_cart=cart, product=product)
+            cart_item = ShoppingCartItem.objects.get(
+                shopping_cart=cart, product=product
+            )
             cart_item.quantity += serializer.validated_data['quantity']
             cart_item.save()
         except ShoppingCartItem.DoesNotExist:
             serializer.save(shopping_cart=cart, price=product.price)
 
-
-class ShoppingCartItemBaseView:
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = [IsAuthenticated]
-
-    def get_product_id(self):
-        product_id = self.request.data.get('product_id')
-        if not product_id:
-            raise ValidationError({"product_id": "This field is required."})
-        return product_id
-
-    def get_queryset(self):
-        product_id = self.get_product_id()
-        return ShoppingCartItem.objects.filter(
-            shopping_cart__owner=self.request.user,
-            shopping_cart__status='active',
-            product__id=product_id
-        )
-
-
-class ShoppingCartItemUpdateView(ShoppingCartItemBaseView, UpdateAPIView):
-    serializer_class = ShoppingCartItemSerializer
-
     def get_object(self):
-        queryset = self.get_queryset()
-        return get_object_or_404(queryset)
+        product_id = self.kwargs['pk']
+        cart, _ = ShoppingCart.objects.get_or_create(owner=self.request.user, status='active')
+        return get_object_or_404(ShoppingCartItem, shopping_cart=cart, product_id=product_id)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
-class ShoppingCartItemDestroyView(ShoppingCartItemBaseView, DestroyAPIView):
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        return get_object_or_404(queryset)
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
