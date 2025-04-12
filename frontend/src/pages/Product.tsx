@@ -170,48 +170,55 @@ export default function Product() {
       {category ? <CategoryBreadcrumb category={category} includeSelf={true} /> : "Category missing"}
 
       {/* Main product info */}
-      <Grid2 container direction="column" sx={{width: "100%"}}>
-
+      <Grid2 container direction="column" sx={{ width: "100%" }}>
         {/* Images on left with title and price on right*/}
-        <Grid2 container direction="row" sx={{width: "100%"}} spacing={2}>
+        <Grid2 container direction="row" sx={{ width: "100%", height: "500px" }} spacing={2}>
+          {/* Left: Product images */}
+          <Grid2 container direction="column" size={{ xs: 12, md: 6 }} sx={{ marginX: "auto" }}>
+            <Box>
+              <Card
+                onClick={() => openLightbox(currentImageIndex)}
+                sx={{
+                  width: "100%",
+                  aspectRatio: "16/9",
+                  display: "flex", // makes CardMedia respect parent's size
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  image={selectedImage}
+                  alt={product.name}
+                  sx={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    objectFit: "contain",
+                    objectPosition: "center",
+                    cursor: "pointer",
+                  }}
+                />
+              </Card>
+            </Box>
 
-            {/* Left: Product images */}
-            <Grid2 container direction="column" size={{xs: 12, md: 6,}} sx={{ maxWidth: "500px", marginX: "auto" }}>
-              <Box sx={{ width: "100%" }}>
-                <Card onClick={() => openLightbox(currentImageIndex)}>
-                  <CardMedia
-                    component="img"
-                    image={selectedImage}
-                    alt={product.name}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      objectPosition: "center",
-                      cursor: "pointer",
-                    }}
-                  />
-                </Card>
-              </Box>
-
-              {/* Thumbnails using Swiper */}
-              <Box sx={{ width: "100%" }}>
-                <Swiper
-                  modules={[Navigation, Pagination, Scrollbar, A11y]}
-                  spaceBetween={10}
-                  slidesPerView={3}
-                  navigation
-                  pagination={{ clickable: true }}
-                  scrollbar={{ draggable: true }}
-                  style={{ width: "100%" }}
-                >
-                  {swiperSlides}
-                </Swiper>
-              </Box>
-            </Grid2>
+            {/* Thumbnails using Swiper */}
+            <Box sx={{ width: "100%" }}>
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={10}
+                slidesPerView={3}
+                navigation
+                pagination={{ clickable: true }}
+                scrollbar={{ draggable: true }}
+                style={{ width: "100%" }}
+              >
+                {swiperSlides}
+              </Swiper>
+            </Box>
+          </Grid2>
           {/* Right: Product details and cart actions */}
           <Grid2
-          size={{xs: 12, md: 6,}}
+            size={{ xs: 12, md: 6 }}
             sx={{
               justifyContent: "center",
               alignItems: "center",
