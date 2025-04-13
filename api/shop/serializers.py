@@ -104,6 +104,11 @@ class CategoryFlatSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
     description = serializers.CharField(allow_blank=True, style={'base_template': 'textarea.html'})
     is_on_sale = serializers.BooleanField(read_only=True, default=False)
     price = serializers.DecimalField(min_value=Decimal(0.01), max_value=Decimal(1000000.00), decimal_places=2,
@@ -131,8 +136,17 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'category', 'description', 'images', 'images', 'price', 'sale_start', 'sale_end',
+        fields = ('id', 'name', 'category', 'description', 'images','uploaded_images',  'images', 'price', 'sale_start', 'sale_end',
                   'is_on_sale', 'slug')
+
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop('uploaded_images', [])
+        product = Product.objects.create(**validated_data)
+
+        for image in uploaded_images:
+            ProductImage.objects.create(product=product, image=image)
+
+        return product
 
 
 class ProductUpdateSerializer(serializers.ModelSerializer):
