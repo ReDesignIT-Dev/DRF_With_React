@@ -58,7 +58,8 @@ class ProductList(ListAPIView):
 
 class ProductCreate(CreateAPIView):
     serializer_class = ProductSerializer
-    permission_classes = [AllowAny]
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
