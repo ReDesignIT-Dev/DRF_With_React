@@ -9,6 +9,7 @@ import {
 import { getToken, removeToken, setToken } from "utils/cookies";
 import { apiErrorHandler } from "./apiErrorHandler";
 import { AxiosResponse, AxiosError } from "axios";
+import { getHeaders } from "utils/utils";
 
 interface ReCaptchaData {
   recaptcha: string | null;
@@ -44,12 +45,6 @@ interface AuthTokenResponse {
 
 type ApiResponse<T = any> = AxiosResponse<T>;
 
-const getHeaders = (additionalHeaders?: Record<string, string>): Record<string, string> => {
-  return {
-    ...apiClient.defaults.headers as Record<string, string>,
-    ...additionalHeaders
-  };
-};
 
 function handleApiError(error: unknown): void {
   if (error instanceof AxiosError) {
