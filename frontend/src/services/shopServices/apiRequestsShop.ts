@@ -10,6 +10,7 @@ import {
   API_PRODUCT_ADD_URL,
 } from "config";
 import { AxiosResponse } from "axios";
+import { getToken } from "utils/cookies";
 
 
 export async function getAllProductsInCategory(categoryId: number, page: number = 1): Promise<AxiosResponse | undefined> {
@@ -124,9 +125,11 @@ export async function getAllSearchProducts(searchString: string): Promise<AxiosR
 
 export async function addProduct(formData : FormData): Promise<AxiosResponse | undefined> {
   try {
+    const token = getToken();
     const response = await apiClient.post(`${API_PRODUCT_ADD_URL}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Token ${token}`
       }});
     return response;
   } catch (error) {
