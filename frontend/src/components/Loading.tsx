@@ -1,15 +1,30 @@
-import React from "react";
-import ReactLoading from "react-loading";
-import "./Loading.scss";
+import React, { useEffect, useState } from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 const Loading: React.FC = () => {
+  const [showSpinner, setShowSpinner] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSpinner(true), 200);
+    return () => clearTimeout(timer); // Clear timer if unmounted early
+  }, []);
+
+  if (!showSpinner) return null;
+
   return (
-    <div className='loading-div'>
-      <div className='loading-component mb-5 mt-5'>
-        <ReactLoading type={"spinningBubbles"} color={"green"} height={"100%"} width={"100%"} />
-      </div>
-      <div className='fs-3'>Please wait</div>
-    </div>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="30vh"
+      gap={2}
+    >
+      <CircularProgress color="primary" size={60} />
+      <Typography variant="h6" color="textSecondary">
+        Please wait
+      </Typography>
+    </Box>
   );
 };
 
