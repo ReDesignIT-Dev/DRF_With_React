@@ -11,10 +11,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "reduxComponents/store";
 import { selectFlatCategoryById, selectTreeCategoryById } from "reduxComponents/reduxShop/Categories/selectors";
 import { getAllProductsInCategory } from "services/shopServices/apiRequestsShop";
+import Loading from "components/Loading";
 
 export default function Category() {
-  const [categoryNotFound, setCategoryNotFound] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [products, setProducts] = useState<Product[]>([]);
   const { slug } = useParams() as { slug: string };
   const [searchParams] = useSearchParams();
@@ -22,36 +24,65 @@ export default function Category() {
   const categoryId = getIdFromSlug(slug);
   const category = useSelector((state: RootState) => (categoryId !== null ? selectFlatCategoryById(state, categoryId) : null));
   const categoryTree = useSelector((state: RootState) => (categoryId !== null ? selectTreeCategoryById(state, categoryId) : null));
-
-  useEffect(() => {
-    setCategoryNotFound(!category);
-  }, [category, categoryTree]);
+  const isCategoryResolved = category !== null;
 
   useEffect(() => {
     const fetchProducts = async () => {
       if (categoryId) {
+        setIsLoading(true);
         try {
           const response = await getAllProductsInCategory(categoryId, pageParam);
           if (response?.data) {
             setProducts(response.data.results);
+            setTotalPages(response.data.totalPages);
           } else {
             console.error("Error fetching products: response is undefined or has no data");
           }
         } catch (error) {
           console.error("Error fetching products:", error);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
     fetchProducts();
-  }, [categoryId]);
-
-  const handleDialogOpen = () => setIsDialogOpen(true);
+  }, [categoryId, pageParam]);
+  
+   const handleDialogOpen = () => setIsDialogOpen(true);
   const handleDialogClose = () => setIsDialogOpen(false);
 
-  if (categoryNotFound) {
+  if (!isCategoryResolved || isLoading) {
+    console.log("loading...");
+    return <Loading />;
+  }
+  
+  if (category === null) {
+    console.log("not found...");
     return <NotFound />;
   }
-
+  
+  
+  const renderPagination = () => {
+    return (
+      <Box display="flex" justifyContent="flex-end" gap={1} mb={1}>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <Button
+            key={i + 1}
+            variant={pageParam === i + 1 ? "contained" : "outlined"}
+            onClick={() => {
+              const params = new URLSearchParams(searchParams);
+              params.set("page", String(i + 1));
+              window.history.pushState({}, "", `?${params.toString()}`);
+              window.location.reload();
+            }}
+          >
+            {i + 1}
+          </Button>
+        ))}
+      </Box>
+    );
+  };
+  
   return (
     <>
       {slug && category && (
@@ -92,7 +123,9 @@ export default function Category() {
                 boxSizing: "border-box",
               }}
             >
+              {renderPagination()}
               <ProductList products={products} />
+              {renderPagination()}
             </Grid2>
           </Grid2>
 
