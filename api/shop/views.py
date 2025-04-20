@@ -22,6 +22,20 @@ from django.db.models import Q
 from urllib.parse import unquote
 
 
+class TenPerPagePagination(PageNumberPagination):
+    page_size = 10
+
+    def get_paginated_response(self, data):
+        total_pages = math.ceil(self.page.paginator.count / self.page_size)
+        return Response({
+            'count': self.page.paginator.count,
+            'totalPages': total_pages,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'products': data
+        })
+
+
 class HomeView(APIView):
     permission_classes = [AllowAny]
 
@@ -90,11 +104,12 @@ class ProductView(RetrieveAPIView):
 class ProductSearchView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = CategoryProductListSerializer
+    pagination_class = TenPerPagePagination
 
     def get_queryset(self):
         query_param = self.request.query_params.get('string', '')
         search_terms = unquote(query_param).split()
-
+        print(search_terms)
         if not search_terms:
             return Product.objects.none()
 
@@ -102,12 +117,19 @@ class ProductSearchView(ListAPIView):
         for term in search_terms:
             query |= Q(name__icontains=term) | Q(description__icontains=term)
 
-        return Product.objects.filter(query)
+        return Product.objects.filter(query).distinct().order_by('id')
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        # fallback (if pagination is disabled)
         serializer = self.get_serializer(queryset, many=True)
-        return Response({'products': serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.data)
 
 
 class CategoriesSearchAssociatedView(ListAPIView):
@@ -204,20 +226,6 @@ class CategoryView(APIView):
         }
 
         return Response(response_data)
-
-
-class TenPerPagePagination(PageNumberPagination):
-    page_size = 10
-
-    def get_paginated_response(self, data):
-        total_pages = math.ceil(self.page.paginator.count / self.page_size)
-        return Response({
-            'count': self.page.paginator.count,
-            'totalPages': total_pages,
-            'next': self.get_next_link(),
-            'previous': self.get_previous_link(),
-            'results': data
-        })
 
 
 class CategoryProductsView(RetrieveAPIView):
