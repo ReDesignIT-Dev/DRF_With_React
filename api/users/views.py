@@ -61,6 +61,7 @@ class LoginView(KnoxLoginView):
             user.last_login = timezone.now().replace(microsecond=0)
             user.save(update_fields=['last_login'])
             data['user'] = user.username
+            data['isAdmin'] = user.is_staff
         return data
 
 
