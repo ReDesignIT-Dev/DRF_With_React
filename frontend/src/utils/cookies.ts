@@ -26,3 +26,15 @@ export const setToken = (token: string, expiry: string | Date): void => {
     console.error("Failed to set token cookie:", error);
   }
 };
+
+export const isUserAdmin = (): boolean => {
+  return Cookies.get("isAdmin") === "true";
+};
+
+export const setIsUserAdmin = (isUserAdmin: boolean): void => {
+  Cookies.set("isAdmin", isUserAdmin.toString());
+};
+
+export const removeUserData = (): void => {
+  Cookies.remove('isAdmin');
+}
