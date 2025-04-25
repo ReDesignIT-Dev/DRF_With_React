@@ -15,7 +15,7 @@ const Login: React.FC = () => {
           type='button'
           className='btn btn-info mt-2'
           onClick={() => {
-            navigate(`${FRONTEND_SHOP_URL}${FRONTEND_REGISTER_URL}`, { replace: true });
+            navigate(`${FRONTEND_REGISTER_URL}`, { replace: true });
           }}
         >
           {"Don't have an account? Click here to register"}
