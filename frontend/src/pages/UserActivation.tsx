@@ -23,7 +23,7 @@ const UserActivation: React.FC = () => {
           const response = await activateUser(token);
           if (response && response.status === 200) {
             setSuccess(true);
-            navigate(`${FRONTEND_SHOP_URL}${FRONTEND_LOGIN_URL}`, { replace: true });
+            navigate(`${FRONTEND_LOGIN_URL}`, { replace: true });
           } else {
             setMessage("Failed to activate.");
           }
