@@ -23,6 +23,14 @@ export async function getAllProductsInCategory(categoryId: number, page: number 
   }
 }
 
+export async function getAllSearchProducts(searchString: string, page: number = 1): Promise<AxiosResponse | undefined> {
+  try {
+    const response = await apiClient.get(`${API_SEARCH_URL}${searchString}&page=${page}`);
+    return response;
+  } catch (error) {
+    apiErrorHandler(error);
+  }
+}
 export async function getCategoriesTree(): Promise<AxiosResponse | undefined> {
   try {
     const response = await apiClient.get(API_ALL_CATEGORIES_TREE);
@@ -114,14 +122,6 @@ export async function getAllSearchAssociatedCategories(
 }
 
 
-export async function getAllSearchProducts(searchString: string): Promise<AxiosResponse | undefined> {
-  try {
-    const response = await apiClient.get(`${API_SEARCH_URL}${searchString}`);
-    return response;
-  } catch (error) {
-    apiErrorHandler(error);
-  }
-}
 
 export async function addProduct(formData : FormData): Promise<AxiosResponse | undefined> {
   try {
