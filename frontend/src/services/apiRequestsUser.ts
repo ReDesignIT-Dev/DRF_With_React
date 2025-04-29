@@ -6,7 +6,7 @@ import {
   API_LOGIN_USER_URL,
   API_LOGOUT_USER_URL,
 } from "config";
-import { getToken, removeToken, setToken } from "utils/cookies";
+import { getToken, removeToken, removeUserData, setToken } from "utils/cookies";
 import { apiErrorHandler } from "./apiErrorHandler";
 import { AxiosResponse, AxiosError } from "axios";
 import { getHeaders } from "utils/utils";
@@ -152,5 +152,6 @@ export async function logoutUser(): Promise<void> {
     handleApiError(error);
   } finally {
     removeToken();
+    removeUserData();
   }
 }
