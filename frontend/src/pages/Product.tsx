@@ -248,7 +248,8 @@ export default function Product() {
                 type="number"
                 value={quantity}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleQuantityChange(Math.max(1, parseInt(e.target.value, 10)))}
-                inputProps={{ min: 1 }}
+                
+                slotProps={{ htmlInput: { min: 1 } }}
                 sx={{ width: 80 }}
               />
             </Box>
