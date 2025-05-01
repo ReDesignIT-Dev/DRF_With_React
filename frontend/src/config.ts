@@ -39,6 +39,8 @@ export const ROUTE_PATH_SEARCH: string = "/search";
 export const FRONTEND_SEARCH_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_SEARCH}`;
 export const ROUTE_PATH_CART: string = "/cart";
 export const FRONTEND_CART_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_CART}`;
+export const ROUTE_PATH_ADMIN_PANEL: string = "/admin-panel";
+export const FRONTEND_ADMIN_PANEL_URL: string = `${FRONTEND_SHOP_URL}${ROUTE_PATH_ADMIN_PANEL}`;
 
 // API urls should match the django urls
 export const API_LOGOUT_USER_URL: string = `${BACKEND_USER_URL}/logout`;
