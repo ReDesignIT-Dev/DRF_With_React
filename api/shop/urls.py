@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     ProductList, ProductCreate, ProductCRUDView, HomeView, CategoryTreeView,
-    CategoryCRUDView, ShopAdminPanel, ShopAdminPanelProducts, CategoryProductsView,
+    CategoryCRUDView, ShopAdminPanel, ShopAdminPanelProducts,
     ProductSearchView, CategoriesSearchAssociatedView, CategoryFlatView, ShoppingCartItemViewSet
 )
 
@@ -21,7 +21,6 @@ urlpatterns = [
     path('category/tree', CategoryTreeView.as_view(), name='tree_categories'),
     path('category/flat', CategoryFlatView.as_view(), name='flat_categories'),
     path('category/<int:id>', CategoryCRUDView.as_view(), name='category_crud'),
-    path('category/<int:id>/products', CategoryProductsView.as_view(), name='category_products'),
     path('shopping-admin-panel', ShopAdminPanel.as_view(), name='shop_admin_panel'),
     path('shopping-admin-panel/products', ShopAdminPanelProducts.as_view(), name='shop_admin_panel_products'),
 ]
