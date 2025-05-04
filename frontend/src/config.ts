@@ -51,6 +51,7 @@ export const API_PASSWORD_RESET_URL: string = `${BACKEND_USER_URL}/password-rese
 
 // API shop based
 export const API_PRODUCT_URL: string = `${BACKEND_SHOP_URL}/product`;
+export const API_PRODUCTS_QUERY_URL: string = `${BACKEND_SHOP_URL}/products`;
 export const API_PRODUCT_ADD_URL: string = `${API_PRODUCT_URL}/create`;
 export const API_CATEGORY_URL: string = `${BACKEND_SHOP_URL}/category`;
 export const API_ALL_CATEGORIES_TREE: string = `${API_CATEGORY_URL}/tree`;
