@@ -51,24 +51,17 @@ class ProductsPagination(LimitOffsetPagination):
 
 
 class ProductList(ListAPIView):
-    permission_classes = [AllowAny]
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    pagination_class = ProductsPagination
+    queryset = Product.objects.all()
+    pagination_class = TenPerPagePagination
 
     def get_queryset(self):
-        on_sale = self.request.query_params.get("on_sale", None)
-        if on_sale is None:
-            return super().get_queryset()
-        queryset = Product.objects.all()
-        if on_sale.lower() == "true":
-            from django.utils import timezone
-
-            now = timezone.now()
-            return queryset.filter(
-                sale_start__lte=now,
-                sale_end__gte=now,
-            )
+        queryset = super().get_queryset()
+        category_id = self.request.query_params.get('category')
+        if category_id:
+            category = get_object_or_404(Category, id=category_id)
+            descendants = category.get_descendants(include_self=True)
+            queryset = queryset.filter(category__in=descendants).distinct().order_by('id')
         return queryset
 
 
@@ -84,21 +77,31 @@ class ProductCreate(CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class ProductCRUDView(APIView):
+    authentication_classes = (TokenAuthentication,)
 
-class ProductEditView(RetrieveUpdateDestroyAPIView):
-    lookup_field = 'id'
-    queryset = Product.objects.all()
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAuthenticated(), IsAdminUser()]
 
-    def get_serializer_class(self):
-        if self.request.method in ['PUT', 'PATCH']:
-            return ProductUpdateSerializer
-        return ProductSerializer
+    def get(self, request, id=None, *args, **kwargs):
+        product = get_object_or_404(Product, id=id)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def put(self, request, id=None, *args, **kwargs):
+        product = get_object_or_404(Product, id=id)
+        serializer = ProductUpdateSerializer(product, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProductView(RetrieveAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    lookup_field = 'id'
+    def delete(self, request, id=None, *args, **kwargs):
+        product = get_object_or_404(Product, id=id)
+        product.delete()
+        return Response({"message": "Product deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
 class ProductSearchView(ListAPIView):
@@ -227,28 +230,60 @@ class CategoryView(APIView):
 
         return Response(response_data)
 
+class CategoryCRUDView(APIView):
 
-class CategoryProductsView(RetrieveAPIView):
-    serializer_class = CategoryProductListSerializer
-    lookup_field = 'id'
-    pagination_class = TenPerPagePagination
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAuthenticated(), IsAdminUser()]
 
-    def get_object(self):
-        id = self.kwargs.get("id")
-        return get_object_or_404(Category, id=id)
+    def get(self, request, id=None, *args, **kwargs):
+        if id:
+            category = get_object_or_404(Category, id=id)
+            products = Product.objects.filter(category=category)
+            child_categories = category.children.all()
+            category_serializer = CategoryTreeSerializer(category)
+            product_serializer = ProductSerializer(products, many=True)
+            child_category_serializer = [child.id for child in child_categories]
 
-    def retrieve(self, request, *args, **kwargs):
-        category = self.get_object()
-        descendants = category.get_descendants(include_self=True)
-        products = Product.objects.filter(category__in=descendants).distinct().order_by('id')
-        page = self.paginate_queryset(products)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+            response_data = {
+                'category': category_serializer.data,
+                'products': product_serializer.data,
+                'child_categories': child_category_serializer
+            }
+            return Response(response_data)
+        else:
+            categories = Category.objects.all()
+            serializer = CategoryTreeSerializer(categories, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-        print('reach this')
-        serializer = self.get_serializer(products, many=True)
-        return Response(serializer.data)
+    def post(self, request, *args, **kwargs):
+        serializer = CategoryCreateEditSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id=None, *args, **kwargs):
+        category = get_object_or_404(Category, id=id)
+        serializer = CategoryCreateEditSerializer(category, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id=None, *args, **kwargs):
+        category = get_object_or_404(Category, id=id)
+        if category.parent is None:
+            has_children = category.children.exists()
+            has_products = category.products.exists()
+            if has_children or has_products:
+                return Response(
+                    {"error": "Cannot delete a root category with child categories or associated products."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        category.delete()
+        return Response({"message": "Category deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CategoryTreeView(ListAPIView):
