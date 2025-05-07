@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
@@ -9,17 +10,25 @@ import {
   CircularProgress,
   Card,
   CardContent,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { addProduct } from "services/shopServices/apiRequestsShop";
+import { selectFlatCategories } from "reduxComponents/reduxShop/Categories/selectors";
 
-export const ProductAddPage = () => {
+export const ProductAdd = () => {
   const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [productSummary, setProductSummary] = useState<ProductFormData | null>(null);
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  // Use the selector to get flat categories from the Redux store
+  const categories = useSelector(selectFlatCategories);
 
   const {
     control,
@@ -30,8 +39,8 @@ export const ProductAddPage = () => {
     defaultValues: {
       categoryId: 1,
       price: 1,
-      name: '',
-      description: '',
+      name: "",
+      description: "",
       isOnSale: false,
       images: [],
     },
@@ -58,7 +67,7 @@ export const ProductAddPage = () => {
       if (response && response.status === 201) {
         setSubmitted(true);
         setSnackbarOpen(true);
-        setProductSummary(data); // save for summary display
+        setProductSummary(data); // Save for summary display
       }
     } catch (error) {
       console.error("Error adding product:", error);
@@ -108,12 +117,24 @@ export const ProductAddPage = () => {
             <Card sx={{ mt: 2 }}>
               <CardContent>
                 <Typography variant="h6">Summary</Typography>
-                <Typography><strong>Name:</strong> {productSummary.name}</Typography>
-                <Typography><strong>Category:</strong> {productSummary.categoryId}</Typography>
-                <Typography><strong>Description:</strong> {productSummary.description}</Typography>
-                <Typography><strong>Price:</strong> ${productSummary.price}</Typography>
-                <Typography><strong>On Sale:</strong> {productSummary.isOnSale ? "Yes" : "No"}</Typography>
-                <Typography><strong>Images:</strong> {productSummary.images?.length ?? 0} file(s)</Typography>
+                <Typography>
+                  <strong>Name:</strong> {productSummary.name}
+                </Typography>
+                <Typography>
+                  <strong>Category:</strong> {productSummary.categoryId}
+                </Typography>
+                <Typography>
+                  <strong>Description:</strong> {productSummary.description}
+                </Typography>
+                <Typography>
+                  <strong>Price:</strong> ${productSummary.price}
+                </Typography>
+                <Typography>
+                  <strong>On Sale:</strong> {productSummary.isOnSale ? "Yes" : "No"}
+                </Typography>
+                <Typography>
+                  <strong>Images:</strong> {productSummary.images?.length ?? 0} file(s)
+                </Typography>
               </CardContent>
             </Card>
           )}
@@ -127,12 +148,7 @@ export const ProductAddPage = () => {
           >
             Add Another Product
           </Button>
-          <Button
-            variant="outlined"
-            onClick={handleGoHome}
-            fullWidth
-            sx={{ mt: 2 }}
-          >
+          <Button variant="outlined" onClick={handleGoHome} fullWidth sx={{ mt: 2 }}>
             Go Back Home
           </Button>
         </>
@@ -160,15 +176,21 @@ export const ProductAddPage = () => {
             defaultValue={1}
             rules={{ required: "Category is required" }}
             render={({ field }) => (
-              <TextField
-                {...field}
-                label="Category"
-                fullWidth
-                margin="normal"
-                error={!!errors.categoryId}
-                helperText={errors.categoryId?.message}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="category-select-label">Category</InputLabel>
+                <Select
+                  {...field}
+                  labelId="category-select-label"
+                  label="Category"
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
           <Controller
