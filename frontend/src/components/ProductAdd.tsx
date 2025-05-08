@@ -51,7 +51,7 @@ export const ProductAdd = () => {
 
     const formData = new FormData();
     formData.append("name", data.name);
-    formData.append("categoryId", String(data.categoryId));
+    formData.append("category", String(data.categoryId));
     formData.append("description", data.description || "");
     formData.append("price", String(data.price));
     formData.append("isOnSale", String(data.isOnSale ?? false));
@@ -63,7 +63,7 @@ export const ProductAdd = () => {
     }
 
     try {
-      const response = await addProduct(formData);
+      const response = await addProduct(formData);  
       if (response && response.status === 201) {
         setSubmitted(true);
         setSnackbarOpen(true);
