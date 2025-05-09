@@ -25,12 +25,14 @@ import {
   ROUTE_PATH_PASSWORD_RESET,
   ROUTE_PATH_ACTIVATE_USER,
   ROUTE_PATH_PRODUCT_ADD,
+  ROUTE_PATH_ADMIN_PANEL,
 } from "config";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategoryFlat, fetchCategoryTree } from "reduxComponents/reduxShop/Categories/thunks";
 import { AppDispatch } from "reduxComponents/store";
-import { ProductAddPage } from "./ProductAdd";
+import { ProductAdd } from "../components/ProductAdd";
+import AdminPanel from "./AdminPanel";
 
 function Shop() {
   const dispatch = useDispatch<AppDispatch>();
@@ -53,9 +55,10 @@ function Shop() {
           <Route path={ROUTE_PATH_ACTIVATE_USER} element={<UserActivation />} />
           <Route path={ROUTE_PATH_CATEGORY} element={<Category />} />
           <Route path={ROUTE_PATH_PRODUCT} element={<Product />} />
-          <Route path={ROUTE_PATH_PRODUCT_ADD} element={<ProductAddPage />} />
+          <Route path={ROUTE_PATH_PRODUCT_ADD} element={<ProductAdd />} />
           <Route path={ROUTE_PATH_SEARCH} element={<SearchPage />} />
           <Route path={ROUTE_PATH_CART} element={<Cart />} />
+          <Route path={ROUTE_PATH_ADMIN_PANEL} element={<AdminPanel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>
