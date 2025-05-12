@@ -5,10 +5,20 @@ import NotFound from "pages/NotFound";
 import { FRONTEND_SHOP_URL } from "config";
 import MainPage from "pages/MainPage";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "reduxComponents/store";
+import { validateToken } from "reduxComponents/reduxUser/Auth/thunks";
 
 
 function App() {
   
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(validateToken());
+  }, [dispatch]);
+
   return (
     <Box
       sx={{
