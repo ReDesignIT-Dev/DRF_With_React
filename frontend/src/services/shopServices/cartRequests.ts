@@ -1,5 +1,5 @@
 import { AxiosResponse, AxiosRequestConfig } from "axios";
-import { getToken } from "utils/cookies";
+import { getToken, getValidatedToken } from "utils/cookies";
 import apiClient from "services/axiosConfig";
 import { apiErrorHandler } from "services/apiErrorHandler";
 import { API_CART_URL, API_ADD_TO_CART_URL, API_UPDATE_CART_URL, API_DELETE_FROM_CART_URL} from "config";
@@ -7,7 +7,7 @@ import { API_CART_URL, API_ADD_TO_CART_URL, API_UPDATE_CART_URL, API_DELETE_FROM
 type Headers = Record<string, string | undefined>;
 
 const getAuthHeaders = (): Headers => {
-  const token = getToken();
+  const token = getValidatedToken();
   const headers: Headers = {
     Authorization: token ? `Token ${token}` : undefined,
     'Content-Type': apiClient.defaults.headers['Content-Type'] as string | undefined,
