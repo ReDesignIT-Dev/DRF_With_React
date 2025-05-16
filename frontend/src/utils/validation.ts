@@ -1,4 +1,4 @@
-import { getToken } from "./cookies";
+import { getToken, getValidatedToken } from "./cookies";
 
 export function isEmailValid(emailToTest: string): boolean {
   const emailRegex = 
@@ -47,6 +47,6 @@ export function isPasswordValid(password: string): boolean {
 }
 
 export function isUserLoggedIn(): boolean {
-  const token = getToken();
+  const token = getValidatedToken();
   return token ? true : false;
 }
