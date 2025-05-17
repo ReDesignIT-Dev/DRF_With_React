@@ -8,14 +8,15 @@ import {
   API_ALL_CATEGORIES_TREE,
   API_ALL_CATEGORIES_FLAT,
   API_PRODUCT_ADD_URL,
+  API_PRODUCTS_QUERY_URL,
 } from "config";
 import { AxiosResponse } from "axios";
-import { getToken } from "utils/cookies";
+import { getToken, getValidatedToken } from "utils/cookies";
 
 
 export async function getAllProductsInCategory(categoryId: number, page: number = 1): Promise<AxiosResponse | undefined> {
   try {
-    const url = `${API_CATEGORY_URL}/${categoryId}/products?page=${page}`;
+    const url = `${API_PRODUCTS_QUERY_URL}?category=${categoryId}&page=${page}`;
     const response = await apiClient.get(url);
     return response;
   } catch (error) {
@@ -125,7 +126,7 @@ export async function getAllSearchAssociatedCategories(
 
 export async function addProduct(formData : FormData): Promise<AxiosResponse | undefined> {
   try {
-    const token = getToken();
+    const token = getValidatedToken();
     const response = await apiClient.post(`${API_PRODUCT_ADD_URL}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
