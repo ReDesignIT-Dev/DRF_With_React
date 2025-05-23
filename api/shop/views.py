@@ -58,10 +58,18 @@ class ProductList(ListAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
         category_id = self.request.query_params.get('category')
+        search = self.request.query_params.get('search', '').strip()
+
         if category_id:
             category = get_object_or_404(Category, id=category_id)
             descendants = category.get_descendants(include_self=True)
             queryset = queryset.filter(category__in=descendants).distinct().order_by('id')
+
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) | Q(description__icontains=search)
+            )
+
         return queryset
 
 
